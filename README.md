@@ -22,10 +22,8 @@ Implement a light weight minimal version of kepler.gl with a small subset of the
 
 [x] use react-map-gl
 [x] UI (same as kepler) to pick base map
-[inprogress] render GeoJSON layer
+[x] render GeoJSON layer
 [x] Add/Remove Layers (same as kepler)
 [] Draw polygon on the map
 [] Render time-series chart on click or selection
 [] save and load features
-
-7:00
