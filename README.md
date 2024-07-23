@@ -21,9 +21,9 @@ Implement a light weight minimal version of kepler.gl with a small subset of the
 ## CheckList
 
 [x] use react-map-gl
-[] UI (same as kepler) to pick base map
-[] render GeoJSON layer
-[] Add/Remove Layers (same as kepler)
+[x] UI (same as kepler) to pick base map
+[inprogress] render GeoJSON layer
+[x] Add/Remove Layers (same as kepler)
 [] Draw polygon on the map
 [] Render time-series chart on click or selection
 [] save and load features

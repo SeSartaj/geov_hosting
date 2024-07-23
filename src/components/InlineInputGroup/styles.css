@@ -1,0 +1,8 @@
+.i-group {
+  display: flex;
+  align-items: center;
+}
+
+.i-label {
+  margin-right: 10px;
+}
