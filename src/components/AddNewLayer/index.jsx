@@ -8,7 +8,9 @@ import { fromJS } from 'immutable';
 const AddNewLayerModal = ({ setSources }) => {
   const [open, setOpen] = useState(false);
   const { mapStyle, setMapStyle, mapRef } = useContext(MapContext);
+
   const [url, setUrl] = useState(typeof mapStyle === 'string' ? mapStyle : '');
+  const [layerSource, setLayerSource] = useState();
 
   const mapInstance = mapRef.current.getMap();
 
@@ -29,20 +31,29 @@ const AddNewLayerModal = ({ setSources }) => {
     reader.readAsText(file);
   };
   const handleAddLayer = (e) => {
-    // write adding layer code here
-    // add a layer from geojson url
-
-    // add layer
-    mapInstance?.addLayer({
-      id: 'earthquake-layer',
-      type: 'circle',
-      source: 'earthquakes',
+    const mapInstance = mapRef.current.getMap();
+    console.log('adding layer');
+    mapInstance.addLayer({
+      id: layerSource + '-polygon',
+      type: 'fill',
+      source: layerSource,
+      paint: {
+        'fill-color': [
+          'interpolate',
+          ['linear'],
+          ['get', 'Obesity'],
+          15,
+          'green',
+          40,
+          'red',
+        ],
+        'fill-opacity': 0.8,
+      },
+      filter: ['==', '$type', 'Polygon'],
     });
-
-    return;
   };
 
-  console.log('sources', mapInstance.getStyle()?.sources);
+  console.log(mapInstance.getStyle().sources);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -60,34 +71,18 @@ const AddNewLayerModal = ({ setSources }) => {
           <textarea name='layer' id='layer' cols='30' rows='10'></textarea> */}
 
           <p>Source</p>
-          <select name='source' id='source'>
+          <select
+            name='source'
+            id='source'
+            value={layerSource}
+            onChange={(e) => setLayerSource(e.target.value)}
+          >
             {Object.keys(mapInstance.getStyle()?.sources).map((source) => (
               <option key={source} value={source}>
                 {source}
               </option>
             ))}{' '}
           </select>
-
-          <p>Name</p>
-          <input
-            type='text'
-            style={{ fontSize: 20, padding: 5 }}
-            name='name'
-            className='Input'
-          />
-
-          <p>type</p>
-          <select>
-            <option value='fill'>Fill</option>
-            <option value='polygon'>polygon</option>
-            <option value='line'>line</option>
-            <option value='point'>point</option>
-          </select>
-
-          <p>Color</p>
-          <input type='color' name='color' id='color' />
-
-          <p>stroke</p>
 
           <div
             style={{
