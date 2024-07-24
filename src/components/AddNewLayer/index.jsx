@@ -7,32 +7,14 @@ import { fromJS } from 'immutable';
 
 const AddNewLayerModal = ({ setSources }) => {
   const [open, setOpen] = useState(false);
-  const { mapStyle, setMapStyle, mapRef } = useContext(MapContext);
+  const { mapRef } = useContext(MapContext);
 
-  const [url, setUrl] = useState(typeof mapStyle === 'string' ? mapStyle : '');
   const [layerSource, setLayerSource] = useState();
 
   const mapInstance = mapRef.current.getMap();
 
-  const handleUrlChange = (e) => {
-    setUrl(e.target.value);
-  };
-
-  const handleStyleFileChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const newMapStyle = fromJS(JSON.parse(event.target.result));
-      setMapStyle(newMapStyle);
-      setOpen(false);
-    };
-
-    reader.readAsText(file);
-  };
   const handleAddLayer = (e) => {
     const mapInstance = mapRef.current.getMap();
-    console.log('adding layer');
     mapInstance.addLayer({
       id: layerSource + '-polygon',
       type: 'fill',
@@ -52,8 +34,6 @@ const AddNewLayerModal = ({ setSources }) => {
       filter: ['==', '$type', 'Polygon'],
     });
   };
-
-  console.log(mapInstance.getStyle().sources);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

@@ -14,7 +14,7 @@ body {
   right: left;
   max-width: 320px;
   max-height: 80%;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   background: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   padding: 5px 10px;
@@ -52,4 +52,10 @@ input {
 
 .action-icon:hover {
   color: rgb(0, 0, 0);
+}
+
+.panel-header-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

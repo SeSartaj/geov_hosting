@@ -34,7 +34,6 @@ const AddNewSourceModal = ({ setSources }) => {
   };
 
   const handleAddSource = () => {
-    console.log('adding source');
     const data = url ? url : fileContent;
     map.addSource(name, {
       type: 'geojson',
@@ -47,7 +46,7 @@ const AddNewSourceModal = ({ setSources }) => {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button className='Button violet'>Add New GeoJSON Source</button>
+        <button className='Button violet'>Add New Source</button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='DialogOverlay' />

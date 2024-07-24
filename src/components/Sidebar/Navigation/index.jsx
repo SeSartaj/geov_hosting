@@ -1,9 +1,10 @@
 import * as Tabs from '@radix-ui/react-tabs';
-import { BiFilter, BiGlobe, BiLayer } from 'react-icons/bi';
+import { BiFilter, BiGlobe, BiLayer, BiLibrary } from 'react-icons/bi';
 import BaseMapPanel from '../BaseMapPanel';
 import './styles.css';
 import LayerPanel from '../LayerPanel';
 import Tooltip from '../../Tooltip';
+import SourcesPanel from '../../SourcesPanel';
 
 const Navigation = () => (
   <Tabs.Root className='TabsRoot' defaultValue='tab1'>
@@ -23,6 +24,11 @@ const Navigation = () => (
           <BiGlobe className='action-icon' />
         </Tooltip>
       </Tabs.Trigger>
+      <Tabs.Trigger className='TabsTrigger' value='tab4'>
+        <Tooltip text='Sources'>
+          <BiLibrary className='action-icon' />
+        </Tooltip>
+      </Tabs.Trigger>
     </Tabs.List>
     <Tabs.Content className='TabsContent' value='tab1'>
       <LayerPanel />
@@ -32,6 +38,9 @@ const Navigation = () => (
     </Tabs.Content>
     <Tabs.Content className='TabsContent' value='tab3'>
       <BaseMapPanel />
+    </Tabs.Content>
+    <Tabs.Content className='TabsContent' value='tab4'>
+      <SourcesPanel />
     </Tabs.Content>
   </Tabs.Root>
 );

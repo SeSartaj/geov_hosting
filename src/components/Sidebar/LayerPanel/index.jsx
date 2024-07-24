@@ -1,6 +1,6 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { MapContext } from '../../../contexts/MapContext';
-import { BiHide, BiShow, BiTrash } from 'react-icons/bi';
+import { BiTrash } from 'react-icons/bi';
 import AddNewLayerModal from '../../AddNewLayer';
 import AddNewSourceModal from '../../AddNewSourceModal';
 import Layer from '../../Layer';
@@ -9,6 +9,7 @@ export default function LayerPanel() {
   const { mapRef } = useContext(MapContext);
   const map = mapRef.current.getMap();
   const [sources, setSources] = useState(map?.getStyle()?.sources || []);
+  const [layers, setLayers] = useState(map.getStyle().layers);
 
   const handleRemoveSource = (e) => {
     const sourceId = e.target.getAttribute('data-source-id');
@@ -18,24 +19,53 @@ export default function LayerPanel() {
     }
   };
 
+  const toggleLayerVisibility = (e) => {
+    const layerId = e.target.getAttribute('data-layer-id');
+    // check if layer exists
+    if (!map?.getLayer(layerId)) {
+      return;
+    }
+    // get current visilibyt
+    const currentVisibility = mapRef.current.getLayoutProperty(
+      layerId,
+      'visibility'
+    );
+    if (currentVisibility === 'visible') {
+      map?.setLayoutProperty(layerId, 'visibility', 'none');
+    } else {
+      map?.setLayoutProperty(layerId, 'visibility', 'visible');
+    }
+    setLayers(map.getStyle().layers);
+  };
+
+  const handleDeleteLayer = (e) => {
+    const layerId = e.target.getAttribute('data-layer-id');
+    if (layerId) {
+      map?.removeLayer(layerId);
+      setLayers(map.getStyle().layers);
+    }
+  };
+
   return (
     <div>
-      <h3>Sources</h3>
-      <AddNewSourceModal setSources={setSources} />
-
-      <ul>
-        {Object.keys(sources).map((source) => (
-          <li key={source}>
-            {source}
-            <BiTrash data-source-id={source} onClick={handleRemoveSource} />
-          </li>
+      <div className='panel-header-action'>
+        <h3 style={{ margin: 0 }}>Map Layers</h3>
+        <AddNewLayerModal />
+      </div>
+      <hr />
+      <ul
+        className='layers-list'
+        style={{ overflowY: 'scroll', height: 400, paddingRight: 10 }}
+      >
+        {layers.map((layer) => (
+          <Layer
+            layer={layer}
+            handleDeleteLayer={handleDeleteLayer}
+            toggleLayerVisibility={toggleLayerVisibility}
+            key={layer.id}
+          />
         ))}
       </ul>
-
-      <h3>Map Layers</h3>
-      <AddNewLayerModal />
-      <hr />
-      <Layer />
     </div>
   );
 }
