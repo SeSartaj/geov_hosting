@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { MapContext } from '../../../contexts/MapContext';
 import AddNewStyleModal from '../../AddNewStyleModal';
-import { BiHide, BiShow, BiTrash } from 'react-icons/bi';
 import Layer from '../../Layer';
+import './styles.css';
 
 export default function BaseMapPanel() {
   const { mapRef } = useContext(MapContext);
@@ -50,7 +50,7 @@ export default function BaseMapPanel() {
       </ul> */}
       <h3>Map Layers</h3>
 
-      <ul style={{ listStyleType: 'none' }}>
+      <ul className='layers-list'>
         {layers.map((layer) => (
           <Layer
             layer={layer}
