@@ -55,7 +55,7 @@ export default function LayerPanel() {
       <hr />
       <ul
         className='layers-list'
-        style={{ overflowY: 'scroll', height: 400, paddingRight: 10 }}
+        style={{ overflowY: 'scroll', height: '60vh', paddingRight: 10 }}
       >
         {layers
           .map((layer, i) => (

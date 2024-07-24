@@ -26,5 +26,6 @@ Implement a light weight minimal version of kepler.gl with a small subset of the
 - [x] render GeoJSON layer
 - [x] Add/Remove Layers (same as kepler)
 - [ ] Draw polygon on the map
+- [ ] Render markers and show popup
 - [ ] Render time-series chart on click or selection
 - [ ] save and load features

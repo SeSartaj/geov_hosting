@@ -60,8 +60,12 @@ function Layer({
             alignContent: 'center',
           }}
         >
-          <BiCaretUp onClick={moveLayerUp} />
-          <BiCaretDown onClick={moveLayerDown} />
+          <Tooltip text='move layer above'>
+            <BiCaretUp onClick={moveLayerUp} />
+          </Tooltip>
+          <Tooltip text='move layer below'>
+            <BiCaretDown onClick={moveLayerDown} />
+          </Tooltip>
         </span>
         <label onClick={toggleLayerVisibility}>
           {mapRef?.current?.getLayoutProperty(layer.id, 'visibility') ===
