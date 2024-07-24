@@ -57,14 +57,19 @@ export default function LayerPanel() {
         className='layers-list'
         style={{ overflowY: 'scroll', height: 400, paddingRight: 10 }}
       >
-        {layers.map((layer) => (
-          <Layer
-            layer={layer}
-            handleDeleteLayer={handleDeleteLayer}
-            toggleLayerVisibility={toggleLayerVisibility}
-            key={layer.id}
-          />
-        ))}
+        {layers
+          .map((layer, i) => (
+            <Layer
+              layers={layers}
+              layerIndex={i}
+              layer={layer}
+              handleDeleteLayer={handleDeleteLayer}
+              toggleLayerVisibility={toggleLayerVisibility}
+              key={layer.id}
+              setLayers={setLayers}
+            />
+          ))
+          .reverse()}
       </ul>
     </div>
   );

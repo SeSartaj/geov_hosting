@@ -10,10 +10,15 @@ import {
 import Tooltip from '../Tooltip';
 import { MapContext } from '../../contexts/MapContext';
 
-function Layer({ layer, handleDeleteLayer, toggleLayerVisibility }) {
+function Layer({
+  layers,
+  layer,
+  layerIndex,
+  handleDeleteLayer,
+  toggleLayerVisibility,
+  setLayers,
+}) {
   const { mapRef } = useContext(MapContext);
-  const [opacity, setOpacity] = useState(1);
-  const [blendMode, setBlendMode] = useState('normal');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleExpand = () => {
@@ -22,9 +27,42 @@ function Layer({ layer, handleDeleteLayer, toggleLayerVisibility }) {
 
   if (!layer) return null;
 
+  const handleMoveLayer = (direction) => {
+    const currentIndex = layerIndex;
+    const newIndex = direction === 'up' ? currentIndex + 2 : currentIndex - 1;
+    // get layer id for the newIndex
+    if (newIndex < 0) return;
+    if (newIndex >= layers.length) return;
+
+    const beforeId = layers[newIndex]?.id;
+    console.log('moving layer', newIndex, beforeId);
+    mapRef?.current?.moveLayer(layer.id, beforeId);
+    setLayers(mapRef?.current?.getStyle().layers);
+  };
+
+  const moveLayerUp = () => {
+    console.log('moveLayerUp');
+    handleMoveLayer('up');
+  };
+
+  const moveLayerDown = () => {
+    console.log('moveLayerDown');
+    handleMoveLayer('down');
+  };
+
   return (
     <div className='layer-container'>
       <div className='layer-header'>
+        <span
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignContent: 'center',
+          }}
+        >
+          <BiCaretUp onClick={moveLayerUp} />
+          <BiCaretDown onClick={moveLayerDown} />
+        </span>
         <label onClick={toggleLayerVisibility}>
           {mapRef?.current?.getLayoutProperty(layer.id, 'visibility') ===
           'visible' ? (
