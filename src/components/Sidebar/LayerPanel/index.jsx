@@ -3,6 +3,7 @@ import { MapContext } from '../../../contexts/MapContext';
 import { BiHide, BiShow, BiTrash } from 'react-icons/bi';
 import AddNewLayerModal from '../../AddNewLayer';
 import AddNewSourceModal from '../../AddNewSourceModal';
+import Layer from '../../Layer';
 
 export default function LayerPanel() {
   const { mapRef } = useContext(MapContext);
@@ -34,6 +35,7 @@ export default function LayerPanel() {
       <h3>Map Layers</h3>
       <AddNewLayerModal />
       <hr />
+      <Layer />
     </div>
   );
 }

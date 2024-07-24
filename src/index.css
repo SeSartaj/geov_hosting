@@ -25,11 +25,6 @@ body {
   outline: none;
 }
 
-label {
-  display: inline-block;
-  width: 150px;
-}
-
 input {
   margin-left: 20px;
 }
@@ -53,4 +48,8 @@ input {
   color: rgb(62, 62, 62);
   transition: color 0.3s ease;
   cursor: pointer;
+}
+
+.action-icon:hover {
+  color: rgb(0, 0, 0);
 }

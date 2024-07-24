@@ -1,0 +1,41 @@
+.layer-container,
+.layer-header,
+.layer-footer {
+  display: flex;
+  align-items: center;
+}
+
+.layer-container {
+  border: 1px solid #ccc;
+  justify-content: space-between;
+}
+
+.layer-header > label,
+.layer-footer > span {
+  padding: 0 2px;
+}
+
+.layer-body {
+  flex: 5;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.layer-header {
+  flex: 1;
+  justify-content: flex-start;
+  align-self: flex-start;
+}
+.layer-footer {
+  flex: 1;
+  justify-content: flex-end;
+  align-self: flex-start;
+}
+
+.layer-body > p {
+  display: block;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis'...';
+}

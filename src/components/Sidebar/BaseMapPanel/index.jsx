@@ -2,13 +2,19 @@ import { useContext, useState } from 'react';
 import { MapContext } from '../../../contexts/MapContext';
 import AddNewStyleModal from '../../AddNewStyleModal';
 import { BiHide, BiShow, BiTrash } from 'react-icons/bi';
+import Layer from '../../Layer';
 
 export default function BaseMapPanel() {
   const { mapRef } = useContext(MapContext);
   const map = mapRef.current.getMap();
   const [layers, setLayers] = useState(map.getStyle().layers);
 
-  const toggleLayerVisibility = (layerId) => {
+  const toggleLayerVisibility = (e) => {
+    const layerId = e.target.getAttribute('data-layer-id');
+    // check if layer exists
+    if (!map?.getLayer(layerId)) {
+      return;
+    }
     // get current visilibyt
     const currentVisibility = mapRef.current.getLayoutProperty(
       layerId,
@@ -28,6 +34,7 @@ export default function BaseMapPanel() {
       setLayers(map.getStyle().layers);
     }
   };
+
   return (
     <div>
       <span>
@@ -45,27 +52,34 @@ export default function BaseMapPanel() {
 
       <ul style={{ listStyleType: 'none' }}>
         {layers.map((layer) => (
-          <li key={layer.id}>
-            <span
-              style={{ cursor: 'pointer' }}
-              onClick={() => toggleLayerVisibility(layer.id)}
-            >
-              {mapRef?.current?.getLayoutProperty(layer.id, 'visibility') ===
-              'visible' ? (
-                <BiShow />
-              ) : (
-                <BiHide />
-              )}
-            </span>{' '}
-            {layer.id}
-            {
-              <BiTrash
-                style={{ cursor: 'pointer' }}
-                data-layer-id={layer.id}
-                onClick={handleDeleteLayer}
-              />
-            }
-          </li>
+          <Layer
+            layer={layer}
+            key={layer.id}
+            handleDeleteLayer={handleDeleteLayer}
+            toggleLayerVisibility={toggleLayerVisibility}
+          />
+
+          // <li key={layer.id}>
+          //   <span
+          //     style={{ cursor: 'pointer' }}
+          //     onClick={() => toggleLayerVisibility(layer.id)}
+          //   >
+          //     {mapRef?.current?.getLayoutProperty(layer.id, 'visibility') ===
+          //     'visible' ? (
+          //       <BiShow />
+          //     ) : (
+          //       <BiHide />
+          //     )}
+          //   </span>{' '}
+          //   {layer.id}
+          //   {
+          //     <BiTrash
+          //       style={{ cursor: 'pointer' }}
+          //       data-layer-id={layer.id}
+          //       onClick={handleDeleteLayer}
+          //     />
+          //   }
+          // </li>
         ))}
       </ul>
     </div>

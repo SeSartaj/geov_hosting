@@ -1,0 +1,20 @@
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/violet.css';
+
+.TooltipContent {
+  border-radius: 1px;
+  padding: 2px 3px;
+  font-size: smaller;
+  /* line-height: 1; */
+  color: var(--violet-11);
+  background-color: rgb(23, 23, 23);
+  color: white;
+  user-select: none;
+  animation-duration: 100ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.TooltipArrow {
+  fill: rgb(23, 23, 23);
+}
