@@ -70,7 +70,7 @@ const AddNewSourceModal = ({ setSources }) => {
           <input
             type='text'
             style={{ fontSize: 20, padding: 5 }}
-            placeholder='paste style url here'
+            placeholder="geojson file's url here"
             name='style_url'
             className='Input'
             value={url}

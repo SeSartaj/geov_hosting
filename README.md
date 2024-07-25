@@ -29,3 +29,5 @@ Implement a light weight minimal version of kepler.gl with a small subset of the
 - [ ] Render markers and show popup
 - [ ] Render time-series chart on click or selection
 - [ ] save and load features
+- [ ] editing style of a layer (paint)
+- [ ] filtering layer based on properties

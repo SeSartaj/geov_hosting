@@ -9,6 +9,7 @@ import {
 } from 'react-icons/bi';
 import Tooltip from '../Tooltip';
 import { MapContext } from '../../contexts/MapContext';
+import turfBbox from '@turf/bbox';
 
 function Layer({
   layers,
@@ -50,6 +51,29 @@ function Layer({
     handleMoveLayer('down');
   };
 
+  const flyToLayer = (layerId) => {
+    // Get the source data of the layer
+    const sources = mapRef.current.getStyle().sources;
+    console.log(sources);
+    const sourceId = layer.source;
+    const sourceData = sources[sourceId];
+    console.log(sourceData);
+    // Get the bbox of the source data
+
+    if (sourceData.type === 'geojson' && sourceData.data.features.length > 0) {
+      // Get the bounding box of the features in the layer
+      const layerBbox = turfBbox(sourceData.data);
+
+      // Fly to the bounding box of the layer
+      mapRef.current.fitBounds(layerBbox, {
+        padding: 20,
+        duration: 2000, // Duration of the flight animation in milliseconds
+      });
+    } else {
+      console.error('Layer is empty or not a FeatureCollection.');
+    }
+  };
+
   return (
     <div className='layer-container'>
       <div className='layer-header'>
@@ -68,8 +92,7 @@ function Layer({
           </Tooltip>
         </span>
         <label onClick={toggleLayerVisibility}>
-          {mapRef?.current?.getLayoutProperty(layer.id, 'visibility') ===
-          'visible' ? (
+          {layer?.layout?.visibility === 'visible' ? (
             <Tooltip text='Hide Layer'>
               <BiShow className='action-icon' data-layer-id={layer.id} />
             </Tooltip>
@@ -81,7 +104,7 @@ function Layer({
         </label>
       </div>
       <div className='layer-body'>
-        <p>{layer?.id}</p>
+        <p onClick={flyToLayer}>{layer?.id}</p>
         {isExpanded && (
           <div>
             <span>

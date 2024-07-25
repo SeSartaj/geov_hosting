@@ -5,34 +5,110 @@ import { useContext, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import { fromJS } from 'immutable';
 
-const AddNewLayerModal = ({ setSources }) => {
+const AddNewLayerModal = ({ setSources, setLayers }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
 
   const [layerSource, setLayerSource] = useState();
+  const [type, setType] = useState('polygon');
 
   const mapInstance = mapRef.current.getMap();
 
   const handleAddLayer = (e) => {
     const mapInstance = mapRef.current.getMap();
     mapInstance.addLayer({
-      id: layerSource + '-polygon',
-      type: 'fill',
+      id: layerSource + `-${type}`,
+      type: type,
       source: layerSource,
-      paint: {
-        'fill-color': [
-          'interpolate',
-          ['linear'],
-          ['get', 'Obesity'],
-          15,
-          'green',
-          40,
-          'red',
-        ],
-        'fill-opacity': 0.8,
+      layout: {
+        visibility: 'visible',
       },
-      filter: ['==', '$type', 'Polygon'],
+      paint: DEFAULT_PAINTS[type],
+      filter: ['==', '$type', LAYER_TYPE_GEOMETRY[type]],
     });
+    setLayers(mapRef.current.getStyle().layers);
+  };
+
+  const DEFAULT_PAINTS = {
+    fill: {
+      'fill-color': 'green',
+      'fill-opacity': 0.8,
+    },
+    line: {
+      'line-color': 'blue',
+      'line-width': 2,
+      'line-opacity': 0.8,
+    },
+    circle: {
+      'circle-radius': 5,
+      'circle-color': 'red',
+      'circle-opacity': 0.8,
+    },
+    symbol: {
+      'text-color': 'black',
+      'text-halo-color': 'white',
+      'text-halo-width': 2,
+      'text-opacity': 1.0,
+    },
+    'fill-extrusion': {
+      'fill-extrusion-color': 'gray',
+      'fill-extrusion-height': 10,
+      'fill-extrusion-opacity': 0.8,
+    },
+    heatmap: {
+      'heatmap-radius': 30,
+      'heatmap-opacity': 0.8,
+      'heatmap-color': [
+        'interpolate',
+        ['linear'],
+        ['heatmap-density'],
+        0,
+        'blue',
+        0.5,
+        'lime',
+        1,
+        'red',
+      ],
+    },
+    raster: {
+      'raster-opacity': 1.0,
+      'raster-brightness-min': 0,
+      'raster-brightness-max': 1,
+      'raster-contrast': 0,
+      'raster-saturation': 0,
+    },
+    hillshade: {
+      'hillshade-exaggeration': 0.5,
+      'hillshade-shadow-color': '#000000',
+      'hillshade-highlight-color': '#FFFFFF',
+      'hillshade-accent-color': '#0000FF',
+    },
+    background: {
+      'background-color': 'white',
+      'background-opacity': 1.0,
+    },
+  };
+
+  const LAYER_TYPES = [
+    'background',
+    'fill',
+    'line',
+    'symbol',
+    'raster',
+    'circle',
+    'fill-extrusion',
+    'heatmap',
+    'hillshade',
+  ];
+
+  const LAYER_TYPE_GEOMETRY = {
+    fill: 'Polygon',
+    line: 'LineString',
+    symbol: 'Point',
+    raster: 'Raster',
+    circle: 'Point',
+    'fill-extrusion': 'Polygon',
+    heatmap: 'Point',
   };
 
   return (
@@ -60,6 +136,20 @@ const AddNewLayerModal = ({ setSources }) => {
             {Object.keys(mapInstance.getStyle()?.sources).map((source) => (
               <option key={source} value={source}>
                 {source}
+              </option>
+            ))}{' '}
+          </select>
+
+          <p>Type</p>
+          <select
+            name='type'
+            id='type'
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+          >
+            {LAYER_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {type}
               </option>
             ))}{' '}
           </select>

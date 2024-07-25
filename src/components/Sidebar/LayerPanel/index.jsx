@@ -46,11 +46,13 @@ export default function LayerPanel() {
     }
   };
 
+  console.log('layers', layers);
+
   return (
     <div>
       <div className='panel-header-action'>
         <h3 style={{ margin: 0 }}>Map Layers</h3>
-        <AddNewLayerModal />
+        <AddNewLayerModal setLayers={setLayers} />
       </div>
       <hr />
       <ul
