@@ -7,7 +7,7 @@ import Tooltip from '../../Tooltip';
 import SourcesPanel from '../../SourcesPanel';
 
 const Navigation = () => (
-  <Tabs.Root className='TabsRoot' defaultValue='tab1'>
+  <Tabs.Root className='TabsRoot' defaultValue='tab4'>
     <Tabs.List className='TabsList' aria-label='Manage your account'>
       <Tabs.Trigger className='TabsTrigger' value='tab1'>
         <Tooltip text='layers'>

@@ -46,8 +46,6 @@ export default function LayerPanel() {
     }
   };
 
-  console.log('layers', layers);
-
   return (
     <div>
       <div className='panel-header-action'>
