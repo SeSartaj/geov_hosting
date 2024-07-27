@@ -2,7 +2,7 @@
 
 ## Goal
 
-Implement a light weight minimal version of kepler.gl with a small subset of the original features. (Kepler is heavy!)
+Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard.
 
 ## Requirements
 
@@ -22,12 +22,8 @@ Implement a light weight minimal version of kepler.gl with a small subset of the
 ## CheckList
 
 - [x] use react-map-gl
-- [x] UI (same as kepler) to pick base map
-- [x] render GeoJSON layer
-- [x] Add/Remove Layers (same as kepler)
-- [ ] Draw polygon on the map
-- [ ] Render markers and show popup
-- [ ] Render time-series chart on click or selection
-- [ ] save and load features
-- [ ] editing style of a layer (paint)
-- [ ] filtering layer based on properties
+- [ ] Add and load markers
+- [ ] show popup with time-series data chart on marker
+- [ ] draw polygon and add fields
+- [ ] render ndvi layer
+- [ ] show popup with time series data on each feature of ndvi
