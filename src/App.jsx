@@ -2,7 +2,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import Sidebar from './components/Sidebar';
 import { MapProvider } from './contexts/MapContext';
 import MyMap from './components/MyMap';
-import { FullscreenControl } from 'react-map-gl';
+import { FullscreenControl } from 'react-map-gl/maplibre';
 {
   FullscreenControl;
 }
