@@ -1,16 +1,24 @@
 import PropTypes from 'prop-types';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import './styles.css';
+import { useContext } from 'react';
+import { MapContext } from '../../contexts/MapContext';
 
 export default function Tooltip({ children, text, ...props }) {
+  const { mapRef } = useContext(MapContext);
+
+  console.log('mapRef', mapRef);
   return (
     <TooltipPrimitive.Provider delayDuration={200}>
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger asChild>
           <span>{children}</span>
         </TooltipPrimitive.Trigger>
-        <TooltipPrimitive.Portal>
+        <TooltipPrimitive.Portal
+          container={mapRef?.current?.getMap().getContainer() || document.body}
+        >
           <TooltipPrimitive.Content
+            portalled={false}
             className='TooltipContent'
             side='top'
             align='center'

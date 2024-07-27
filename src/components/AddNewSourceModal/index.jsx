@@ -48,7 +48,9 @@ const AddNewSourceModal = ({ setSources }) => {
       <Dialog.Trigger asChild>
         <button className='Button violet'>Add New Source</button>
       </Dialog.Trigger>
-      <Dialog.Portal>
+      <Dialog.Portal
+        container={mapRef?.current?.getMap().getContainer() || document.body}
+      >
         <Dialog.Overlay className='DialogOverlay' />
         <Dialog.Content className='DialogContent'>
           <Dialog.Title className='DialogTitle'>

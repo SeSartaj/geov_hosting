@@ -12,6 +12,8 @@ export default function MyMap({ children, props }) {
       initialViewState={{
         longitude: 69.2075,
         latitude: 34.5553,
+        width: '100%',
+        height: '100%',
         zoom: 3,
       }}
       style={{ width: '100%', height: '80vh' }}

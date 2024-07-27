@@ -10,6 +10,9 @@ import { FullscreenControl } from 'react-map-gl';
 function App() {
   return (
     <MapProvider>
+      <div>
+        <h1>Dashboard</h1>
+      </div>
       <div style={{ padding: 30, marginTop: 20 }}>
         <MyMap>
           <FullscreenControl position='top-right' />
