@@ -1,9 +1,15 @@
-import Map, { useMap, useControl } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { useContext, useEffect } from 'react';
-import { MapContext } from '../../contexts/MapContext';
 
-export default function MyMap({ children, props }) {
+import Map from 'react-map-gl/maplibre';
+import { useContext } from 'react';
+import { FullscreenControl } from 'react-map-gl/maplibre';
+
+import { MapContext } from '../../contexts/MapContext';
+import Sidebar from '../Sidebar';
+import Markers from '../Markers';
+import MarkerPopup from '../MarkerPopup';
+
+export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
 
   return (
@@ -20,9 +26,11 @@ export default function MyMap({ children, props }) {
       mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}
       attributionControl={false}
       reuseMaps
-      {...props}
     >
-      {children}
+      <FullscreenControl position='top-right' />
+      <Sidebar />
+      <Markers />
+      <MarkerPopup />
     </Map>
   );
 }
