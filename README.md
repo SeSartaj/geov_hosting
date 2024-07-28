@@ -23,7 +23,7 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 
 - [x] use react-map-gl
 - [x] Add and load markers
-- [ ] show popup with time-series data chart on marker
+- [x] show popup with time-series data chart on marker
 - [ ] draw polygon and add fields
 - [ ] render ndvi layer
 - [ ] show popup with time series data on each feature of ndvi
