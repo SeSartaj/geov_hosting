@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 // Create a new context for the map
@@ -30,9 +30,12 @@ function generateRandomMarkers(numMarkers) {
 
 const MarkersProvider = ({ children }) => {
   // in the future, fetch markers from the server
-  const [markersData, setMarkersData] = useState(generateRandomMarkers(100));
+  const [markersData, setMarkersData] = useState(generateRandomMarkers(2000));
   const [clickedMarker, setClickedMarker] = useState(null);
 
+  useEffect(() => {
+    console.log('markers data', markersData);
+  }, [markersData]);
   return (
     <MarkersContext.Provider
       value={{ markersData, setMarkersData, clickedMarker, setClickedMarker }}

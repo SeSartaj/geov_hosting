@@ -7,7 +7,6 @@ import { MapContext } from '../../contexts/MapContext';
 export default function Tooltip({ children, text, ...props }) {
   const { mapRef } = useContext(MapContext);
 
-  console.log('mapRef', mapRef);
   return (
     <TooltipPrimitive.Provider delayDuration={200}>
       <TooltipPrimitive.Root>

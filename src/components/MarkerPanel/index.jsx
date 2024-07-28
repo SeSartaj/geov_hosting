@@ -3,6 +3,7 @@ import { MapContext } from '../../contexts/MapContext';
 import AddNewSourceModal from '../AddNewSourceModal';
 import { BiTrash } from 'react-icons/bi';
 import { Marker, Popup } from 'react-map-gl/maplibre';
+import AddNewMarkerModal from '../AddNewMarkerModal';
 
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
@@ -62,6 +63,7 @@ export default function MarkerPanel() {
     <div>
       <div className='panel-header-action'>
         <h3 style={{ margin: 0 }}>Markers</h3>
+        <AddNewMarkerModal />
       </div>
       <hr />
     </div>

@@ -17,6 +17,8 @@ export default function MarkerPopup() {
       <div>
         <h3>{clickedMarker.title}</h3>
         <p>{clickedMarker.description}</p>
+        <p>longitude: {clickedMarker.longitude}</p>
+        <p>latitude: {clickedMarker.latitude}</p>
       </div>
     </Popup>
   );

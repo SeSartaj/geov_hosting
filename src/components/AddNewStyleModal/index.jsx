@@ -4,6 +4,7 @@ import { BiX } from 'react-icons/bi';
 import { useContext, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import { fromJS } from 'immutable';
+import MyButton from '../../ui-components/MyButton';
 
 const AddNewStyleModal = () => {
   const [open, setOpen] = useState(false);
@@ -36,7 +37,7 @@ const AddNewStyleModal = () => {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button className='Button violet'>Add Map Style</button>
+        <MyButton>Add Map Style</MyButton>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='DialogOverlay' />
@@ -73,18 +74,28 @@ const AddNewStyleModal = () => {
             }}
           >
             <Dialog.Close asChild>
-              <button className='Button'>Cancel</button>
+              <MyButton size='sm' color='mute'>
+                Cancel
+              </MyButton>
             </Dialog.Close>
             <Dialog.Close asChild>
-              <button className='Button green' onClick={handleStyleChange}>
+              <MyButton onClick={handleStyleChange} size='sm'>
                 Add Style
-              </button>
+              </MyButton>
             </Dialog.Close>
           </div>
           <Dialog.Close asChild>
-            <button className='IconButton CloseButton' aria-label='Close'>
+            {/* <button className='IconButton CloseButton' aria-label='Close'>
               <BiX />
-            </button>
+            </button> */}
+            <MyButton
+              color='mute'
+              variant='icon'
+              style={{ position: 'absolute', top: 10, right: 10 }}
+              aria-label='Close'
+            >
+              <BiX />
+            </MyButton>
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
