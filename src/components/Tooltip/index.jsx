@@ -14,10 +14,13 @@ export default function Tooltip({ children, text, ...props }) {
           <span>{children}</span>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal
-          container={mapRef?.current?.getMap().getContainer() || document.body}
+          container={
+            mapRef?.current
+              ? mapRef?.current?.getMap().getContainer()
+              : document.body
+          }
         >
           <TooltipPrimitive.Content
-            portalled={false}
             className='TooltipContent'
             side='top'
             align='center'

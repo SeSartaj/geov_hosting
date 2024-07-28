@@ -45,9 +45,9 @@ const AddNewMarkerModal = () => {
       open={open}
       setOpen={setOpen}
       portalContainer={
-        mapRef?.current?.getMap().getContainer()
+        mapRef?.current
           ? mapRef?.current?.getMap().getContainer()
-          : undefined
+          : document.body
       }
     >
       <form onSubmit={handleNewMarkerCreation}>

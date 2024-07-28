@@ -1,19 +1,21 @@
 import './styles.css';
 import PropTypes from 'prop-types';
+import { forwardRef } from 'react';
 
-export default function MyButton({
-  color = 'mute',
-  size = 'md',
-  variant = 'fill',
-  children,
-  ...rest
-}) {
+const MyButton = forwardRef(function MyButton(
+  { color = 'mute', size = 'md', variant = 'fill', children, ...rest },
+  ref
+) {
   return (
-    <button className={`my-button ${color} ${size} ${variant}`} {...rest}>
+    <button
+      ref={ref}
+      className={`my-button ${color} ${size} ${variant}`}
+      {...rest}
+    >
       {children}
     </button>
   );
-}
+});
 
 MyButton.propTypes = {
   color: PropTypes.oneOf([
@@ -28,3 +30,5 @@ MyButton.propTypes = {
   variant: PropTypes.oneOf(['fill', 'text', 'icon']),
   children: PropTypes.node,
 };
+
+export default MyButton;

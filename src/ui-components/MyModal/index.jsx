@@ -16,7 +16,9 @@ export default function MyModal({
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
-      <Dialog.Portal container={portalContainer ? portalContainer : undefined}>
+      <Dialog.Portal
+        container={portalContainer ? portalContainer : document.body}
+      >
         <Dialog.Overlay className='DialogOverlay' />
         <Dialog.Content className='DialogContent'>
           <Dialog.Title className='DialogTitle'>{title}</Dialog.Title>
@@ -47,5 +49,5 @@ MyModal.propTypes = {
   children: PropTypes.node.isRequired,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
-  portalContainer: PropTypes.element,
+  // portalContainer: PropTypes.element,
 };
