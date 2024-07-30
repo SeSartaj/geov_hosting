@@ -27,3 +27,21 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [ ] draw polygon and add fields
 - [ ] render ndvi layer
 - [ ] show popup with time series data on each feature of ndvi
+
+## Checklist for version 1
+
+- [] load markers
+- [] show paw, battery level, name, serial, and crop on popup
+- [] filter markers based on farm and state
+- [] switch between map and satellite map
+- [x] full screen mode
+- [] add new station marker
+- [] map settings
+- [] add forcast marker
+
+## Observations
+
+- there are different types of markers
+- a marker may belong to a farm, and a farm can have many markers
+
+## FAQs
