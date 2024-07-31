@@ -30,13 +30,13 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 
 ## Checklist for version 1
 
-- [] load markers
-- [] show paw, battery level, name, serial, and crop on popup
-- [] filter markers based on farm and state
+- [x] load markers
+- [x] show paw, battery level, name, serial, and crop on popup
+- [x] filter markers based on farm and state
 - [x] switch between map and satellite map
 - [x] full screen mode
-- [] add new station marker
 - [] map settings
+- [] add new station marker
 - [] add forcast marker
 
 ## Observations

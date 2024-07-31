@@ -4,13 +4,14 @@ import supercluster from 'supercluster';
 import './styles.css';
 import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
+import StationMarker from '../MyMarker/StationMarker';
+import MyMarker from '../MyMarker';
 
 export default function Markers() {
   const { mapRef } = useContext(MapContext);
   const { markersData, setClickedMarker } = useContext(MarkersContext);
   const [clusters, setClusters] = useState([]);
   const zoomThreshold = 5;
-  const clusterRef = useRef(null);
 
   const handleMarkerClick = (e, marker) => {
     console.log('clicked', marker);
@@ -43,7 +44,7 @@ export default function Markers() {
           properties: { cluster: false, marker },
           geometry: {
             type: 'Point',
-            coordinates: [marker.longitude, marker.latitude],
+            coordinates: [marker.location.lng, marker.location.lat],
           },
         }))
       );
@@ -94,12 +95,19 @@ export default function Markers() {
         }
 
         return (
-          <Marker
-            className='map-marker'
+          // <Marker
+          //   className='map-marker'
+          //   key={cluster.properties.marker.id}
+          //   longitude={longitude}
+          //   latitude={latitude}
+          //   color={cluster.properties.marker.color}
+          //   onClick={(e) => handleMarkerClick(e, cluster.properties.marker)}
+          // />
+          <MyMarker
             key={cluster.properties.marker.id}
             longitude={longitude}
             latitude={latitude}
-            color={cluster.properties.marker.color}
+            marker={cluster}
             onClick={(e) => handleMarkerClick(e, cluster.properties.marker)}
           />
         );

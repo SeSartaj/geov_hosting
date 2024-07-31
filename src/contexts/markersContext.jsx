@@ -1,56 +1,29 @@
 import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useMarkers } from '../hooks/useMarkers';
 
 // Create a new context for the map
 const MarkersContext = createContext();
 
-function getRandomItem(arr) {
-  if (arr.length === 0) return undefined; // Handle case for empty array
-  const randomIndex = Math.floor(Math.random() * arr.length);
-  return arr[randomIndex];
-}
-
-function generateRandomMarkers(numMarkers) {
-  const markers = [];
-
-  for (let i = 0; i < numMarkers; i++) {
-    const marker = {
-      id: `marker${i + 1}`,
-      longitude: (Math.random() * 180 - 90).toFixed(4), // Random longitude between -90 and +90
-      latitude: (Math.random() * 180 - 90).toFixed(4), // Random latitude between -90 and +90
-      title: `Marker ${i + 1}`,
-      description: `This is marker ${i + 1}`,
-      color: getRandomItem(['green', 'red', 'orange']),
-      battery: Math.floor(Math.random() * 100),
-      crop: getRandomItem(['corn', 'wheat', 'soybean', 'rice', 'potato']),
-      avg_paw: (Math.random() * 100).toFixed(2),
-      api: getRandomItem(['Zentra', 'Fieldclimate']),
-      farm: getRandomItem([
-        { id: 1, name: 'Farm 1' },
-        { id: 2, name: 'Farm 2' },
-      ]),
-    };
-    markers.push(marker);
-  }
-
-  return markers;
-}
-
 const MarkersProvider = ({ children }) => {
-  // in the future, fetch markers from the server
-  const [markersData, setMarkersData] = useState([]);
   const [clickedMarker, setClickedMarker] = useState(null);
+  const { markers, loading, markerFilters, setMarkerFilters, resetFilters } =
+    useMarkers();
 
   useEffect(() => {
-    console.log('markers data', markersData);
-  }, [markersData]);
+    console.log('markers have changed, updating the context', markers, loading);
+  }, [markers, loading]);
 
-  useEffect(() => {
-    setMarkersData(generateRandomMarkers(2000));
-  }, []);
   return (
     <MarkersContext.Provider
-      value={{ markersData, setMarkersData, clickedMarker, setClickedMarker }}
+      value={{
+        markersData: markers,
+        markerFilters,
+        setMarkerFilters,
+        clickedMarker,
+        setClickedMarker,
+        resetFilters,
+      }}
     >
       {children}
     </MarkersContext.Provider>

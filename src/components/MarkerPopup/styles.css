@@ -1,0 +1,13 @@
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-header h3 {
+  margin: 0;
+}
+
+/* .popup-content {
+  overflow-y: auto;
+} */

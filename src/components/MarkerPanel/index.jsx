@@ -1,10 +1,18 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AddNewMarkerModal from '../AddNewMarkerModal';
 import { MarkersContext } from '../../contexts/markersContext';
 import './styles.css';
+import { useMarkers } from '../../hooks/useMarkers';
+import MyButton from '../../ui-components/MyButton';
 
 export default function MarkerPanel() {
   const { markersData } = useContext(MarkersContext);
+  const { markerFilters, setMarkerFilters, resetFilters } =
+    useContext(MarkersContext);
+
+  // useEffect(() => {
+  //   filterMarkers(markerFilters);
+  // }, [markerFilters, filterMarkers]);
 
   return (
     <div className='panel-container'>
@@ -12,6 +20,53 @@ export default function MarkerPanel() {
         <h3 style={{ margin: 0 }}>Markers</h3>
         <AddNewMarkerModal />
       </div>
+
+      <span>filter markers</span>
+      <form>
+        <label>type: </label>
+        <select
+          value={markerFilters.type}
+          onChange={(e) =>
+            setMarkerFilters({ ...markerFilters, type: e.target.value })
+          }
+        >
+          <option value=''>all</option>
+          <option value='station'>Station</option>
+          <option value='forecast'>Forecast</option>
+        </select>
+        <br />
+        <label>paw Status: </label>
+        <select
+          value={markerFilters.paw_status}
+          onChange={(e) =>
+            setMarkerFilters({ ...markerFilters, paw_status: e.target.value })
+          }
+        >
+          <option value=''>All</option>
+          <option value='OPTIMAL'>Optimal</option>
+          <option value='STRESS_START'>Stress Start</option>
+          <option value='SEVERE_STRESS'>Severe Stress</option>
+          <option value='EXCESS_WATER'>Excess Water</option>
+        </select>
+        <br />
+        <label>Farm: </label>
+        <select
+          value={markerFilters.farm_id}
+          onChange={(e) =>
+            setMarkerFilters({ ...markerFilters, farm_id: e.target.value })
+          }
+        >
+          <option value=''>All</option>
+          <option value='345'>Farm 1</option>
+          <option value='346'>Farm 2</option>
+        </select>
+        <br />
+      </form>
+      <span>
+        <MyButton size='sm' onClick={resetFilters}>
+          reset filters
+        </MyButton>
+      </span>
 
       <hr />
       <div className='panel-content'>

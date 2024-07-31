@@ -1,0 +1,17 @@
+/* .label-value-list {
+  font-size: 8;
+} */
+
+.label-value-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid grey;
+}
+.lvi-label {
+  color: rgb(59, 59, 59);
+}
+.lvi-value {
+  color: rgb(29, 29, 29);
+  font-weight: bold;
+}
