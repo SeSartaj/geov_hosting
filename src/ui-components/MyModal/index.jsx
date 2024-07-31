@@ -3,6 +3,8 @@ import MyButton from '../MyButton';
 import PropTypes from 'prop-types';
 import { BiX } from 'react-icons/bi';
 import './styles.css';
+import { useContext } from 'react';
+import { MapContext } from '../../contexts/MapContext';
 
 export default function MyModal({
   trigger,
@@ -11,13 +13,18 @@ export default function MyModal({
   children,
   open,
   setOpen,
-  portalContainer,
 }) {
+  const { mapRef } = useContext(MapContext);
+
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal
-        container={portalContainer ? portalContainer : document.body}
+        container={
+          mapRef?.current
+            ? mapRef?.current?.getMap().getContainer()
+            : document.body
+        }
       >
         <Dialog.Overlay className='DialogOverlay' />
         <Dialog.Content className='DialogContent'>

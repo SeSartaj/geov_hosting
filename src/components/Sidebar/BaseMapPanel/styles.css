@@ -3,3 +3,13 @@
   text-decoration: none;
   padding: 0;
 }
+
+.switcher {
+  display: flex;
+  justify-content: space-between;
+  gap: 3px;
+}
+
+.active-switch {
+  filter: brightness(0.8);
+}

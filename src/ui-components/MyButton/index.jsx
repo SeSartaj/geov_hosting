@@ -3,13 +3,20 @@ import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 
 const MyButton = forwardRef(function MyButton(
-  { color = 'mute', size = 'md', variant = 'fill', children, ...rest },
+  {
+    color = 'mute',
+    size = 'md',
+    variant = 'fill',
+    children,
+    className,
+    ...rest
+  },
   ref
 ) {
   return (
     <button
       ref={ref}
-      className={`my-button ${color} ${size} ${variant}`}
+      className={`my-button ${color} ${size} ${variant} ${className}`}
       {...rest}
     >
       {children}
@@ -28,6 +35,7 @@ MyButton.propTypes = {
   ]),
   size: PropTypes.oneOf(['sm', 'md', 'lg']),
   variant: PropTypes.oneOf(['fill', 'text', 'icon']),
+  className: PropTypes.string,
   children: PropTypes.node,
 };
 

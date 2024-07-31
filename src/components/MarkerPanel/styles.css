@@ -1,0 +1,18 @@
+.panel-content {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.panel-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid grey;
+  padding: 3px;
+  min-height: 150px;
+}
+
+.panel-container hr {
+  width: 100%;
+}

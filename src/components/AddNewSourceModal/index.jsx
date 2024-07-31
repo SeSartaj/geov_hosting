@@ -3,6 +3,8 @@ import './styles.css';
 import { BiX } from 'react-icons/bi';
 import { useContext, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
+import MyModal from '../../ui-components/MyModal';
+import MyButton from '../../ui-components/MyButton';
 
 const AddNewSourceModal = ({ setSources }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,8 +13,6 @@ const AddNewSourceModal = ({ setSources }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
   const [url, setUrl] = useState('');
-
-  const map = mapRef.current.getMap();
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
@@ -35,85 +35,58 @@ const AddNewSourceModal = ({ setSources }) => {
 
   const handleAddSource = () => {
     const data = url ? url : fileContent;
-    map.addSource(name, {
+    mapRef?.current.addSource(name, {
       type: 'geojson',
       data: data,
     });
-    setSources(map.getStyle()?.sources);
+    setSources(mapRef?.current.getStyle()?.sources);
     setOpen(false);
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>
-        <button className='Button violet'>Add New Source</button>
-      </Dialog.Trigger>
-      <Dialog.Portal
-        container={mapRef?.current?.getMap().getContainer() || document.body}
-      >
-        <Dialog.Overlay className='DialogOverlay' />
-        <Dialog.Content className='DialogContent'>
-          <Dialog.Title className='DialogTitle'>
-            Add New GeoJSON Source
-          </Dialog.Title>
-          <Dialog.Description className='DialogDescription'>
-            You can add a new source from a GeoJSON url or a file upload
-          </Dialog.Description>
-          <input
-            type='text'
-            style={{ fontSize: 20, padding: 5, marginBottom: 5 }}
-            placeholder='Source Name'
-            name='name'
-            className='Input'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+    <MyModal
+      open={open}
+      setOpen={setOpen}
+      title='Add New GeoJSON Source'
+      trigger={<MyButton>Add New Source</MyButton>}
+      description='You can add a new source from a GeoJSON url or a file upload'
+    >
+      <form onSubmit={handleAddSource}>
+        <input
+          type='text'
+          style={{ fontSize: 20, padding: 5, marginBottom: 5 }}
+          placeholder='Source Name'
+          name='name'
+          className='Input'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-          <input
-            type='text'
-            style={{ fontSize: 20, padding: 5 }}
-            placeholder="geojson file's url here"
-            name='style_url'
-            className='Input'
-            value={url}
-            onChange={handleUrlChange}
-          />
-          <p>Or upload a file</p>
-          <input
-            type='file'
-            style={{ fontSize: 20, padding: 5 }}
-            name='style_file'
-            className='Input'
-            onChange={handleFileChange}
-          />
-          <div
-            style={{
-              display: 'flex',
-              marginTop: 25,
-              justifyContent: 'flex-end',
-            }}
-          >
-            <Dialog.Close asChild>
-              <button className='Button'>Cancel</button>
-            </Dialog.Close>
-            <Dialog.Close asChild>
-              <button
-                className='Button green'
-                onClick={handleAddSource}
-                disabled={isLoading}
-              >
-                Add New Source
-              </button>
-            </Dialog.Close>
-          </div>
-          <Dialog.Close asChild>
-            <button className='IconButton CloseButton' aria-label='Close'>
-              <BiX />
-            </button>
-          </Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        <input
+          type='text'
+          style={{ fontSize: 20, padding: 5 }}
+          placeholder="geojson file's url here"
+          name='style_url'
+          className='Input'
+          value={url}
+          onChange={handleUrlChange}
+        />
+        <p>Or upload a file</p>
+        <input
+          type='file'
+          style={{ fontSize: 20, padding: 5 }}
+          name='style_file'
+          className='Input'
+          onChange={handleFileChange}
+        />
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+          <MyButton variant='text' onClick={() => setOpen(false)}>
+            cancel
+          </MyButton>
+          <MyButton type='submit'>Add Marker</MyButton>
+        </div>
+      </form>
+    </MyModal>
   );
 };
 

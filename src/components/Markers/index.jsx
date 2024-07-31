@@ -22,6 +22,7 @@ export default function Markers() {
     if (!mapRef?.current) return;
 
     const updateClusters = () => {
+      if (!mapRef?.current) return;
       const map = mapRef.current.getMap();
       const bounds = map.getBounds().toArray().flat();
       const zoom = map.getZoom();
@@ -56,7 +57,7 @@ export default function Markers() {
     mapRef.current.on('moveend', updateClusters);
 
     return () => {
-      mapRef.current.off('moveend', updateClusters);
+      mapRef?.current?.off('moveend', updateClusters);
     };
   }, [mapRef, markersData, zoomThreshold]);
 

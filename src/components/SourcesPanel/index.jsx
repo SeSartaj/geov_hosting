@@ -1,18 +1,29 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import AddNewSourceModal from '../AddNewSourceModal';
 import { BiTrash } from 'react-icons/bi';
 
 export default function SourcesPanel() {
   const { mapRef } = useContext(MapContext);
-  const map = mapRef.current.getMap();
-  const [sources, setSources] = useState(map?.getStyle()?.sources || []);
+  const [sources, setSources] = useState([]);
+
+  useEffect(() => {
+    if (mapRef?.current) {
+      loadSources(mapRef?.current);
+    }
+  }, [mapRef]);
+
+  const loadSources = (map) => {
+    setSources(map.getStyle()?.sources || []);
+  };
 
   const handleRemoveSource = (e) => {
-    const sourceId = e.target.getAttribute('data-source-id');
-    if (sourceId) {
-      map?.removeSource(sourceId);
-      setSources(map.getStyle().sources);
+    if (mapRef?.current) {
+      const sourceId = e.target.getAttribute('data-source-id');
+      if (sourceId) {
+        mapRef?.current?.removeSource(sourceId);
+        loadSources(mapRef?.current);
+      }
     }
   };
   return (

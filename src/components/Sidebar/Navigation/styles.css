@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   width: 300px;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 
 .TabsList {
@@ -54,9 +54,17 @@
 } */
 
 .TabsContent {
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 10px;
   outline: none;
+  overflow: scroll;
+}
+
+/* tab content that has data-state="inactive" should have display none */
+.TabsContent[data-state='inactive'] {
+  display: none;
 }
 /* .TabsContent:focus {
   box-shadow: 0 0 0 2px black;

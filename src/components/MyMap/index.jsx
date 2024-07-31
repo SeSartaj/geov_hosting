@@ -8,19 +8,23 @@ import { MapContext } from '../../contexts/MapContext';
 import Sidebar from '../Sidebar';
 import Markers from '../Markers';
 import MarkerPopup from '../MarkerPopup';
+import { SettingsContext } from '../../contexts/SettingsContext';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
+  const { settings } = useContext(SettingsContext);
+
+  console.log(mapStyle);
 
   return (
     <Map
       ref={mapRef}
       initialViewState={{
-        longitude: 69.2075,
-        latitude: 34.5553,
+        latitude: settings.basemap.latitude,
+        longitude: settings.basemap.longitude,
         width: '100%',
         height: '100%',
-        zoom: 3,
+        zoom: settings.basemap.zoom,
       }}
       style={{ width: '100%', height: '80vh' }}
       mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}

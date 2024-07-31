@@ -21,6 +21,14 @@ function generateRandomMarkers(numMarkers) {
       title: `Marker ${i + 1}`,
       description: `This is marker ${i + 1}`,
       color: getRandomItem(['green', 'red', 'orange']),
+      battery: Math.floor(Math.random() * 100),
+      crop: getRandomItem(['corn', 'wheat', 'soybean', 'rice', 'potato']),
+      avg_paw: (Math.random() * 100).toFixed(2),
+      api: getRandomItem(['Zentra', 'Fieldclimate']),
+      farm: getRandomItem([
+        { id: 1, name: 'Farm 1' },
+        { id: 2, name: 'Farm 2' },
+      ]),
     };
     markers.push(marker);
   }
@@ -30,12 +38,16 @@ function generateRandomMarkers(numMarkers) {
 
 const MarkersProvider = ({ children }) => {
   // in the future, fetch markers from the server
-  const [markersData, setMarkersData] = useState(generateRandomMarkers(2000));
+  const [markersData, setMarkersData] = useState([]);
   const [clickedMarker, setClickedMarker] = useState(null);
 
   useEffect(() => {
     console.log('markers data', markersData);
   }, [markersData]);
+
+  useEffect(() => {
+    setMarkersData(generateRandomMarkers(2000));
+  }, []);
   return (
     <MarkersContext.Provider
       value={{ markersData, setMarkersData, clickedMarker, setClickedMarker }}

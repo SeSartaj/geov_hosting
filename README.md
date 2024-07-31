@@ -33,7 +33,7 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [] load markers
 - [] show paw, battery level, name, serial, and crop on popup
 - [] filter markers based on farm and state
-- [] switch between map and satellite map
+- [x] switch between map and satellite map
 - [x] full screen mode
 - [] add new station marker
 - [] map settings
