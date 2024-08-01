@@ -198,7 +198,7 @@ const DUMMY_RESPONSE = [
     lng: null,
     lat: null,
     use_custom_location: false,
-    avg_paw: 12.0,
+    avg_paw: 32,
     marker_map: 4934,
   },
   {
@@ -564,7 +564,7 @@ const DUMMY_RESPONSE = [
     lng: null,
     lat: null,
     use_custom_location: false,
-    avg_paw: 74.0,
+    avg_paw: 12,
     marker_map: 4934,
   },
   {
@@ -761,7 +761,7 @@ const DUMMY_RESPONSE = [
     lng: null,
     lat: null,
     use_custom_location: false,
-    avg_paw: 74.0,
+    avg_paw: 120,
     marker_map: 4934,
   },
   {

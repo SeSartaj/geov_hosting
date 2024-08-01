@@ -38,6 +38,7 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [] map settings
 - [] add new station marker
 - [] add forcast marker
+- [] add a pie chart on map that shows percentage of each paw status.
 
 ## Observations
 
@@ -45,3 +46,9 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - a marker may belong to a farm, and a farm can have many markers
 
 ## FAQs
+
+- why backend throws CORS error?
+- only port 3000 is allowed on the backend.
+- what is the difference between forecast marker and station marker?
+- If a marker is associated with a device, it represents a station marker. Otherwise, it is a forecast marker, and data for forecast marker is fetched from a third-party service.
+-

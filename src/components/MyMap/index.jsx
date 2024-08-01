@@ -9,6 +9,7 @@ import Sidebar from '../Sidebar';
 import Markers from '../Markers';
 import MarkerPopup from '../MarkerPopup';
 import { SettingsContext } from '../../contexts/SettingsContext';
+import PAWStatusPieChart from '../PAWStatusPieChart';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -33,6 +34,7 @@ export default function MyMap() {
     >
       <FullscreenControl position='top-right' />
       <Sidebar />
+      <PAWStatusPieChart />
       <Markers />
       <MarkerPopup />
     </Map>

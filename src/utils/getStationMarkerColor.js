@@ -3,7 +3,7 @@ export function getStationMarkerColor(paw_status) {
     case 'SEVERE_STRESS':
       return 'red';
     case 'STRESS_START':
-      return 'yellow';
+      return 'orange';
     case 'OPTIMAL':
       return 'green';
     case 'EXCESS_WATER':
