@@ -4,15 +4,23 @@ import { MarkersContext } from '../../contexts/markersContext';
 import './styles.css';
 import { useMarkers } from '../../hooks/useMarkers';
 import MyButton from '../../ui-components/MyButton';
+import { MapContext } from '../../contexts/MapContext';
 
 export default function MarkerPanel() {
+  const { mapRef } = useContext(MapContext);
   const { markersData } = useContext(MarkersContext);
   const { markerFilters, setMarkerFilters, resetFilters } =
     useContext(MarkersContext);
 
-  // useEffect(() => {
-  //   filterMarkers(markerFilters);
-  // }, [markerFilters, filterMarkers]);
+  const handleMarkerClick = (e) => {
+    if (!mapRef?.current) return;
+    const markerId = e.currentTarget.getAttribute('data-marker-id');
+    console.log(markerId);
+    const marker = markersData.find((m) => m.id == markerId);
+    if (!marker) return;
+    const { lat, lng } = marker.location;
+    mapRef.current.flyTo({ center: [lng, lat], zoom: 14 });
+  };
 
   return (
     <div className='panel-container'>
@@ -72,7 +80,12 @@ export default function MarkerPanel() {
       <div className='panel-content'>
         {markersData?.map((marker) => (
           <div key={marker.id} className='marker-item'>
-            <div className='marker-item-info'>
+            <div
+              className='marker-item-info'
+              data-marker-id={marker.id}
+              onClick={handleMarkerClick}
+              style={{ cursor: 'pointer' }}
+            >
               <h4>{marker.title}</h4>
             </div>
           </div>

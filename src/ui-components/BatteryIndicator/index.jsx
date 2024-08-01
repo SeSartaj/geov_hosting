@@ -7,7 +7,7 @@ import {
 
 const BatteryIndicator = ({ level }) => {
   let BatteryIcon;
-  let color = '#00FF00'; // Default color
+  let color = '#111'; // Default color
 
   if (level > 75) {
     BatteryIcon = FaBatteryFull;

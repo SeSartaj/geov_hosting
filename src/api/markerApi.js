@@ -545,7 +545,992 @@ const DUMMY_RESPONSE = [
         location: {
           alt: 145.223,
           lat: -41.0850084,
-          lng: -73.3105914,
+          lng: -71.3105914,
+        },
+        timezone: 'America/Santiago',
+        use_push_api: false,
+        download_in_progress: false,
+        sensors_without_data: 100,
+        no_sensors_without_data: 7,
+      },
+      plot: null,
+      crop: 'POTATO',
+    },
+    farm: {
+      id: 345,
+      name: 'Farm 1',
+    },
+    location_name: '',
+    lng: null,
+    lat: null,
+    use_custom_location: false,
+    avg_paw: 74.0,
+    marker_map: 4934,
+  },
+  {
+    id: 1899,
+    paw_graphs: [
+      {
+        id: '5d889f5e-ba28-432f-857b-206f7558e28f',
+        label: '1 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 75.3],
+      },
+      {
+        id: '41580187-1a28-4dda-9b31-d23928a7b19b',
+        label: '2 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 74.0],
+      },
+    ],
+    graphs: [],
+    device: {
+      name: 'PLOT 1',
+      api: 'Zentra',
+      serial: 'z6-07441',
+      last_transmission: '2024-03-05T15:00:00-03:00',
+      users: [
+        {
+          username: 'pieterpaulmichau@gmail.com',
+        },
+        {
+          username: 'Benn',
+        },
+        {
+          username: 'Kikko',
+        },
+        {
+          username: 'demometerusa',
+        },
+        {
+          username: 'fperez@agricolasutil.cl',
+        },
+        {
+          username: 'Juan',
+        },
+        {
+          username: 'ashish',
+        },
+        {
+          username: 'SLG',
+        },
+        {
+          username: 'Pagranifo',
+        },
+        {
+          username: 'Gom nam',
+        },
+        {
+          username: 'Sanosvaldo ',
+        },
+        {
+          username: 'Ana',
+        },
+        {
+          username: 'Bae 💝💖',
+        },
+        {
+          username: 'Oktafz',
+        },
+        {
+          username: 'juan1789',
+        },
+        {
+          username: 'AVENTURA',
+        },
+        {
+          username: 'farmer Joe',
+        },
+        {
+          username: 'Gerhard Peters Blatz',
+        },
+        {
+          username: 'Tarahamal ',
+        },
+        {
+          username: 'Takoua',
+        },
+        {
+          username: 'Wahid rafaat',
+        },
+        {
+          username: 'test_user_02',
+        },
+        {
+          username: 'Endless ',
+        },
+        {
+          username: 'Wahidrafaat',
+        },
+        {
+          username: 'Nashimwe',
+        },
+        {
+          username: 'Rabbit Run',
+        },
+        {
+          username: 'Gilbert ',
+        },
+        {
+          username: 'Andawari doutimi ',
+        },
+        {
+          username: 'test_user_12',
+        },
+        {
+          username: 'I love farms 23',
+        },
+        {
+          username: 'Itz obyno ',
+        },
+        {
+          username: 'demo',
+        },
+        {
+          username: 'adel',
+        },
+        {
+          username: 'DIINA NDINELAO ',
+        },
+        {
+          username: 'Nelson',
+        },
+        {
+          username: 'elparque',
+        },
+        {
+          username: 'jsilv0784@gmail.com',
+        },
+        {
+          username: 'testuser',
+        },
+        {
+          username: 'jmw132001',
+        },
+        {
+          username: 'Asha',
+        },
+        {
+          username: 'Rodrigo Barraza ',
+        },
+        {
+          username: 'Hyginus@',
+        },
+        {
+          username: 'isyo',
+        },
+        {
+          username: 'Clobis Ponce',
+        },
+      ],
+      is_lagging: true,
+      is_battery_low: false,
+      details: {
+        battery: 89,
+        location: {
+          alt: 145.223,
+          lat: -41.086,
+          lng: -73.3605914,
+        },
+        timezone: 'America/Santiago',
+        use_push_api: false,
+        download_in_progress: false,
+        sensors_without_data: 100,
+        no_sensors_without_data: 7,
+      },
+      plot: null,
+      crop: 'POTATO',
+    },
+    farm: {
+      id: 345,
+      name: 'Farm 1',
+    },
+    location_name: '',
+    lng: null,
+    lat: null,
+    use_custom_location: false,
+    avg_paw: 74.0,
+    marker_map: 4934,
+  },
+  {
+    id: 1895,
+    paw_graphs: [
+      {
+        id: '5d889f5e-ba28-432f-857b-206f7558e28f',
+        label: '1 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 75.3],
+      },
+      {
+        id: '41580187-1a28-4dda-9b31-d23928a7b19b',
+        label: '2 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 74.0],
+      },
+    ],
+    graphs: [],
+    device: {
+      name: 'PLOT 1',
+      api: 'Zentra',
+      serial: 'z6-07441',
+      last_transmission: '2024-03-05T15:00:00-03:00',
+      users: [
+        {
+          username: 'pieterpaulmichau@gmail.com',
+        },
+        {
+          username: 'Benn',
+        },
+        {
+          username: 'Kikko',
+        },
+        {
+          username: 'demometerusa',
+        },
+        {
+          username: 'fperez@agricolasutil.cl',
+        },
+        {
+          username: 'Juan',
+        },
+        {
+          username: 'ashish',
+        },
+        {
+          username: 'SLG',
+        },
+        {
+          username: 'Pagranifo',
+        },
+        {
+          username: 'Gom nam',
+        },
+        {
+          username: 'Sanosvaldo ',
+        },
+        {
+          username: 'Ana',
+        },
+        {
+          username: 'Bae 💝💖',
+        },
+        {
+          username: 'Oktafz',
+        },
+        {
+          username: 'juan1789',
+        },
+        {
+          username: 'AVENTURA',
+        },
+        {
+          username: 'farmer Joe',
+        },
+        {
+          username: 'Gerhard Peters Blatz',
+        },
+        {
+          username: 'Tarahamal ',
+        },
+        {
+          username: 'Takoua',
+        },
+        {
+          username: 'Wahid rafaat',
+        },
+        {
+          username: 'test_user_02',
+        },
+        {
+          username: 'Endless ',
+        },
+        {
+          username: 'Wahidrafaat',
+        },
+        {
+          username: 'Nashimwe',
+        },
+        {
+          username: 'Rabbit Run',
+        },
+        {
+          username: 'Gilbert ',
+        },
+        {
+          username: 'Andawari doutimi ',
+        },
+        {
+          username: 'test_user_12',
+        },
+        {
+          username: 'I love farms 23',
+        },
+        {
+          username: 'Itz obyno ',
+        },
+        {
+          username: 'demo',
+        },
+        {
+          username: 'adel',
+        },
+        {
+          username: 'DIINA NDINELAO ',
+        },
+        {
+          username: 'Nelson',
+        },
+        {
+          username: 'elparque',
+        },
+        {
+          username: 'jsilv0784@gmail.com',
+        },
+        {
+          username: 'testuser',
+        },
+        {
+          username: 'jmw132001',
+        },
+        {
+          username: 'Asha',
+        },
+        {
+          username: 'Rodrigo Barraza ',
+        },
+        {
+          username: 'Hyginus@',
+        },
+        {
+          username: 'isyo',
+        },
+        {
+          username: 'Clobis Ponce',
+        },
+      ],
+      is_lagging: true,
+      is_battery_low: false,
+      details: {
+        battery: 89,
+        location: {
+          alt: 145.223,
+          lat: -41.0830084,
+          lng: -70.2105914,
+        },
+        timezone: 'America/Santiago',
+        use_push_api: false,
+        download_in_progress: false,
+        sensors_without_data: 100,
+        no_sensors_without_data: 7,
+      },
+      plot: null,
+      crop: 'POTATO',
+    },
+    farm: {
+      id: 345,
+      name: 'Farm 1',
+    },
+    location_name: '',
+    lng: null,
+    lat: null,
+    use_custom_location: false,
+    avg_paw: 74.0,
+    marker_map: 4934,
+  },
+  {
+    id: 1898,
+    paw_graphs: [
+      {
+        id: '5d889f5e-ba28-432f-857b-206f7558e28f',
+        label: '1 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 75.3],
+      },
+      {
+        id: '41580187-1a28-4dda-9b31-d23928a7b19b',
+        label: '2 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 74.0],
+      },
+    ],
+    graphs: [],
+    device: {
+      name: 'PLOT 1',
+      api: 'Zentra',
+      serial: 'z6-07441',
+      last_transmission: '2024-03-05T15:00:00-03:00',
+      users: [
+        {
+          username: 'pieterpaulmichau@gmail.com',
+        },
+        {
+          username: 'Benn',
+        },
+        {
+          username: 'Kikko',
+        },
+        {
+          username: 'demometerusa',
+        },
+        {
+          username: 'fperez@agricolasutil.cl',
+        },
+        {
+          username: 'Juan',
+        },
+        {
+          username: 'ashish',
+        },
+        {
+          username: 'SLG',
+        },
+        {
+          username: 'Pagranifo',
+        },
+        {
+          username: 'Gom nam',
+        },
+        {
+          username: 'Sanosvaldo ',
+        },
+        {
+          username: 'Ana',
+        },
+        {
+          username: 'Bae 💝💖',
+        },
+        {
+          username: 'Oktafz',
+        },
+        {
+          username: 'juan1789',
+        },
+        {
+          username: 'AVENTURA',
+        },
+        {
+          username: 'farmer Joe',
+        },
+        {
+          username: 'Gerhard Peters Blatz',
+        },
+        {
+          username: 'Tarahamal ',
+        },
+        {
+          username: 'Takoua',
+        },
+        {
+          username: 'Wahid rafaat',
+        },
+        {
+          username: 'test_user_02',
+        },
+        {
+          username: 'Endless ',
+        },
+        {
+          username: 'Wahidrafaat',
+        },
+        {
+          username: 'Nashimwe',
+        },
+        {
+          username: 'Rabbit Run',
+        },
+        {
+          username: 'Gilbert ',
+        },
+        {
+          username: 'Andawari doutimi ',
+        },
+        {
+          username: 'test_user_12',
+        },
+        {
+          username: 'I love farms 23',
+        },
+        {
+          username: 'Itz obyno ',
+        },
+        {
+          username: 'demo',
+        },
+        {
+          username: 'adel',
+        },
+        {
+          username: 'DIINA NDINELAO ',
+        },
+        {
+          username: 'Nelson',
+        },
+        {
+          username: 'elparque',
+        },
+        {
+          username: 'jsilv0784@gmail.com',
+        },
+        {
+          username: 'testuser',
+        },
+        {
+          username: 'jmw132001',
+        },
+        {
+          username: 'Asha',
+        },
+        {
+          username: 'Rodrigo Barraza ',
+        },
+        {
+          username: 'Hyginus@',
+        },
+        {
+          username: 'isyo',
+        },
+        {
+          username: 'Clobis Ponce',
+        },
+      ],
+      is_lagging: true,
+      is_battery_low: false,
+      details: {
+        battery: 89,
+        location: {
+          alt: 145.223,
+          lat: -41.0850084,
+          lng: -73.3005914,
+        },
+        timezone: 'America/Santiago',
+        use_push_api: false,
+        download_in_progress: false,
+        sensors_without_data: 100,
+        no_sensors_without_data: 7,
+      },
+      plot: null,
+      crop: 'POTATO',
+    },
+    farm: {
+      id: 345,
+      name: 'Farm 1',
+    },
+    location_name: '',
+    lng: null,
+    lat: null,
+    use_custom_location: false,
+    avg_paw: 74.0,
+    marker_map: 4934,
+  },
+  {
+    id: 1897,
+    paw_graphs: [
+      {
+        id: '5d889f5e-ba28-432f-857b-206f7558e28f',
+        label: '1 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 75.3],
+      },
+      {
+        id: '41580187-1a28-4dda-9b31-d23928a7b19b',
+        label: '2 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 74.0],
+      },
+    ],
+    graphs: [],
+    device: {
+      name: 'PLOT 1',
+      api: 'Zentra',
+      serial: 'z6-07441',
+      last_transmission: '2024-03-05T15:00:00-03:00',
+      users: [
+        {
+          username: 'pieterpaulmichau@gmail.com',
+        },
+        {
+          username: 'Benn',
+        },
+        {
+          username: 'Kikko',
+        },
+        {
+          username: 'demometerusa',
+        },
+        {
+          username: 'fperez@agricolasutil.cl',
+        },
+        {
+          username: 'Juan',
+        },
+        {
+          username: 'ashish',
+        },
+        {
+          username: 'SLG',
+        },
+        {
+          username: 'Pagranifo',
+        },
+        {
+          username: 'Gom nam',
+        },
+        {
+          username: 'Sanosvaldo ',
+        },
+        {
+          username: 'Ana',
+        },
+        {
+          username: 'Bae 💝💖',
+        },
+        {
+          username: 'Oktafz',
+        },
+        {
+          username: 'juan1789',
+        },
+        {
+          username: 'AVENTURA',
+        },
+        {
+          username: 'farmer Joe',
+        },
+        {
+          username: 'Gerhard Peters Blatz',
+        },
+        {
+          username: 'Tarahamal ',
+        },
+        {
+          username: 'Takoua',
+        },
+        {
+          username: 'Wahid rafaat',
+        },
+        {
+          username: 'test_user_02',
+        },
+        {
+          username: 'Endless ',
+        },
+        {
+          username: 'Wahidrafaat',
+        },
+        {
+          username: 'Nashimwe',
+        },
+        {
+          username: 'Rabbit Run',
+        },
+        {
+          username: 'Gilbert ',
+        },
+        {
+          username: 'Andawari doutimi ',
+        },
+        {
+          username: 'test_user_12',
+        },
+        {
+          username: 'I love farms 23',
+        },
+        {
+          username: 'Itz obyno ',
+        },
+        {
+          username: 'demo',
+        },
+        {
+          username: 'adel',
+        },
+        {
+          username: 'DIINA NDINELAO ',
+        },
+        {
+          username: 'Nelson',
+        },
+        {
+          username: 'elparque',
+        },
+        {
+          username: 'jsilv0784@gmail.com',
+        },
+        {
+          username: 'testuser',
+        },
+        {
+          username: 'jmw132001',
+        },
+        {
+          username: 'Asha',
+        },
+        {
+          username: 'Rodrigo Barraza ',
+        },
+        {
+          username: 'Hyginus@',
+        },
+        {
+          username: 'isyo',
+        },
+        {
+          username: 'Clobis Ponce',
+        },
+      ],
+      is_lagging: true,
+      is_battery_low: false,
+      details: {
+        battery: 89,
+        location: {
+          alt: 145.223,
+          lat: -41.0850084,
+          lng: -73.3205914,
+        },
+        timezone: 'America/Santiago',
+        use_push_api: false,
+        download_in_progress: false,
+        sensors_without_data: 100,
+        no_sensors_without_data: 7,
+      },
+      plot: null,
+      crop: 'POTATO',
+    },
+    farm: {
+      id: 345,
+      name: 'Farm 1',
+    },
+    location_name: '',
+    lng: null,
+    lat: null,
+    use_custom_location: false,
+    avg_paw: 74.0,
+    marker_map: 4934,
+  },
+  {
+    id: 1896,
+    paw_graphs: [
+      {
+        id: '5d889f5e-ba28-432f-857b-206f7558e28f',
+        label: '1 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 75.3],
+      },
+      {
+        id: '41580187-1a28-4dda-9b31-d23928a7b19b',
+        label: '2 foot WC',
+        chart: {
+          id: '43803e73-2f15-4b34-a707-61b0a57bbb94',
+          name: 'PLOT 1 POTATO PLANT AVAILABLE WATER',
+          user: {
+            username: 'demo',
+          },
+        },
+        last_value: [1709564400000.0, 74.0],
+      },
+    ],
+    graphs: [],
+    device: {
+      name: 'PLOT 1',
+      api: 'Zentra',
+      serial: 'z6-07441',
+      last_transmission: '2024-03-05T15:00:00-03:00',
+      users: [
+        {
+          username: 'pieterpaulmichau@gmail.com',
+        },
+        {
+          username: 'Benn',
+        },
+        {
+          username: 'Kikko',
+        },
+        {
+          username: 'demometerusa',
+        },
+        {
+          username: 'fperez@agricolasutil.cl',
+        },
+        {
+          username: 'Juan',
+        },
+        {
+          username: 'ashish',
+        },
+        {
+          username: 'SLG',
+        },
+        {
+          username: 'Pagranifo',
+        },
+        {
+          username: 'Gom nam',
+        },
+        {
+          username: 'Sanosvaldo ',
+        },
+        {
+          username: 'Ana',
+        },
+        {
+          username: 'Bae 💝💖',
+        },
+        {
+          username: 'Oktafz',
+        },
+        {
+          username: 'juan1789',
+        },
+        {
+          username: 'AVENTURA',
+        },
+        {
+          username: 'farmer Joe',
+        },
+        {
+          username: 'Gerhard Peters Blatz',
+        },
+        {
+          username: 'Tarahamal ',
+        },
+        {
+          username: 'Takoua',
+        },
+        {
+          username: 'Wahid rafaat',
+        },
+        {
+          username: 'test_user_02',
+        },
+        {
+          username: 'Endless ',
+        },
+        {
+          username: 'Wahidrafaat',
+        },
+        {
+          username: 'Nashimwe',
+        },
+        {
+          username: 'Rabbit Run',
+        },
+        {
+          username: 'Gilbert ',
+        },
+        {
+          username: 'Andawari doutimi ',
+        },
+        {
+          username: 'test_user_12',
+        },
+        {
+          username: 'I love farms 23',
+        },
+        {
+          username: 'Itz obyno ',
+        },
+        {
+          username: 'demo',
+        },
+        {
+          username: 'adel',
+        },
+        {
+          username: 'DIINA NDINELAO ',
+        },
+        {
+          username: 'Nelson',
+        },
+        {
+          username: 'elparque',
+        },
+        {
+          username: 'jsilv0784@gmail.com',
+        },
+        {
+          username: 'testuser',
+        },
+        {
+          username: 'jmw132001',
+        },
+        {
+          username: 'Asha',
+        },
+        {
+          username: 'Rodrigo Barraza ',
+        },
+        {
+          username: 'Hyginus@',
+        },
+        {
+          username: 'isyo',
+        },
+        {
+          username: 'Clobis Ponce',
+        },
+      ],
+      is_lagging: true,
+      is_battery_low: false,
+      details: {
+        battery: 89,
+        location: {
+          alt: 145.223,
+          lat: -40.0820084,
+          lng: -72.3005914,
         },
         timezone: 'America/Santiago',
         use_push_api: false,

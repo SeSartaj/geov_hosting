@@ -4,9 +4,7 @@ import './styles.css';
 import { useContext } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 
-export default function Tooltip({ children, text, ...props }) {
-  const { mapRef } = useContext(MapContext);
-
+export default function Tooltip({ children, text, portalContainer, ...props }) {
   return (
     <TooltipPrimitive.Provider delayDuration={200}>
       <TooltipPrimitive.Root>
@@ -14,11 +12,7 @@ export default function Tooltip({ children, text, ...props }) {
           <span>{children}</span>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal
-          container={
-            mapRef?.current
-              ? mapRef?.current?.getMap().getContainer()
-              : document.body
-          }
+          container={portalContainer ? portalContainer : document.body}
         >
           <TooltipPrimitive.Content
             className='TooltipContent'
@@ -42,4 +36,5 @@ export default function Tooltip({ children, text, ...props }) {
 Tooltip.propTypes = {
   children: PropTypes.node.isRequired,
   text: PropTypes.string.isRequired,
+  portalContainer: PropTypes.element,
 };
