@@ -53,7 +53,7 @@ function StationPopupContent({ marker }) {
             { label: 'Crop', value: marker.crop },
           ]}
         />
-        <span className='lvi-label'>paw history: </span>
+        <span className='lvi-label'>PAW history: </span>
         <HumidityChart marker={marker} />
       </div>
     </div>

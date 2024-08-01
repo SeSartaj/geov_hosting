@@ -16,7 +16,7 @@ import { HiOutlineMapPin } from 'react-icons/hi2';
 import MarkerPanel from '../../MarkerPanel';
 
 const Navigation = () => (
-  <Tabs.Root className='TabsRoot' defaultValue='tab4'>
+  <Tabs.Root className='TabsRoot' defaultValue='tab1'>
     <Tabs.List className='TabsList' aria-label='Manage your account'>
       {/* <Tabs.Trigger className='TabsTrigger' value='tab1'>
         <Tooltip text='layers'>
