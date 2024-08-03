@@ -36,9 +36,8 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [x] switch between map and satellite map
 - [x] full screen mode
 - [] map settings
-- [] add new station marker
-- [] add forcast marker
-- [] add a pie chart on map that shows percentage of each paw status.
+- [] add new marker
+- [x] add a pie chart on map that shows percentage of each paw status.
 
 ## Observations
 

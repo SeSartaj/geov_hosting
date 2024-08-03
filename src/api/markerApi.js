@@ -1148,8 +1148,8 @@ const DUMMY_RESPONSE = [
       crop: 'POTATO',
     },
     farm: {
-      id: 345,
-      name: 'Farm 1',
+      id: 346,
+      name: 'Farm 2',
     },
     location_name: '',
     lng: null,
@@ -1345,14 +1345,14 @@ const DUMMY_RESPONSE = [
       crop: 'POTATO',
     },
     farm: {
-      id: 345,
-      name: 'Farm 1',
+      id: 346,
+      name: 'Farm 2',
     },
     location_name: '',
     lng: null,
     lat: null,
     use_custom_location: false,
-    avg_paw: 74.0,
+    avg_paw: 29.0,
     marker_map: 4934,
   },
   {
