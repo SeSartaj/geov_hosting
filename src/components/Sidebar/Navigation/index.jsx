@@ -15,7 +15,7 @@ import SourcesPanel from '../../SourcesPanel';
 import { HiOutlineMapPin } from 'react-icons/hi2';
 import MarkerPanel from '../../MarkerPanel';
 import { FaRegMap } from 'react-icons/fa';
-import FarmPanel from '../../FarmPanel';
+import PlotPanel from '../../PlotPanel';
 import { useContext } from 'react';
 import { MapContext } from 'react-map-gl/dist/esm/components/map';
 
@@ -33,20 +33,20 @@ const Navigation = () => {
             <HiOutlineMapPin className='action-icon' />
           </Tooltip>
         </Tabs.Trigger>
-        <Tabs.Trigger className='TabsTrigger' value='farmPanel'>
+        <Tabs.Trigger className='TabsTrigger' value='plotPanel'>
           <Tooltip
-            text='Farms'
+            text='Plots'
             portalContainer={mapRef?.current?.getMap()?.getContainer()}
           >
             <FaRegMap className='action-icon' />
           </Tooltip>
         </Tabs.Trigger>
 
-        {/* <Tabs.Trigger className='TabsTrigger' value='tab2'>
-        <Tooltip text='filters'>
-          <BiFilter className='action-icon' />
-        </Tooltip>
-      </Tabs.Trigger> */}
+        <Tabs.Trigger className='TabsTrigger' value='layers'>
+          <Tooltip text='layers'>
+            <BiLayer className='action-icon' />
+          </Tooltip>
+        </Tabs.Trigger>
         <Tabs.Trigger className='TabsTrigger' value='tab3'>
           <Tooltip
             text='base map'
@@ -76,8 +76,11 @@ const Navigation = () => {
       <Tabs.Content className='TabsContent' value='tab4'>
         <SourcesPanel />
       </Tabs.Content>
-      <Tabs.Content className='TabsContent' value='farmPanel'>
-        <FarmPanel />
+      <Tabs.Content className='TabsContent' value='plotPanel'>
+        <PlotPanel />
+      </Tabs.Content>
+      <Tabs.Content className='TabsContent' value='layers'>
+        <LayerPanel />
       </Tabs.Content>
     </Tabs.Root>
   );

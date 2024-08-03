@@ -1,0 +1,6 @@
+.draw-actions {
+  position: absolute;
+  top: 0;
+  right: 80px;
+  z-index: 2;
+}

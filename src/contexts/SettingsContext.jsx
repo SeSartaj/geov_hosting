@@ -9,8 +9,8 @@ const SettingsProvider = ({ children }) => {
     basemap: {
       id: 'basic',
       zoom: 6,
-      longitude: -73.138,
-      latitude: -40.799,
+      longitude: 69.2084,
+      latitude: 34.5553,
     },
   });
 

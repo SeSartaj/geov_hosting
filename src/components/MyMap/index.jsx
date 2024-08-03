@@ -10,6 +10,8 @@ import Markers from '../Markers';
 import MarkerPopup from '../MarkerPopup';
 import { SettingsContext } from '../../contexts/SettingsContext';
 import PAWStatusPieChart from '../PAWStatusPieChart';
+import Plots from '../Plots';
+import { DrawPolygonControl } from '../DrawPolygonControl';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -37,6 +39,8 @@ export default function MyMap() {
       <PAWStatusPieChart />
       <Markers />
       <MarkerPopup />
+      <Plots />
+      <DrawPolygonControl />
     </Map>
   );
 }
