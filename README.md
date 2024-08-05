@@ -39,9 +39,8 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [] add new marker
 - [x] add a pie chart on map that shows percentage of each paw status.
 - [x] display plots on the map
-- [ ] draw a polygon on the map and show add plot to it.
+- [x] draw a polygon on the map and show add plot to it.
 - [ ] when a plot is clicked show popup displaying time series data of that plot
-- [ ]
 
 ## Observations
 

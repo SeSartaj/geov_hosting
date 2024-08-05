@@ -1,31 +1,20 @@
 import React, { useContext, useState } from 'react';
 import MyButton from '../../ui-components/MyButton';
 import { PlotContext } from '../../contexts/PlotContext';
+import { Popup } from 'react-map-gl/maplibre';
+import AddPlotModal from '../AddPlotModal';
 
 export default function PolygonDrawActionsPopup({ polygon }) {
-  const { plots, addNewPlot } = useContext(PlotContext);
-  const [plotName, setPlotName] = useState('');
+  if (!polygon) return null;
 
-  const handleAddPlot = () => {
-    let mpolygon = polygon.features[0];
-    mpolygon = {
-      ...mpolygon,
-      properties: {
-        name: plotName,
-      },
-    };
-
-    addNewPlot(mpolygon);
-  };
   return (
-    <div className='draw-actions'>
-      <input
-        name='plotname'
-        placeholder='plot name'
-        value={plotName}
-        onChange={(e) => setPlotName(e.target.value)}
-      />
-      <MyButton onClick={handleAddPlot}>add plot</MyButton>
-    </div>
+    <Popup
+      latitude={polygon.geometry.coordinates[0][0][1]}
+      longitude={polygon.geometry.coordinates[0][0][0]}
+      closeOnClick={false}
+      anchor='top'
+    >
+      <AddPlotModal polygon={polygon} />
+    </Popup>
   );
 }

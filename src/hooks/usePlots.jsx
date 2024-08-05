@@ -5,6 +5,7 @@ const EMPTY_FILTERS = {};
 
 const DUMMY_PLOTS = [
   {
+    id: 'lmvkmsdmweioldmfsk',
     type: 'Feature',
     geometry: {
       type: 'Polygon',
@@ -24,6 +25,7 @@ const DUMMY_PLOTS = [
     },
   },
   {
+    id: 'idskkaldmlvksdkds',
     type: 'Feature',
     geometry: {
       type: 'Polygon',
@@ -43,6 +45,7 @@ const DUMMY_PLOTS = [
     },
   },
   {
+    id: 'kdkjsksksdladfd',
     type: 'Feature',
     geometry: {
       type: 'Polygon',
@@ -59,6 +62,27 @@ const DUMMY_PLOTS = [
     properties: {
       name: 'Plot 3',
       farm: 'Farm 1',
+    },
+  },
+  {
+    id: '195998dfd94a7cf8c98320177b9266ab',
+    type: 'Feature',
+    properties: {
+      name: 'plot 1 3',
+      description: 'ksdkf',
+    },
+    geometry: {
+      coordinates: [
+        [
+          [-72.30484165371566, -40.08026576811746],
+          [-72.29506559590199, -40.07979240065652],
+          [-72.2926107806077, -40.083089622627874],
+          [-72.30806030453363, -40.085650691709894],
+          [-72.30788864315659, -40.07800003272502],
+          [-72.30484165371566, -40.08026576811746],
+        ],
+      ],
+      type: 'Polygon',
     },
   },
 ];
@@ -81,6 +105,20 @@ export const usePlots = () => {
     setPlots((prev) => [...prev, newPlot]);
   };
 
+  const updatePlot = (updatedPlot) => {
+    console.log('updating plot', updatedPlot);
+    setPlots((prev) => {
+      const index = prev.findIndex((plot) => plot.id === updatedPlot.id);
+      if (index === -1) {
+        return prev;
+      }
+
+      const newPlots = [...prev];
+      newPlots[index] = updatedPlot;
+      return newPlots;
+    });
+  };
+
   useEffect(() => {
     setPlots(filterPlots(unfilteredPlots));
   }, [plotFilters]);
@@ -100,6 +138,7 @@ export const usePlots = () => {
     loading,
     plotFilters,
     addNewPlot,
+    updatePlot,
     setPlotFilters,
     resetFilters,
   };

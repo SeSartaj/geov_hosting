@@ -92,7 +92,8 @@ function Layer({
           </Tooltip>
         </span>
         <label onClick={toggleLayerVisibility}>
-          {layer?.layout?.visibility === 'visible' ? (
+          {!layer?.layout?.visibility ||
+          layer?.layout?.visibility === 'visible' ? (
             <Tooltip text='Hide Layer'>
               <BiShow className='action-icon' data-layer-id={layer.id} />
             </Tooltip>

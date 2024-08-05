@@ -1,7 +1,8 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
+import './mapbox-draw-style.css';
 
 import Map from 'react-map-gl/maplibre';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { FullscreenControl } from 'react-map-gl/maplibre';
 
 import { MapContext } from '../../contexts/MapContext';
@@ -11,13 +12,13 @@ import MarkerPopup from '../MarkerPopup';
 import { SettingsContext } from '../../contexts/SettingsContext';
 import PAWStatusPieChart from '../PAWStatusPieChart';
 import Plots from '../Plots';
+import { useMapboxDraw } from '../../hooks/useMapboxDraw';
+import AddNewPlotUI from '../AddNewPlotUI/AddNewPlotUI';
 import { DrawPolygonControl } from '../DrawPolygonControl';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
   const { settings } = useContext(SettingsContext);
-
-  console.log(mapStyle);
 
   return (
     <Map
@@ -40,6 +41,7 @@ export default function MyMap() {
       <Markers />
       <MarkerPopup />
       <Plots />
+      <AddNewPlotUI />
       <DrawPolygonControl />
     </Map>
   );

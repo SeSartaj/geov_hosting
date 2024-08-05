@@ -79,7 +79,7 @@ export default function Markers() {
               latitude={latitude}
               onClick={() => {
                 const expansionZoom = Math.min(
-                  mapRef.current.getMap().getZoom() + 2,
+                  mapRef.current.getMap().getZoom() + 3,
                   16
                 );
                 mapRef.current.getMap().easeTo({
@@ -95,14 +95,6 @@ export default function Markers() {
         }
 
         return (
-          // <Marker
-          //   className='map-marker'
-          //   key={cluster.properties.marker.id}
-          //   longitude={longitude}
-          //   latitude={latitude}
-          //   color={cluster.properties.marker.color}
-          //   onClick={(e) => handleMarkerClick(e, cluster.properties.marker)}
-          // />
           <MyMarker
             key={cluster.properties.marker.id}
             longitude={longitude}

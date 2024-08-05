@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   ResponsiveContainer,
   LineChart,
@@ -8,6 +9,8 @@ import {
   Tooltip,
   ReferenceArea,
 } from 'recharts';
+import { getPawData } from '../../api/markerApi';
+import { BiLoader } from 'react-icons/bi';
 
 const SAMPLE_DATA = [
   [1721728800000, 84.7],
@@ -189,7 +192,29 @@ const transformData = (data) => {
 
 const transformedData = transformData(SAMPLE_DATA);
 
-const HumidityChart = ({ data }) => {
+const HumidityChart = ({ marker }) => {
+  const [pawData, setPawData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchdata = async () => {
+      setLoading(true);
+      try {
+        // this is temporary for testing, user marker.id instead
+        const data = await getPawData(8386);
+        setPawData(transformData(data));
+      } catch (error) {
+        console.log('error fetching paw data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchdata();
+  }, []);
+
+  if (loading) return <BiLoader />;
+
   return (
     <ResponsiveContainer width='100%' height={100}>
       <LineChart

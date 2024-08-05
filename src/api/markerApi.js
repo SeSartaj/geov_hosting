@@ -1,6 +1,6 @@
 import { fetchWrapper } from '../utils/fetchWrapper';
 
-const API_URL = 'http://agviewer.com/api/dashboard/';
+const API_URL = 'https://agviewer.com/api/dashboard/';
 
 const DUMMY_RESPONSE = [
   {

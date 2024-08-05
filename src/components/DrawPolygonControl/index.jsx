@@ -1,70 +1,81 @@
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import MapboxDraw, { constants } from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import { MapContext } from '../../contexts/MapContext';
 import './mapbox-draw-style.css';
 import './styles.css';
-import MyButton from '../../ui-components/MyButton';
 import PolygonDrawActionsPopup from '../PolygonDrawActionsPopup';
+import { useControl, useMap } from 'react-map-gl';
+import { MapContext } from '../../contexts/MapContext';
 
 export function DrawPolygonControl() {
-  const { mapRef } = useContext(MapContext);
-  const map = mapRef.current?.getMap();
-  const [polygonCreated, setPolygonCreated] = useState(false);
+  const [features, setFeatures] = useState({});
+  const { drawRef } = useContext(MapContext);
+  // Set the custom classes for MapLibre
+  constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
+  constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
+  constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
 
-  useEffect(() => {
-    if (!map) return;
-
-    // Set the custom classes for MapLibre
-    constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
-    constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
-    constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
-
-    // Initialize MapboxDraw
-    const draw = new MapboxDraw({
-      displayControlsDefault: false,
-      controls: {
-        point: true,
-        polygon: true,
-        trash: true,
-      },
-      defaultMode: 'draw_polygon',
+  const onCreate = useCallback((e) => {
+    setFeatures((currFeatures) => {
+      const newFeatures = { ...currFeatures };
+      for (const f of e.features) {
+        newFeatures[f.id] = f;
+      }
+      return newFeatures;
     });
+  }, []);
 
-    // Add the draw control to the map
-    map.addControl(draw);
+  const onUpdate = onCreate;
 
-    // Event listener for when a polygon is created
-    map.on('draw.create', (event) => {
-      console.log('polygon created', event);
-
-      // Store the centroid of the polygon to display the popup
-      setPolygonCreated(event);
+  const onDelete = useCallback((e) => {
+    setFeatures((currFeatures) => {
+      const newFeatures = { ...currFeatures };
+      for (const f of e.features) {
+        delete newFeatures[f.id];
+      }
+      return newFeatures;
     });
+  }, []);
 
-    // Event listener for when a polygon is updated
-    map.on('draw.update', (event) => {
-      const polygon = event.features[0];
-      console.log('Polygon updated:', polygon);
-    });
+  useControl(
+    () => {
+      const draw = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+          point: true,
+          polygon: true,
+          trash: true,
+        },
+        // defaultMode: 'draw_polygon',
+      });
 
-    // Event listener for when a polygon is deleted
-    map.on('draw.delete', (event) => {
-      console.log('Polygon(s) deleted:', event.features);
-    });
+      drawRef.current = draw;
+      return draw;
+    },
+    ({ map }) => {
+      map.on('draw.create', onCreate);
+      map.on('draw.update', onUpdate);
+      map.on('draw.delete', onDelete);
+    },
+    ({ map }) => {
+      map.off('draw.create', onCreate);
+      map.off('draw.update', onUpdate);
+      map.off('draw.delete', onDelete);
+    },
+    {
+      position: 'top-right',
+    }
+  );
 
-    // Cleanup when component unmounts
-    return () => {
-      map.removeControl(draw);
-    };
-  }, [map]);
-
-  if (polygonCreated) {
-    console.log('p', polygonCreated);
+  if (features) {
     return (
-      <>
-        {polygonCreated && <PolygonDrawActionsPopup polygon={polygonCreated} />}
-      </>
+      <div>
+        {Object.values(features).map((feature) => (
+          <PolygonDrawActionsPopup key={feature.id} polygon={feature} />
+        ))}
+      </div>
     );
   }
+
+  return null;
 }

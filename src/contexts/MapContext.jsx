@@ -19,10 +19,11 @@ const MapProvider = ({ children }) => {
 
   const [sources, setSources] = useState({});
   const mapRef = useRef(null);
+  const drawRef = useRef(null);
 
   return (
     <MapContext.Provider
-      value={{ mapStyle, setMapStyle, mapRef, sources, setSources }}
+      value={{ mapStyle, setMapStyle, mapRef, drawRef, sources, setSources }}
     >
       {children}
     </MapContext.Provider>
