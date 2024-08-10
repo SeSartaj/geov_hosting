@@ -42,6 +42,12 @@ function transformForecastMarker(marker) {
     location: marker.use_custom_location
       ? { lng: marker.lng, lat: marker.lat }
       : marker.device.details.location,
+    latitude: marker.use_custom_location
+      ? marker.lat
+      : marker.device.details.location.lat,
+    longitude: marker.use_custom_location
+      ? marker.lng
+      : marker.device.details.location.lng,
     battery: {
       percentage: marker.device.details.battery,
       is_low: marker.device.is_battery_low,
