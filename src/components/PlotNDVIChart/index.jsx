@@ -1,14 +1,6 @@
 import { useEffect, useState } from 'react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ReferenceArea,
-} from 'recharts';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import { BiLoader } from 'react-icons/bi';
 
 const SAMPLE_NDVI_DATA = [
@@ -30,8 +22,81 @@ const transformNdviData = (data) => {
 const transformedNdviData = transformNdviData(SAMPLE_NDVI_DATA);
 
 const NdviChart = ({ plot }) => {
-  const [ndviData, setNdviData] = useState([]);
+  const [ndviData, setNdviData] = useState(transformedNdviData);
   const [loading, setLoading] = useState(false);
+
+  const options = {
+    chart: {
+      type: 'line',
+      height: 100,
+    },
+    title: {
+      text: null, // No title
+    },
+    xAxis: {
+      categories: ndviData.map((d) => new Date(d.time).toLocaleDateString()),
+      tickLength: 0, // Hide ticks
+      labels: {
+        enabled: false, // Hide labels
+      },
+    },
+    yAxis: {
+      min: -1,
+      max: 1,
+      title: {
+        text: null, // No title
+      },
+      gridLineWidth: 0, // Remove horizontal grid lines
+      lineWidth: 0, // Remove the axis line itself
+      plotBands: [
+        {
+          from: -1,
+          to: 0,
+          color: 'rgba(0, 0, 255, 0.3)', // Blue
+        },
+        {
+          from: 0,
+          to: 0.2,
+          color: 'rgba(165, 42, 42, 0.3)', // Brown
+        },
+        {
+          from: 0.2,
+          to: 0.5,
+          color: 'rgba(144, 238, 144, 0.3)', // Light green
+        },
+        {
+          from: 0.5,
+          to: 1,
+          color: 'rgba(0, 128, 0, 0.3)', // Green
+        },
+      ],
+      labels: {
+        enabled: false,
+      },
+    },
+    tooltip: {
+      formatter: function () {
+        return `Date: ${this.x}<br>NDVI: ${this.y}`;
+      },
+    },
+    series: [
+      {
+        name: 'NDVI',
+        data: ndviData.map((d) => d.ndvi),
+        color: '#333',
+        lineWidth: 1,
+        marker: {
+          enabled: false, // Hide dots
+        },
+      },
+    ],
+    credits: {
+      enabled: false, // Disable the Highcharts watermark
+    },
+    legend: {
+      enabled: false, // Disable the legend
+    },
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,30 +117,7 @@ const NdviChart = ({ plot }) => {
 
   if (loading) return <BiLoader />;
 
-  return (
-    <ResponsiveContainer width='100%' height={100}>
-      <LineChart
-        data={ndviData.length ? ndviData : transformedNdviData} // Use fetched data if available, else use sample data
-        margin={{ top: 0, right: 10, left: -30, bottom: 0 }}
-      >
-        <CartesianGrid strokeDasharray='3 3' />
-        <ReferenceArea y1={-1} y2={0} fill='blue' fillOpacity={0.3} />
-        <ReferenceArea y1={0} y2={0.2} fill='brown' fillOpacity={0.3} />
-        <ReferenceArea y1={0.2} y2={0.5} fill='lightgreen' fillOpacity={0.3} />
-        <ReferenceArea y1={0.5} y2={1} fill='green' fillOpacity={0.3} />
-        <XAxis
-          tick={false}
-          dataKey='time'
-          tickFormatter={(time) => new Date(time).toLocaleDateString()}
-        />
-        <YAxis tick={{ fontSize: 9 }} domain={[-1, 1]} />
-        <Tooltip
-          labelFormatter={(time) => new Date(time).toLocaleDateString()}
-        />
-        <Line type='monotone' dataKey='ndvi' stroke='#333' dot={false} />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+  return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
 
 export default NdviChart;

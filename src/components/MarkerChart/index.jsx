@@ -1,3 +1,5 @@
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useState } from 'react';
 import {
   ResponsiveContainer,
@@ -196,6 +198,82 @@ const HumidityChart = ({ marker }) => {
   const [pawData, setPawData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const hichartOptions = {
+    chart: {
+      type: 'line',
+      height: 100,
+    },
+    title: {
+      text: null, // No title
+    },
+    xAxis: {
+      categories: transformedData.map((d) =>
+        new Date(d.time).toLocaleDateString()
+      ),
+      tickLength: 0, // Hide ticks
+      labels: {
+        enabled: false, // Hide labels
+      },
+    },
+    yAxis: {
+      min: 0,
+      max: 150,
+      title: {
+        text: null, // No title
+      },
+      labels: {
+        enabled: false, // Hide labels
+      },
+      gridLineWidth: 0, // Remove horizontal grid lines
+      lineWidth: 0, // Remove the axis line itself
+
+      plotBands: [
+        {
+          from: 0,
+          to: 30,
+          color: 'rgba(255, 0, 0, 0.3)', // Red
+        },
+        {
+          from: 30,
+          to: 70,
+          color: 'rgba(255, 255, 0, 0.3)', // Yellow
+        },
+        {
+          from: 70,
+          to: 100,
+          color: 'rgba(0, 128, 0, 0.3)', // Green
+        },
+        {
+          from: 100,
+          to: 150,
+          color: 'rgba(0, 0, 255, 0.3)', // Blue
+        },
+      ],
+    },
+    tooltip: {
+      formatter: function () {
+        return `Date: ${this.x}<br>Humidity: ${this.y}`;
+      },
+    },
+    series: [
+      {
+        name: 'Humidity',
+        data: transformedData.map((d) => d.humidity),
+        color: '#333',
+        lineWidth: 1,
+        marker: {
+          enabled: false, // Hide dots
+        },
+      },
+    ],
+    credits: {
+      enabled: false, // Disable the Highcharts watermark
+    },
+    legend: {
+      enabled: false, // Disable the legend
+    },
+  };
+
   useEffect(() => {
     const fetchdata = async () => {
       setLoading(true);
@@ -215,36 +293,7 @@ const HumidityChart = ({ marker }) => {
 
   if (loading) return <BiLoader />;
 
-  return (
-    <ResponsiveContainer width='100%' height={100}>
-      <LineChart
-        data={transformedData}
-        margin={{ top: 0, right: 10, left: -30, bottom: 0 }}
-      >
-        <CartesianGrid strokeDasharray='3 3' />
-        <ReferenceArea y1={0} y2={30} fill='red' fillOpacity={0.3} />
-        <ReferenceArea y1={30} y2={70} fill='yellow' fillOpacity={0.3} />
-        <ReferenceArea y1={70} y2={100} fill='green' fillOpacity={0.3} />
-        <ReferenceArea y1={100} y2={150} fill='blue' fillOpacity={0.3} />
-        <XAxis
-          tick={false}
-          dataKey='time'
-          tickFormatter={(time) => new Date(time).toLocaleDateString()}
-        />
-        <YAxis tick={{ fontSize: 9 }} domain={[0, 150]} />
-        <Tooltip
-          labelFormatter={(time) => new Date(time).toLocaleDateString()}
-        />
-        <Line
-          type='monotone'
-          dataKey='humidity'
-          stroke='#333'
-          // strokeWidth={2}
-          dot={false}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  );
+  return <HighchartsReact highcharts={Highcharts} options={hichartOptions} />;
 };
 
 export default HumidityChart;
