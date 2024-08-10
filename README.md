@@ -35,12 +35,18 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [x] filter markers based on farm and state
 - [x] switch between map and satellite map
 - [x] full screen mode
-- [] map settings
-- [] add new marker
 - [x] add a pie chart on map that shows percentage of each paw status.
 - [x] display plots on the map
 - [x] draw a polygon on the map and show add plot to it.
-- [ ] when a plot is clicked show popup displaying time series data of that plot
+- [] map settings
+- [] add new marker
+- [x] when a plot is clicked show popup displaying time series data of that plot
+- [] use highcharts and get configs from mr. zakir
+- [] ESA Sen-ET (explore it) manual
+- [] Preline U
+- [] collapsable sidebar
+- [] translation translation file (i18n library) (ask zakir)
+- [] for design use kendo-react-ui with tailwindcss
 
 ## Observations
 
@@ -53,4 +59,10 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - only port 3000 is allowed on the backend.
 - what is the difference between forecast marker and station marker?
 - If a marker is associated with a device, it represents a station marker. Otherwise, it is a forecast marker, and data for forecast marker is fetched from a third-party service.
+-
+
+## Issues
+
+- [] when draw is started a popup shows up, however if clicked anywhere else, the popup disapears and doesn't show up again
+- [] when a plot is added, the modal doesn't close up and the popup also doesn't close up.
 -

@@ -22,6 +22,20 @@ export default function Plots() {
 
   const handleMapClick = (event) => {
     console.log('inside handleMapClick');
+    // Query for features from the draw layer
+    const drawFeatures = map.queryRenderedFeatures(event.point, {
+      layers: [
+        'gl-draw-polygon-fill-inactive.cold',
+        'gl-draw-polygon-fill-active',
+      ],
+    });
+
+    // If there are any draw features, don't show the popup
+    if (drawFeatures.length > 0) {
+      setPopupInfo(null);
+      return;
+    }
+
     const features = map.queryRenderedFeatures(event.point, {
       layers: ['plots-layer'],
     });

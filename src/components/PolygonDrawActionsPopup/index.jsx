@@ -7,6 +7,8 @@ import AddPlotModal from '../AddPlotModal';
 export default function PolygonDrawActionsPopup({ polygon }) {
   if (!polygon) return null;
 
+  console.log('popup is rendering');
+
   return (
     <Popup
       latitude={polygon.geometry.coordinates[0][0][1]}

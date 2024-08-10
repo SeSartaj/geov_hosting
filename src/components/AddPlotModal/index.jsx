@@ -25,6 +25,7 @@ const AddPlotModal = ({ polygon }) => {
     };
     addNewPlot(polygon);
     drawRef?.current.delete([polygon.id]);
+    setOpen(false);
   };
 
   return (

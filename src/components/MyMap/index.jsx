@@ -12,8 +12,7 @@ import MarkerPopup from '../MarkerPopup';
 import { SettingsContext } from '../../contexts/SettingsContext';
 import PAWStatusPieChart from '../PAWStatusPieChart';
 import Plots from '../Plots';
-import { useMapboxDraw } from '../../hooks/useMapboxDraw';
-import AddNewPlotUI from '../AddNewPlotUI/AddNewPlotUI';
+// import AddNewPlotUI from '../AddNewPlotUI/AddNewPlotUI';
 import { DrawPolygonControl } from '../DrawPolygonControl';
 
 export default function MyMap() {
@@ -41,7 +40,7 @@ export default function MyMap() {
       <Markers />
       <MarkerPopup />
       <Plots />
-      <AddNewPlotUI />
+      {/* <AddNewPlotUI /> */}
       <DrawPolygonControl />
     </Map>
   );
