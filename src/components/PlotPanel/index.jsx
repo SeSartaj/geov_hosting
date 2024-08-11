@@ -17,6 +17,7 @@ export default function PlotPanel() {
   const draw = drawRef.current;
 
   const handleDrawComplete = (event) => {
+    console.log('mode', event.mode);
     // delete draws after completion
     console.log('event', event);
     console.log('deleting edited plot drawing layer', editingPlot);
@@ -25,10 +26,8 @@ export default function PlotPanel() {
     }
   };
   const handleDrawChange = (event) => {
-    console.log('editingPlot', editingPlot);
+    // Update the plot when it is edited
     if (event.features && event.features.length > 0) {
-      const editedPlotId = event.features[0].id; // Assuming you're working with a single feature
-      console.log('Edited plot ID:', editedPlotId);
       updatePlot(event.features[0]);
     }
   };
@@ -58,8 +57,10 @@ export default function PlotPanel() {
       const draw = drawRef.current;
       handleFlyToPlot(plot.geometry.coordinates);
       if (draw) {
-        draw.deleteAll(); // Remove existing features
-        draw.add(plot); // Add the new plot to be edited
+        // remove anything drawn before
+        draw.deleteAll();
+        // add the plot to draw layer
+        draw.add(plot);
         setEditingPlot(plot);
       }
     }

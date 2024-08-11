@@ -46,7 +46,7 @@ const AddPlotModal = ({ polygon }) => {
         description: <input type='text' name='description' /> <br />
         <br />
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <MyButton variant='text' onClick={() => setOpen(false)}>
+          <MyButton type='cancel' variant='text' onClick={() => setOpen(false)}>
             cancel
           </MyButton>
           <MyButton type='submit'>Add Plot</MyButton>

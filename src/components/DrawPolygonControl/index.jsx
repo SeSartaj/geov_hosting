@@ -84,6 +84,9 @@ export function DrawPolygonControl() {
   };
 
   const handleSelectionChange = (e) => {
+    // what if more than one feature is selected? where will the
+    // popup be displayed?
+    // when popup is deleted, the popup should disappear
     console.log('selection changed', e);
     // print all drawn features to consule
     console.log('selected Ids', drawRef.current.getSelectedIds());

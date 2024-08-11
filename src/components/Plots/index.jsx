@@ -8,6 +8,7 @@ import PlotPopup from '../PlotPopup';
 
 export default function Plots() {
   const { plots } = useContext(PlotContext);
+  const { drawRef, mapRef } = useContext(MapContext);
   const [popupInfo, setPopupInfo] = useState(null);
   const { current: map } = useMap();
 
@@ -20,18 +21,16 @@ export default function Plots() {
     },
   };
 
-  const handleMapClick = (event) => {
-    console.log('inside handleMapClick');
-    // Query for features from the draw layer
-    const drawFeatures = map.queryRenderedFeatures(event.point, {
-      layers: [
-        'gl-draw-polygon-fill-inactive.cold',
-        'gl-draw-polygon-fill-active',
-      ],
-    });
+  const areFeaturesDrawn = (drawRef) => {
+    const draw = drawRef?.current?.getAll();
+    const features = draw?.features || [];
+    return features.length > 0;
+  };
 
+  const handleMapClick = (event) => {
     // If there are any draw features, don't show the popup
-    if (drawFeatures.length > 0) {
+    if (areFeaturesDrawn(drawRef)) {
+      console.log('no popup info');
       setPopupInfo(null);
       return;
     }

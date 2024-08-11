@@ -38,7 +38,7 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [x] add a pie chart on map that shows percentage of each paw status.
 - [x] display plots on the map
 - [x] draw a polygon on the map and show add plot to it.
-- [] map settings
+- [] map settings should be stored with user account or on the localhost.
 - [] add new marker
 - [x] when a plot is clicked show popup displaying time series data of that plot
 - [] use highcharts and get configs from mr. zakir
@@ -63,6 +63,6 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 
 ## Issues
 
-- [] when draw is started a popup shows up, however if clicked anywhere else, the popup disapears and doesn't show up again
-- [] when a plot is added, the modal doesn't close up and the popup also doesn't close up.
--
+- ~[] when draw is started a popup shows up, however if clicked anywhere else, the popup disapears and doesn't show up again~
+- [] when a plot is added, ~the modal doesn't close up~ and the popup also doesn't close up.
+- [] when a marker is drawn on the map, error is thrown
