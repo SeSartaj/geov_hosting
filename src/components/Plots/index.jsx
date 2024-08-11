@@ -16,7 +16,7 @@ export default function Plots() {
     id: 'plots-layer',
     type: 'fill',
     paint: {
-      'fill-color': '#0080ff', // Plot fill color
+      'fill-color': '#e31717', // Plot fill color
       'fill-opacity': 0.2,
     },
   };
