@@ -2,7 +2,9 @@ import ForecastMarker from './ForecastMarker';
 import StationMarker from './StationMarker';
 
 export default function MyMarker({ marker, ...rest }) {
-  switch (marker.properties.marker.type) {
+  console.log('forecast marker', marker.type);
+
+  switch (marker.type) {
     case 'station':
       return <StationMarker marker={marker} {...rest} />;
     case 'forecast':

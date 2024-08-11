@@ -1,15 +1,15 @@
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Marker } from 'react-map-gl/maplibre';
 import supercluster from 'supercluster';
 import './styles.css';
 import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
-import StationMarker from '../MyMarker/StationMarker';
 import MyMarker from '../MyMarker';
 
 export default function Markers() {
   const { mapRef } = useContext(MapContext);
   const { markersData, setClickedMarker } = useContext(MarkersContext);
+  const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [clusters, setClusters] = useState([]);
   const zoomThreshold = 5;
 
@@ -22,88 +22,117 @@ export default function Markers() {
   useEffect(() => {
     if (!mapRef?.current) return;
 
-    const updateClusters = () => {
-      if (!mapRef?.current) return;
-      const map = mapRef.current.getMap();
-      const bounds = map.getBounds().toArray().flat();
+    const updateVisibleMarkers = () => {
+      const map = mapRef?.current?.getMap();
+      if (!map) return;
+      const bounds = map.getBounds();
       const zoom = map.getZoom();
 
-      // if (zoom < zoomThreshold) {
-      //   setClusters([]);
-      //   return;
-      // }
+      const southWest = bounds.getSouthWest();
+      const northEast = bounds.getNorthEast();
 
-      const index = new supercluster({
-        radius: 40,
-        maxZoom: 16,
-      });
+      if (zoom < zoomThreshold) {
+        // Create clusters
+        const index = new supercluster({
+          radius: 40,
+          maxZoom: 16,
+        });
 
-      index.load(
-        markersData.map((marker) => ({
-          type: 'Feature',
-          properties: { cluster: false, marker },
-          geometry: {
-            type: 'Point',
-            coordinates: [marker.location.lng, marker.location.lat],
-          },
-        }))
-      );
+        index.load(
+          markersData.map((marker) => ({
+            type: 'Feature',
+            properties: { cluster: false, marker },
+            geometry: {
+              type: 'Point',
+              coordinates: [marker.longitude, marker.latitude],
+            },
+          }))
+        );
 
-      const newClusters = index.getClusters(bounds, Math.floor(zoom));
-      setClusters(newClusters);
+        const newClusters = index.getClusters(
+          [southWest.lng, southWest.lat, northEast.lng, northEast.lat],
+          Math.floor(zoom)
+        );
+        setClusters(newClusters);
+        setVisibleMarkers([]); // Hide individual markers
+      } else {
+        // Show individual markers
+        const filteredMarkers = markersData.filter((marker) => {
+          const { longitude, latitude } = marker;
+          return (
+            southWest.lng <= longitude &&
+            longitude <= northEast.lng &&
+            southWest.lat <= latitude &&
+            latitude <= northEast.lat
+          );
+        });
+
+        setVisibleMarkers(filteredMarkers);
+        setClusters([]); // Hide clusters
+      }
     };
 
-    updateClusters();
+    updateVisibleMarkers();
 
-    mapRef.current.on('moveend', updateClusters);
+    mapRef.current.on('moveend', updateVisibleMarkers);
 
     return () => {
-      mapRef?.current?.off('moveend', updateClusters);
+      mapRef.current.off('moveend', updateVisibleMarkers);
     };
   }, [mapRef, markersData, zoomThreshold]);
 
-  console.log('rerendering clusters ', clusters.length);
-
   return (
     <>
-      {clusters.map((cluster) => {
-        const [longitude, latitude] = cluster.geometry.coordinates;
-        const { cluster: isCluster, point_count: pointCount } =
-          cluster.properties;
+      {clusters.length > 0 &&
+        clusters.map((cluster) => {
+          const [longitude, latitude] = cluster.geometry.coordinates;
+          const { cluster: isCluster, point_count: pointCount } =
+            cluster.properties;
 
-        if (isCluster) {
+          if (isCluster) {
+            return (
+              <Marker
+                key={`cluster-${cluster.id}`}
+                longitude={longitude}
+                latitude={latitude}
+                onClick={() => {
+                  const expansionZoom = Math.min(
+                    mapRef.current.getMap().getZoom() + 3,
+                    16
+                  );
+                  mapRef.current.getMap().easeTo({
+                    center: [longitude, latitude],
+                    zoom: expansionZoom,
+                  });
+                }}
+                className='cluster-marker'
+              >
+                <div className='cluster-marker-inner'>{pointCount}</div>
+              </Marker>
+            );
+          }
+
           return (
-            <Marker
-              key={`cluster-${cluster.id}`}
+            <MyMarker
+              key={cluster.properties.marker.id}
               longitude={longitude}
               latitude={latitude}
-              onClick={() => {
-                const expansionZoom = Math.min(
-                  mapRef.current.getMap().getZoom() + 3,
-                  16
-                );
-                mapRef.current.getMap().easeTo({
-                  center: [longitude, latitude],
-                  zoom: expansionZoom,
-                });
-              }}
-              className='cluster-marker'
-            >
-              <div className='cluster-marker-inner'>{pointCount}</div>
-            </Marker>
+              marker={cluster.properties.marker}
+              onClick={(e) => handleMarkerClick(e, cluster.properties.marker)}
+            />
           );
-        }
+        })}
 
-        return (
+      {visibleMarkers.length > 0 &&
+        visibleMarkers.map((marker) => (
           <MyMarker
-            key={cluster.properties.marker.id}
-            longitude={longitude}
-            latitude={latitude}
-            marker={cluster}
-            onClick={(e) => handleMarkerClick(e, cluster.properties.marker)}
+            key={marker.id}
+            longitude={marker.longitude}
+            latitude={marker.latitude}
+            marker={marker}
+            onClick={(e) => handleMarkerClick(e, marker)}
           />
-        );
-      })}
+        ))}
     </>
   );
 }

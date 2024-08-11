@@ -8,10 +8,12 @@ const ForecastMarker = React.memo(function ForecastMarker({
   longitude,
   onClick,
 }) {
+  console.log('forecast marker', marker);
+
   return (
     <Marker
       className='map-marker'
-      key={marker.properties.marker.id}
+      key={marker.id}
       longitude={longitude}
       latitude={latitude}
       onClick={onClick}
