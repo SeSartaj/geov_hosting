@@ -77,7 +77,7 @@ export default function Markers() {
     mapRef.current.on('moveend', updateVisibleMarkers);
 
     return () => {
-      mapRef.current.off('moveend', updateVisibleMarkers);
+      mapRef?.current?.off('moveend', updateVisibleMarkers);
     };
   }, [mapRef, markersData, zoomThreshold]);
 

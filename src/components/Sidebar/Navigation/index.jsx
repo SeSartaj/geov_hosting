@@ -2,7 +2,6 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { BiGlobe, BiLayer, BiLibrary } from 'react-icons/bi';
 import BaseMapPanel from '../BaseMapPanel';
 import LayerPanel from '../LayerPanel';
-import Tooltip from '../../Tooltip';
 import SourcesPanel from '../../SourcesPanel';
 import { HiOutlineMapPin } from 'react-icons/hi2';
 import MarkerPanel from '../../MarkerPanel';
@@ -40,7 +39,7 @@ const Navigation = () => {
           <BiLayer className='cursor-pointer' />
         </TabTrigger>
 
-        <TabTrigger value='tab4' toolti pText='Sources'>
+        <TabTrigger value='tab4' tooltipText='Sources'>
           <BiLibrary className='cursor-pointer' />
         </TabTrigger>
         <TabTrigger value='settings' tooltipText='Map Settings'>
