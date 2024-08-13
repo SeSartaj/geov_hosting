@@ -25,3 +25,5 @@ export const BASEMAP_OPTIONS = [
     }`,
   },
 ];
+
+export const API_URL = 'https://agviewer.com/api/dashboard/';
