@@ -16,7 +16,9 @@ const MyButton = forwardRef(function MyButton(
   return (
     <button
       ref={ref}
-      className={`my-button ${color} ${size} ${variant} ${className}`}
+      className={`my-button ${color} ${size} ${variant} ${
+        className ? className : ''
+      } dark:text-gray-100`}
       {...rest}
     >
       {children}

@@ -40,7 +40,6 @@ export const useMarkers = () => {
 
   const addNewMarker = (newMarker) => {
     createMarker(newMarker).then((createdMarker) => {
-      console.log('created marker', createdMarker);
       setMarkers([...markers, transformMarker(createdMarker)]);
     });
   };

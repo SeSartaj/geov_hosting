@@ -1,6 +1,5 @@
+import { API_URL } from '@/constants';
 import { fetchWrapper } from '../utils/fetchWrapper';
-
-const API_URL = 'https://agviewer.com/api/dashboard/';
 
 const DUMMY_RESPONSE = [
   {
@@ -1561,16 +1560,25 @@ export const getMarkers = async () => {
 };
 
 export const createMarker = async (data) => {
-  // add new marker to dummy_response
-  const newMarker = JSON.parse(JSON.stringify(DUMMY_RESPONSE[0]));
-  newMarker.id = data.name;
-  newMarker.device.name = data.name;
-  newMarker.device.details.location.lat = data.latitude;
-  newMarker.device.details.location.lng = data.longitude;
+  const response = await fetchWrapper(`${API_URL}marker`, {
+    method: 'POST',
+    body: data,
+  });
 
-  DUMMY_RESPONSE.push(newMarker);
+  if (response.ok) {
+    return response.json();
+  }
 
-  return newMarker;
+  // // add new marker to dummy_response
+  // const newMarker = JSON.parse(JSON.stringify(DUMMY_RESPONSE[0]));
+  // newMarker.id = data.name;
+  // newMarker.device.name = data.name;
+  // newMarker.device.details.location.lat = data.latitude;
+  // newMarker.device.details.location.lng = data.longitude;
+
+  // DUMMY_RESPONSE.push(newMarker);
+
+  // return newMarker;
 };
 
 export const getPawData = async (markerId) => {

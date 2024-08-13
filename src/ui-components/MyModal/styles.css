@@ -168,3 +168,6 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
+
+@media (prefers-color-scheme: dark) {
+}

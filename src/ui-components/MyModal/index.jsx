@@ -27,9 +27,11 @@ export default function MyModal({
         }
       >
         <Dialog.Overlay className='DialogOverlay' />
-        <Dialog.Content className='DialogContent'>
-          <Dialog.Title className='DialogTitle'>{title}</Dialog.Title>
-          <Dialog.Description className='DialogDescription'>
+        <Dialog.Content className='DialogContent dark:bg-gray-900'>
+          <Dialog.Title className='DialogTitle dark:text-gray-100'>
+            {title}
+          </Dialog.Title>
+          <Dialog.Description className='DialogDescription dark:text-gray-200'>
             {description}
           </Dialog.Description>
           {children}

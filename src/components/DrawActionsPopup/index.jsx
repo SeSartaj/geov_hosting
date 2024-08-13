@@ -1,8 +1,10 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Popup } from 'react-map-gl';
+import { Popup } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
 import AddPlotModal from '../AddPlotModal';
 import AddNewMarkerModal from '../AddNewMarkerModal';
+
+import './styles.css';
 
 export default function DrawActionsPopup({ feature }) {
   const { drawRef, mapRef } = useContext(MapContext);

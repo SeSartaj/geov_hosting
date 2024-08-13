@@ -11,7 +11,7 @@ const Input = forwardRef(function Input({ size = 'sm', ...props }, ref) {
   return (
     <input
       ref={ref}
-      className={`border rounded  ${sizeClasses[size]}`}
+      className={`border rounded  ${sizeClasses[size]} dark:bg-gray-800 dark:border-gray-500 dark:text-white`}
       {...props}
     />
   );

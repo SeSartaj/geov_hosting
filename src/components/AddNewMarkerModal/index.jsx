@@ -60,8 +60,17 @@ const AddNewMarkerModal = ({ feature }) => {
     >
       <form onSubmit={handleNewMarkerCreation}>
         <div className='flex flex-col gap-1'>
-          <InlineInputField label='name:'>
-            <Input type='text' name='name' />
+          <InlineInputField label='Station:'>
+            <Input type='text' name='station' />
+          </InlineInputField>
+          <InlineInputField label='Farm:'>
+            <Input type='text' name='farm' />
+          </InlineInputField>
+          <InlineInputField label='Paw Graphs:'>
+            <Input type='text' name='paw_graphs' />
+          </InlineInputField>
+          <InlineInputField label='More Graphs:'>
+            <Input type='text' name='graphs' />
           </InlineInputField>
           <InlineInputField label='description:'>
             <Input type='text' name='description' />
@@ -72,7 +81,7 @@ const AddNewMarkerModal = ({ feature }) => {
               type='number'
               name='latitude'
               step='any'
-              disabled
+              disabled={feature ? true : false}
             />
           </InlineInputField>
           <InlineInputField label='longitude:'>
@@ -81,7 +90,7 @@ const AddNewMarkerModal = ({ feature }) => {
               type='number'
               name='longitude'
               step='any'
-              disabled
+              disabled={feature ? true : false}
             />
           </InlineInputField>
         </div>

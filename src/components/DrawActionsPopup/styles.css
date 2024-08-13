@@ -4,3 +4,10 @@
   right: 80px;
   z-index: 2;
 }
+.maplibregl-popup-content {
+  background-color: rgb(17, 24, 39) !important;
+}
+
+.maplibregl-popup-tip {
+  border-bottom-color: rgb(17, 24, 39) !important;
+}
