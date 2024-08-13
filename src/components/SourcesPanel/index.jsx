@@ -36,7 +36,10 @@ export default function SourcesPanel() {
 
       <ul>
         {Object.keys(sources).map((source) => (
-          <li key={source}>
+          <li
+            key={source}
+            className='inline-flex justify-between items-center p-2 border w-full'
+          >
             {source}
             <BiTrash
               className='action-icon'

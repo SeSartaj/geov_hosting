@@ -1,14 +1,6 @@
 import * as Tabs from '@radix-ui/react-tabs';
-import {
-  BiDroplet,
-  BiFilter,
-  BiGlobe,
-  BiLayer,
-  BiLibrary,
-  BiMapPin,
-} from 'react-icons/bi';
+import { BiGlobe, BiLayer, BiLibrary } from 'react-icons/bi';
 import BaseMapPanel from '../BaseMapPanel';
-import './styles.css';
 import LayerPanel from '../LayerPanel';
 import Tooltip from '../../Tooltip';
 import SourcesPanel from '../../SourcesPanel';
@@ -18,70 +10,63 @@ import { FaRegMap } from 'react-icons/fa';
 import PlotPanel from '../../PlotPanel';
 import { useContext } from 'react';
 import { MapContext } from 'react-map-gl/dist/esm/components/map';
+import { TabContent, TabTrigger } from '@/ui-components/Tabs';
+import { FaGear } from 'react-icons/fa6';
+import { PiGear } from 'react-icons/pi';
 
 const Navigation = () => {
   const { mapRef } = useContext(MapContext);
 
   return (
-    <Tabs.Root className='TabsRoot' defaultValue='tab1'>
-      <Tabs.List className='TabsList' aria-label='Manage your account'>
-        <Tabs.Trigger className='TabsTrigger' value='tab1'>
-          <Tooltip
-            text='Markers'
-            portalContainer={mapRef?.current?.getMap()?.getContainer()}
-          >
-            <HiOutlineMapPin className='action-icon' />
-          </Tooltip>
-        </Tabs.Trigger>
-        <Tabs.Trigger className='TabsTrigger' value='plotPanel'>
-          <Tooltip
-            text='Plots'
-            portalContainer={mapRef?.current?.getMap()?.getContainer()}
-          >
-            <FaRegMap className='action-icon' />
-          </Tooltip>
-        </Tabs.Trigger>
+    <Tabs.Root
+      className='flex flex-col w-[300px] overflow-y-hidden'
+      defaultValue='tab1'
+    >
+      <Tabs.List
+        className='flex flex-shrink-0 justify-start '
+        aria-label='Manage your account'
+      >
+        <TabTrigger
+          value='tab1'
+          tooltipText='Markers'
+          portalContainer={mapRef?.current?.getMap()?.getContainer()}
+        >
+          <HiOutlineMapPin className='cursor-pointer' />
+        </TabTrigger>
+        <TabTrigger value='plotPanel' tooltipText='Plots'>
+          <FaRegMap className='cursor-pointer' />
+        </TabTrigger>
+        <TabTrigger value='layers' tooltipText='Layers'>
+          <BiLayer className='cursor-pointer' />
+        </TabTrigger>
 
-        <Tabs.Trigger className='TabsTrigger' value='layers'>
-          <Tooltip text='layers'>
-            <BiLayer className='action-icon' />
-          </Tooltip>
-        </Tabs.Trigger>
-        <Tabs.Trigger className='TabsTrigger' value='tab3'>
-          <Tooltip
-            text='base map'
-            portalContainer={mapRef?.current?.getMap()?.getContainer()}
-          >
-            <BiGlobe className='action-icon' />
-          </Tooltip>
-        </Tabs.Trigger>
-        <Tabs.Trigger className='TabsTrigger' value='tab4'>
-          <Tooltip
-            text='Sources'
-            portalContainer={mapRef?.current?.getMap()?.getContainer()}
-          >
-            <BiLibrary className='action-icon' />
-          </Tooltip>
-        </Tabs.Trigger>
+        <TabTrigger value='tab4' toolti pText='Sources'>
+          <BiLibrary className='cursor-pointer' />
+        </TabTrigger>
+        <TabTrigger value='settings' tooltipText='Map Settings'>
+          <PiGear className='cursor-pointer' />
+        </TabTrigger>
       </Tabs.List>
-      <Tabs.Content className='TabsContent' value='tab1'>
+
+      <TabContent value='tab1'>
         <MarkerPanel />
-      </Tabs.Content>
-      <Tabs.Content className='TabsContent' value='tab2'>
-        Filters
-      </Tabs.Content>
-      <Tabs.Content className='TabsContent' value='tab3'>
+      </TabContent>
+
+      <TabContent value='settings'>
         <BaseMapPanel />
-      </Tabs.Content>
-      <Tabs.Content className='TabsContent' value='tab4'>
+      </TabContent>
+
+      <TabContent value='tab4'>
         <SourcesPanel />
-      </Tabs.Content>
-      <Tabs.Content className='TabsContent' value='plotPanel'>
+      </TabContent>
+
+      <TabContent value='plotPanel'>
         <PlotPanel />
-      </Tabs.Content>
-      <Tabs.Content className='TabsContent' value='layers'>
+      </TabContent>
+
+      <TabContent value='layers'>
         <LayerPanel />
-      </Tabs.Content>
+      </TabContent>
     </Tabs.Root>
   );
 };

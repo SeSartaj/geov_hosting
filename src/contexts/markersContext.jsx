@@ -7,8 +7,15 @@ const MarkersContext = createContext();
 
 const MarkersProvider = ({ children }) => {
   const [clickedMarker, setClickedMarker] = useState(null);
-  const { markers, loading, markerFilters, setMarkerFilters, resetFilters } =
-    useMarkers();
+  const {
+    markers,
+    setMarkers,
+    addNewMarker,
+    loading,
+    markerFilters,
+    setMarkerFilters,
+    resetFilters,
+  } = useMarkers();
 
   useEffect(() => {
     console.log('markers have changed, updating the context', markers, loading);
@@ -17,7 +24,11 @@ const MarkersProvider = ({ children }) => {
   return (
     <MarkersContext.Provider
       value={{
+        // replace markersData with markers
         markersData: markers,
+        markers,
+        setMarkers,
+        addNewMarker,
         markerFilters,
         setMarkerFilters,
         clickedMarker,

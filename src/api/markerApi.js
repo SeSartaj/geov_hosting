@@ -1188,9 +1188,9 @@ const DUMMY_RESPONSE = [
     ],
     graphs: [],
     device: {
-      name: 'PLOT 1',
+      name: 'PLOT 283',
       api: 'Zentra',
-      serial: 'z6-07441',
+      serial: 'z6-0742000',
       last_transmission: '2024-03-05T15:00:00-03:00',
       users: [
         {
@@ -1558,6 +1558,19 @@ export const getMarkers = async () => {
   // const response = await fetchWrapper(`${API_URL}marker/primary/`);
   // return response.json();
   return DUMMY_RESPONSE;
+};
+
+export const createMarker = async (data) => {
+  // add new marker to dummy_response
+  const newMarker = JSON.parse(JSON.stringify(DUMMY_RESPONSE[0]));
+  newMarker.id = data.name;
+  newMarker.device.name = data.name;
+  newMarker.device.details.location.lat = data.latitude;
+  newMarker.device.details.location.lng = data.longitude;
+
+  DUMMY_RESPONSE.push(newMarker);
+
+  return newMarker;
 };
 
 export const getPawData = async (markerId) => {

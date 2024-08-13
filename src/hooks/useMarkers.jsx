@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getMarkers } from '../api/markerApi';
+import { createMarker, getMarkers } from '../api/markerApi';
 import { transformMarker } from '../utils/transformMarker';
 const EMPTY_FILTERS = {
   type: '',
@@ -38,6 +38,13 @@ export const useMarkers = () => {
     return filteredMarkers;
   };
 
+  const addNewMarker = (newMarker) => {
+    createMarker(newMarker).then((createdMarker) => {
+      console.log('created marker', createdMarker);
+      setMarkers([...markers, transformMarker(createdMarker)]);
+    });
+  };
+
   const resetFilters = () => {
     setMarkerFilters(EMPTY_FILTERS);
   };
@@ -67,5 +74,13 @@ export const useMarkers = () => {
     fetchData();
   }, []);
 
-  return { markers, loading, markerFilters, setMarkerFilters, resetFilters };
+  return {
+    markers,
+    setMarkers,
+    addNewMarker,
+    loading,
+    markerFilters,
+    setMarkerFilters,
+    resetFilters,
+  };
 };

@@ -5,11 +5,13 @@ import './styles.css';
 import { useMarkers } from '../../hooks/useMarkers';
 import MyButton from '../../ui-components/MyButton';
 import { MapContext } from '../../contexts/MapContext';
+import InlineInputField from '@/ui-components/InlineInputField';
+import Tooltip from '../Tooltip';
+import { BiReset } from 'react-icons/bi';
 
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
-  const { markersData } = useContext(MarkersContext);
-  const { markerFilters, setMarkerFilters, resetFilters } =
+  const { markersData, markerFilters, setMarkerFilters, resetFilters } =
     useContext(MarkersContext);
 
   const handleMarkerClick = (e) => {
@@ -23,56 +25,68 @@ export default function MarkerPanel() {
   };
 
   return (
-    <div className='panel-container'>
-      <div className='panel-header-action'>
-        <h3 style={{ margin: 0 }}>Markers</h3>
+    <>
+      <div className='panel-header-action border-b border-gray-300 pb-3'>
+        <h3 className='text-lg'>Markers</h3>
         <AddNewMarkerModal />
       </div>
-
-      <span>filter markers</span>
+      {/* 
+      <div className='flex justify-between items-center '>
+        <span className='text-base'>filter markers</span>
+      </div> */}
       <form>
-        <label>type: </label>
-        <select
-          value={markerFilters.type}
-          onChange={(e) =>
-            setMarkerFilters({ ...markerFilters, type: e.target.value })
-          }
-        >
-          <option value=''>all</option>
-          <option value='station'>Station</option>
-          <option value='forecast'>Forecast</option>
-        </select>
-        <br />
-        <label>paw Status: </label>
-        <select
-          value={markerFilters.paw_status}
-          onChange={(e) =>
-            setMarkerFilters({ ...markerFilters, paw_status: e.target.value })
-          }
-        >
-          <option value=''>All</option>
-          <option value='OPTIMAL'>Optimal</option>
-          <option value='STRESS_START'>Stress Start</option>
-          <option value='SEVERE_STRESS'>Severe Stress</option>
-          <option value='EXCESS_WATER'>Excess Water</option>
-        </select>
-        <br />
-        <label>Farm: </label>
-        <select
-          value={markerFilters.farm_id}
-          onChange={(e) =>
-            setMarkerFilters({ ...markerFilters, farm_id: e.target.value })
-          }
-        >
-          <option value=''>All</option>
-          <option value='345'>Farm 1</option>
-          <option value='346'>Farm 2</option>
-        </select>
-        <br />
+        <div className='flex flex-col gap-1'>
+          <InlineInputField label='type:'>
+            <select
+              value={markerFilters.type}
+              className='p-1 border border-gray-300'
+              onChange={(e) =>
+                setMarkerFilters({ ...markerFilters, type: e.target.value })
+              }
+            >
+              <option value=''>all</option>
+              <option value='station'>Station</option>
+              <option value='forecast'>Forecast</option>
+            </select>
+          </InlineInputField>
+          <InlineInputField label='PAW Status: '>
+            <select
+              className='p-1 border border-gray-300'
+              value={markerFilters.paw_status}
+              onChange={(e) =>
+                setMarkerFilters({
+                  ...markerFilters,
+                  paw_status: e.target.value,
+                })
+              }
+            >
+              <option value=''>All</option>
+              <option value='OPTIMAL'>Optimal</option>
+              <option value='STRESS_START'>Stress Start</option>
+              <option value='SEVERE_STRESS'>Severe Stress</option>
+              <option value='EXCESS_WATER'>Excess Water</option>
+            </select>
+          </InlineInputField>
+          <InlineInputField label='Farm:'>
+            <select
+              className='p-1 border border-gray-300'
+              value={markerFilters.farm_id}
+              onChange={(e) =>
+                setMarkerFilters({ ...markerFilters, farm_id: e.target.value })
+              }
+            >
+              <option value=''>All</option>
+              <option value='345'>Farm 1</option>
+              <option value='346'>Farm 2</option>
+            </select>
+          </InlineInputField>
+        </div>
       </form>
-      <span>
-        <MyButton size='sm' onClick={resetFilters}>
-          reset filters
+      <span className='inline-flex w-full justify-end'>
+        <MyButton onClick={resetFilters} className='self-end' variant='icon'>
+          <Tooltip text='reset form'>
+            <BiReset />
+          </Tooltip>
         </MyButton>
       </span>
 
@@ -81,7 +95,7 @@ export default function MarkerPanel() {
         {markersData?.map((marker) => (
           <div key={marker.id} className='marker-item'>
             <div
-              className='marker-item-info'
+              className='marker-item-info p-2 border border-collapse'
               data-marker-id={marker.id}
               onClick={handleMarkerClick}
               style={{ cursor: 'pointer' }}
@@ -91,6 +105,6 @@ export default function MarkerPanel() {
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }

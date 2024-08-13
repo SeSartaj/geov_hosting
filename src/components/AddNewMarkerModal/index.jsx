@@ -4,11 +4,14 @@ import MyButton from '../../ui-components/MyButton';
 import { useContext, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
+import { BiPin } from 'react-icons/bi';
+import Input from '@/ui-components/Input';
+import InlineInputField from '@/ui-components/InlineInputField';
 
-const AddNewMarkerModal = () => {
+const AddNewMarkerModal = ({ feature }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
-  const { markersData, setMarkersData } = useContext(MarkersContext);
+  const { markers, addNewMarker } = useContext(MarkersContext);
 
   const handleNewMarkerCreation = (e) => {
     e.preventDefault();
@@ -22,24 +25,29 @@ const AddNewMarkerModal = () => {
     const longitude = formData.get('longitude');
     const latitude = formData.get('latitude');
 
+    console.log('lat', latitude, 'long', longitude);
+
     // Create a new marker object
     const newMarker = {
-      id: name,
-      title: name,
+      name: name,
       description,
-      longitude: parseFloat(longitude),
-      latitude: parseFloat(latitude),
+      longitude: feature?.geometry?.coordinates[0],
+      latitude: feature?.geometry?.coordinates[1],
     };
 
-    console.log(newMarker);
+    console.log('newMarker', newMarker);
+    addNewMarker(newMarker);
 
-    setMarkersData([...markersData, newMarker]);
     setOpen(false);
   };
 
   return (
     <MyModal
-      trigger={<MyButton>Add New Marker</MyButton>}
+      trigger={
+        <MyButton>
+          <BiPin /> Add New Marker
+        </MyButton>
+      }
       title='Add New Marker'
       description='add new marker to the map'
       open={open}
@@ -51,11 +59,33 @@ const AddNewMarkerModal = () => {
       }
     >
       <form onSubmit={handleNewMarkerCreation}>
-        name: <input type='text' name='name' /> <br />
-        description: <input type='text' name='description' /> <br />
-        latitude: <input type='number' name='latitude' step='any' /> <br />
-        longitude: <input type='number' name='longitude' step='any' /> <br />
-        <br />
+        <div className='flex flex-col gap-1'>
+          <InlineInputField label='name:'>
+            <Input type='text' name='name' />
+          </InlineInputField>
+          <InlineInputField label='description:'>
+            <Input type='text' name='description' />
+          </InlineInputField>
+          <InlineInputField label='latitude:'>
+            <Input
+              value={feature?.geometry?.coordinates[1].toFixed(7)}
+              type='number'
+              name='latitude'
+              step='any'
+              disabled
+            />
+          </InlineInputField>
+          <InlineInputField label='longitude:'>
+            <Input
+              value={feature?.geometry?.coordinates[0].toFixed(7)}
+              type='number'
+              name='longitude'
+              step='any'
+              disabled
+            />
+          </InlineInputField>
+        </div>
+
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
           <MyButton variant='text' onClick={() => setOpen(false)}>
             cancel

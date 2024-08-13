@@ -89,18 +89,63 @@ export default function PlotPanel() {
         <h3 style={{ margin: 0 }}>Plots</h3>
         <MyButton>Add new Plot</MyButton>
       </div>
-      <ul className='plot-list'>
+      <hr className='my-2' />
+      <ul className='overflow-y-scroll'>
         {plots.map((plot, index) => (
-          <li key={index}>
-            <span onClick={() => handleFlyToPlot(plot.geometry.coordinates)}>
-              {plot.properties.name}(
-              {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(1)}{' '}
-              acres)
-            </span>
-            <span onClick={() => handleEditPlot(plot)}>
-              <BiPencil className='action-icon' />
-            </span>
-          </li>
+          <>
+            <li
+              key={index}
+              className='inline-flex justify-between items-center p-2 border w-full'
+            >
+              <span onClick={() => handleFlyToPlot(plot.geometry.coordinates)}>
+                {plot.properties.name}(
+                {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(1)}{' '}
+                acres)
+              </span>
+              <span onClick={() => handleEditPlot(plot)}>
+                <BiPencil className='action-icon' />
+              </span>
+            </li>
+            <li
+              key={index + 100}
+              className='inline-flex justify-between items-center p-2 border w-full'
+            >
+              <span onClick={() => handleFlyToPlot(plot.geometry.coordinates)}>
+                {plot.properties.name}(
+                {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(1)}{' '}
+                acres)
+              </span>
+              <span onClick={() => handleEditPlot(plot)}>
+                <BiPencil className='action-icon' />
+              </span>
+            </li>
+            <li
+              key={index + 101}
+              className='inline-flex justify-between items-center p-2 border w-full'
+            >
+              <span onClick={() => handleFlyToPlot(plot.geometry.coordinates)}>
+                {plot.properties.name}(
+                {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(1)}{' '}
+                acres)
+              </span>
+              <span onClick={() => handleEditPlot(plot)}>
+                <BiPencil className='action-icon' />
+              </span>
+            </li>
+            <li
+              key={index + 102}
+              className='inline-flex justify-between items-center p-2 border w-full'
+            >
+              <span onClick={() => handleFlyToPlot(plot.geometry.coordinates)}>
+                {plot.properties.name}(
+                {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(1)}{' '}
+                acres)
+              </span>
+              <span onClick={() => handleEditPlot(plot)}>
+                <BiPencil className='action-icon' />
+              </span>
+            </li>
+          </>
         ))}
       </ul>
     </div>

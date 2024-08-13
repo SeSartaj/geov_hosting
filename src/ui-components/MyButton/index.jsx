@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 const MyButton = forwardRef(function MyButton(
   {
     color = 'mute',
-    size = 'md',
+    size = 'sm',
     variant = 'fill',
     children,
     className,

@@ -53,10 +53,7 @@ export default function LayerPanel() {
         <AddNewLayerModal setLayers={setLayers} />
       </div>
       <hr />
-      <ul
-        className='layers-list'
-        style={{ overflowY: 'scroll', height: '60vh', paddingRight: 10 }}
-      >
+      <ul className='layers-list'>
         {layers
           .map((layer, i) => (
             <Layer

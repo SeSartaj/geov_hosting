@@ -21,6 +21,7 @@ export default function MapStyleSwitcher() {
           className={o.id === settings.basemap.id ? 'active-switch ' : ''}
           onClick={handleStyleChange}
           disabled={o.id === settings.basemap.id}
+          size='md'
         >
           {o.name}
         </MyButton>

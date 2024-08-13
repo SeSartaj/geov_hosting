@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { getMarkers } from '../api/markerApi';
-import { transformMarker } from '../utils/transformMarker';
 const EMPTY_FILTERS = {};
 
 const DUMMY_PLOTS = [

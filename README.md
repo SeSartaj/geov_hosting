@@ -47,6 +47,7 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [] collapsable sidebar
 - [] translation translation file (i18n library) (ask zakir)
 - [] for design use kendo-react-ui with tailwindcss
+- [] npm i @formatjs/intl
 
 ## Observations
 

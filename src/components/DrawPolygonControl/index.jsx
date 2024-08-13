@@ -3,7 +3,7 @@ import MapboxDraw, { constants } from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import './mapbox-draw-style.css';
 import './styles.css';
-import PolygonDrawActionsPopup from '../PolygonDrawActionsPopup';
+import DrawActionsPopup from '../DrawActionsPopup';
 import { useControl, useMap } from 'react-map-gl';
 import { MapContext } from '../../contexts/MapContext';
 
@@ -110,7 +110,7 @@ export function DrawPolygonControl() {
     return (
       <div>
         {selectedFeatures?.features?.map((feature) => (
-          <PolygonDrawActionsPopup key={feature.id} polygon={feature} />
+          <DrawActionsPopup key={feature.id} feature={feature} />
         ))}
       </div>
     );
