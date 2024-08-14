@@ -1585,3 +1585,8 @@ export const getPawData = async (markerId) => {
   const response = await fetchWrapper(`${API_URL}marker/paw/${markerId}/`);
   return response.json();
 };
+
+export const getStations = async () => {
+  const response = await fetchWrapper(`${API_URL}station/`);
+  return response.json();
+};

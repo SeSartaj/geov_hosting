@@ -26,7 +26,7 @@ export default function MarkerPanel() {
 
   return (
     <>
-      <div className='panel-header-action border-b border-gray-300 pb-3'>
+      <div className='panel-header-action pb-3'>
         <h3 className='text-lg'>Markers</h3>
         <AddNewMarkerModal />
       </div>
@@ -39,7 +39,7 @@ export default function MarkerPanel() {
           <InlineInputField label='type:'>
             <select
               value={markerFilters.type}
-              className='p-1 border border-gray-300'
+              className='p-1 border border-gray-300 dark:bg-gray-700'
               onChange={(e) =>
                 setMarkerFilters({ ...markerFilters, type: e.target.value })
               }
@@ -51,7 +51,7 @@ export default function MarkerPanel() {
           </InlineInputField>
           <InlineInputField label='PAW Status: '>
             <select
-              className='p-1 border border-gray-300'
+              className='p-1 border border-gray-300 dark:bg-gray-700'
               value={markerFilters.paw_status}
               onChange={(e) =>
                 setMarkerFilters({
@@ -69,7 +69,7 @@ export default function MarkerPanel() {
           </InlineInputField>
           <InlineInputField label='Farm:'>
             <select
-              className='p-1 border border-gray-300'
+              className='p-1 border border-gray-300 dark:bg-gray-700'
               value={markerFilters.farm_id}
               onChange={(e) =>
                 setMarkerFilters({ ...markerFilters, farm_id: e.target.value })
@@ -90,12 +90,11 @@ export default function MarkerPanel() {
         </MyButton>
       </span>
 
-      <hr />
       <div className='panel-content'>
         {markersData?.map((marker) => (
           <div key={marker.id} className='marker-item'>
             <div
-              className='marker-item-info p-2 border border-collapse'
+              className='marker-item-info p-2 border border-solid border-collapse dark:border-gray-500'
               data-marker-id={marker.id}
               onClick={handleMarkerClick}
               style={{ cursor: 'pointer' }}

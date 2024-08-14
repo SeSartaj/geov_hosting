@@ -15,7 +15,7 @@ export default function Tooltip({ children, text, portalContainer, ...props }) {
           container={portalContainer ? portalContainer : document.body}
         >
           <TooltipPrimitive.Content
-            className='TooltipContent'
+            className='TooltipContent dark:bg-gray-600'
             side='top'
             align='center'
             {...props}

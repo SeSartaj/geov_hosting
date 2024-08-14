@@ -7,7 +7,7 @@ import {
 
 const BatteryIndicator = ({ level }) => {
   let BatteryIcon;
-  let color = '#111'; // Default color
+  let colorClasses = 'text-gray-700 dark:text-gray-100'; // Default color
 
   if (level > 75) {
     BatteryIcon = FaBatteryFull;
@@ -17,12 +17,13 @@ const BatteryIndicator = ({ level }) => {
     BatteryIcon = FaBatteryQuarter;
   } else {
     BatteryIcon = FaBatteryEmpty;
-    color = 'red'; // Color when battery is low
+    colorClasses = 'text-red-500'; // Color when battery is low
   }
 
   return (
     <div
-      style={{ display: 'flex', alignItems: 'center', fontSize: '24px', color }}
+      style={{ display: 'flex', alignItems: 'center', fontSize: '24px' }}
+      className={`${colorClasses}`}
     >
       <BatteryIcon />
       <span style={{ marginLeft: '8px', fontSize: 12 }}>{level}%</span>

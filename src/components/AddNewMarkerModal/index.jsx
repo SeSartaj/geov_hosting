@@ -1,17 +1,34 @@
 import './styles.css';
 import MyModal from '../../ui-components/MyModal';
 import MyButton from '../../ui-components/MyButton';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
+import Select from 'react-select';
 import { BiPin } from 'react-icons/bi';
 import Input from '@/ui-components/Input';
 import InlineInputField from '@/ui-components/InlineInputField';
+import MyReactSelect from '@/ui-components/MyReactSelect';
+import InputField from '@/ui-components/InputField';
+import FormGroup from '@/ui-components/FormGroup';
+import { getFarmOptions } from '@/api/farmApi';
+import { getStationOptions } from '@/api/stationApi';
+import { getAllGraphOptions, getPawGraphOptions } from '@/api/graphsApi';
 
 const AddNewMarkerModal = ({ feature }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
+  const [farmOptions, setFarmOptions] = useState([]);
+  const [stationOptions, setStationOptions] = useState([]);
+  const [pawGraphOptions, setPawGraphOptions] = useState([]);
+  const [allGraphOptions, setAllGraphOptions] = useState([]);
   const { markers, addNewMarker } = useContext(MarkersContext);
+  const [formData, setFormData] = useState({
+    station: '',
+    farm: '',
+    paw_graphs: [],
+    graphs: [],
+  });
 
   const handleNewMarkerCreation = (e) => {
     e.preventDefault();
@@ -30,7 +47,9 @@ const AddNewMarkerModal = ({ feature }) => {
     // Create a new marker object
     const newMarker = {
       name: name,
-      description,
+      farm: formData.farm,
+      device: formData.station,
+
       longitude: feature?.geometry?.coordinates[0],
       latitude: feature?.geometry?.coordinates[1],
     };
@@ -40,6 +59,21 @@ const AddNewMarkerModal = ({ feature }) => {
 
     setOpen(false);
   };
+
+  useEffect(() => {
+    getFarmOptions().then((options) => {
+      setFarmOptions(options);
+    });
+    getStationOptions().then((options) => {
+      setStationOptions(options);
+    });
+    getPawGraphOptions().then((options) => {
+      setPawGraphOptions(options);
+    });
+    getAllGraphOptions().then((options) => {
+      setAllGraphOptions(options);
+    });
+  }, []);
 
   return (
     <MyModal
@@ -59,40 +93,64 @@ const AddNewMarkerModal = ({ feature }) => {
       }
     >
       <form onSubmit={handleNewMarkerCreation}>
-        <div className='flex flex-col gap-1'>
-          <InlineInputField label='Station:'>
-            <Input type='text' name='station' />
-          </InlineInputField>
-          <InlineInputField label='Farm:'>
-            <Input type='text' name='farm' />
-          </InlineInputField>
-          <InlineInputField label='Paw Graphs:'>
-            <Input type='text' name='paw_graphs' />
-          </InlineInputField>
-          <InlineInputField label='More Graphs:'>
-            <Input type='text' name='graphs' />
-          </InlineInputField>
-          <InlineInputField label='description:'>
-            <Input type='text' name='description' />
-          </InlineInputField>
-          <InlineInputField label='latitude:'>
+        <div className='flex flex-col gap-1 '>
+          <FormGroup label='Station:'>
+            <MyReactSelect
+              className='w-full'
+              value={formData.station}
+              options={stationOptions}
+              onChange={(s) => setFormData({ ...formData, station: s })}
+              isClearable={true}
+            />
+          </FormGroup>
+          <FormGroup label='Farm:'>
+            <MyReactSelect
+              className='w-full'
+              value={formData.farm}
+              options={farmOptions}
+              onChange={(f) => setFormData({ ...formData, farm: f })}
+            />
+          </FormGroup>
+          <FormGroup label='Paw Graphs:'>
+            <MyReactSelect
+              className='w-full'
+              value={formData.paw_graphs}
+              onChange={(f) => setFormData({ ...formData, paw_graphs: f })}
+              options={pawGraphOptions}
+              isMulti={true}
+              isClearable={true}
+            />
+          </FormGroup>
+          <FormGroup label='More Graphs:'>
+            <MyReactSelect
+              className='w-full'
+              value={formData.graphs}
+              onChange={(f) => setFormData({ ...formData, graphs: f })}
+              options={allGraphOptions}
+              isMulti={true}
+              isClearable={true}
+            />
+          </FormGroup>
+          <FormGroup label='latitude:'>
             <Input
+              className='w-full'
               value={feature?.geometry?.coordinates[1].toFixed(7)}
               type='number'
               name='latitude'
               step='any'
               disabled={feature ? true : false}
             />
-          </InlineInputField>
-          <InlineInputField label='longitude:'>
+          </FormGroup>
+          <FormGroup label='longitude:'>
             <Input
+              className='w-full'
               value={feature?.geometry?.coordinates[0].toFixed(7)}
               type='number'
               name='longitude'
               step='any'
               disabled={feature ? true : false}
             />
-          </InlineInputField>
+          </FormGroup>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>

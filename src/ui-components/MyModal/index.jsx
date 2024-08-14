@@ -1,8 +1,9 @@
+import './styles.css';
+
 import * as Dialog from '@radix-ui/react-dialog';
 import MyButton from '../MyButton';
 import PropTypes from 'prop-types';
 import { BiX } from 'react-icons/bi';
-import './styles.css';
 import { useContext } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 
