@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { getPawData } from '../../api/markerApi';
 import { BiLoader } from 'react-icons/bi';
+import Spinner from '@/ui-components/Spinner';
 
 const SAMPLE_DATA = [
   [1721728800000, 84.7],
@@ -196,7 +197,7 @@ const transformedData = transformData(SAMPLE_DATA);
 
 const HumidityChart = ({ marker }) => {
   const [pawData, setPawData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const hichartOptions = {
     chart: {
@@ -291,7 +292,7 @@ const HumidityChart = ({ marker }) => {
     fetchdata();
   }, []);
 
-  if (loading) return <BiLoader />;
+  if (loading) return <Spinner />;
 
   return <HighchartsReact highcharts={Highcharts} options={hichartOptions} />;
 };

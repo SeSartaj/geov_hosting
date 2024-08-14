@@ -8,10 +8,15 @@ import MyMarker from '../MyMarker';
 
 export default function Markers() {
   const { mapRef } = useContext(MapContext);
-  const { markersData, setClickedMarker } = useContext(MarkersContext);
+  const { markersData, setClickedMarker, showMarkers } =
+    useContext(MarkersContext);
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [clusters, setClusters] = useState([]);
   const zoomThreshold = 5;
+
+  const layerStyle = {
+    id: 'markers-layer',
+  };
 
   const handleMarkerClick = (e, marker) => {
     console.log('clicked', marker);
@@ -21,6 +26,7 @@ export default function Markers() {
 
   useEffect(() => {
     if (!mapRef?.current) return;
+    if (!showMarkers) return;
 
     const updateVisibleMarkers = () => {
       const map = mapRef?.current?.getMap();
@@ -79,7 +85,9 @@ export default function Markers() {
     return () => {
       mapRef?.current?.off('moveend', updateVisibleMarkers);
     };
-  }, [mapRef, markersData, zoomThreshold]);
+  }, [mapRef, markersData, zoomThreshold, showMarkers]);
+
+  if (!showMarkers) return null;
 
   return (
     <>
@@ -112,15 +120,15 @@ export default function Markers() {
             );
           }
 
-          return (
-            <MyMarker
-              key={cluster.properties.marker.id}
-              longitude={longitude}
-              latitude={latitude}
-              marker={cluster.properties.marker}
-              onClick={(e) => handleMarkerClick(e, cluster.properties.marker)}
-            />
-          );
+          // return (
+          //   <MyMarker
+          //     key={cluster.properties.marker.id}
+          //     longitude={longitude}
+          //     latitude={latitude}
+          //     marker={cluster.properties.marker}
+          //     onClick={(e) => handleMarkerClick(e, cluster.properties.marker)}
+          //   />
+          // );
         })}
 
       {visibleMarkers.length > 0 &&

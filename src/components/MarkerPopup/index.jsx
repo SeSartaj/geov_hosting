@@ -9,9 +9,10 @@ import { getStationMarkerColor } from '../../utils/getStationMarkerColor';
 import Badge from '../../ui-components/Badge';
 
 export default function MarkerPopup() {
-  const { clickedMarker, setClickedMarker } = useContext(MarkersContext);
+  const { clickedMarker, setClickedMarker, showMarkers } =
+    useContext(MarkersContext);
 
-  if (!clickedMarker) return null;
+  if (!clickedMarker || !showMarkers) return null;
 
   return (
     <Popup

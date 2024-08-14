@@ -8,10 +8,15 @@ const PlotContext = createContext();
 const PlotProvider = ({ children }) => {
   const [clickedPlot, setClickedPlot] = useState(null);
   const { plots, loading, addNewPlot, updatePlot } = usePlots();
-
+  const [showPlots, setShowPlots] = useState(true);
   useEffect(() => {
     console.log('plots have changed, updating the context', plots, loading);
   }, [plots, loading]);
+
+  const handleShowPlots = (value) => {
+    setClickedPlot(null);
+    setShowPlots(value);
+  };
 
   return (
     <PlotContext.Provider
@@ -21,6 +26,8 @@ const PlotProvider = ({ children }) => {
         updatePlot,
         clickedPlot,
         setClickedPlot,
+        showPlots,
+        setShowPlots: handleShowPlots,
       }}
     >
       {children}

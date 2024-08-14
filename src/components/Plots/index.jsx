@@ -7,9 +7,9 @@ import { useMap } from 'react-map-gl';
 import PlotPopup from '../PlotPopup';
 
 export default function Plots() {
-  const { plots } = useContext(PlotContext);
+  const { plots, showPlots, clickedPlot, setClickedPlot } =
+    useContext(PlotContext);
   const { drawRef, mapRef } = useContext(MapContext);
-  const [popupInfo, setPopupInfo] = useState(null);
   const { current: map } = useMap();
 
   const layerStyle = {
@@ -31,7 +31,7 @@ export default function Plots() {
     // If there are any draw features, don't show the popup
     if (areFeaturesDrawn(drawRef)) {
       console.log('no popup info');
-      setPopupInfo(null);
+      setClickedPlot(null);
       return;
     }
 
@@ -41,12 +41,12 @@ export default function Plots() {
 
     if (features.length > 0) {
       const clickedPlot = features[0];
-      setPopupInfo({
+      setClickedPlot({
         lngLat: event.lngLat,
         plot: clickedPlot, // Assuming the plot name is in the 'name' property
       });
     } else {
-      setPopupInfo(null); // Hide popup if no plot is clicked
+      setClickedPlot(null); // Hide popup if no plot is clicked
     }
   };
 
@@ -72,7 +72,9 @@ export default function Plots() {
         map.off('mouseleave', 'plots-layer', handleMouseLeave);
       }
     };
-  }, [map]);
+  }, [map, showPlots]);
+
+  if (!showPlots) return null;
 
   return (
     <>
@@ -83,8 +85,11 @@ export default function Plots() {
       >
         <Layer {...layerStyle} />
       </Source>
-      {popupInfo && (
-        <PlotPopup popupInfo={popupInfo} onClose={() => setPopupInfo(null)} />
+      {clickedPlot && (
+        <PlotPopup
+          popupInfo={clickedPlot}
+          onClose={() => setClickedPlot(null)}
+        />
       )}
     </>
   );

@@ -8,11 +8,18 @@ import { MapContext } from '../../contexts/MapContext';
 import InlineInputField from '@/ui-components/InlineInputField';
 import Tooltip from '../Tooltip';
 import { BiReset } from 'react-icons/bi';
+import ToggleButton from '@/ui-components/toggleButton';
 
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
-  const { markersData, markerFilters, setMarkerFilters, resetFilters } =
-    useContext(MarkersContext);
+  const {
+    markersData,
+    markerFilters,
+    setMarkerFilters,
+    resetFilters,
+    showMarkers,
+    setShowMarkers,
+  } = useContext(MarkersContext);
 
   const handleMarkerClick = (e) => {
     if (!mapRef?.current) return;
@@ -28,7 +35,13 @@ export default function MarkerPanel() {
     <>
       <div className='panel-header-action pb-3'>
         <h3 className='text-lg'>Markers</h3>
-        <AddNewMarkerModal />
+        {/* <AddNewMarkerModal /> */}
+        <ToggleButton
+          onTooltip='hide markers'
+          offTooltip='show markers'
+          initialState={showMarkers}
+          onToggle={setShowMarkers}
+        />
       </div>
       {/* 
       <div className='flex justify-between items-center '>

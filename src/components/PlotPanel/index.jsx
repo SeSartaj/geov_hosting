@@ -1,15 +1,15 @@
 import { useContext, useDebugValue, useEffect, useState } from 'react';
-import MyButton from '../../ui-components/MyButton';
 import { PlotContext } from '../../contexts/PlotContext';
 import { MapContext } from '../../contexts/MapContext';
 import { LngLatBounds, Padding } from 'maplibre-gl';
-import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { calculatePolygonArea } from '../../utils/calculatePolygonArea';
 import { squareMetersToAcres } from '../../utils/squareMetersToAcres';
 import { BiPencil } from 'react-icons/bi';
+import ToggleButton from '@/ui-components/toggleButton';
 
 export default function PlotPanel() {
-  const { plots, updatePlot } = useContext(PlotContext);
+  const { plots, updatePlot, showPlots, setShowPlots } =
+    useContext(PlotContext);
   const { mapRef, drawRef } = useContext(MapContext);
   const [editingPlot, setEditingPlot] = useState(null);
 
@@ -83,11 +83,18 @@ export default function PlotPanel() {
   useEffect(() => {
     console.log('editingPlot changed', editingPlot);
   }, [editingPlot]);
+
   return (
     <div className='panel-container'>
       <div className='panel-header-action'>
         <h3 style={{ margin: 0 }}>Plots</h3>
-        <MyButton>Add new Plot</MyButton>
+        {/* <MyButton>Add new Plot</MyButton> */}
+        <ToggleButton
+          onTooltip='hide plots'
+          offTooltip='show plots'
+          initialState={showPlots}
+          onToggle={setShowPlots}
+        />
       </div>
       <hr className='my-2' />
       <ul className='overflow-y-scroll'>

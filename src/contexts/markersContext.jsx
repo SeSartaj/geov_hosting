@@ -7,6 +7,7 @@ const MarkersContext = createContext();
 
 const MarkersProvider = ({ children }) => {
   const [clickedMarker, setClickedMarker] = useState(null);
+  const [showMarkers, setShowMarkers] = useState(true);
   const {
     markers,
     setMarkers,
@@ -21,6 +22,10 @@ const MarkersProvider = ({ children }) => {
     console.log('markers have changed, updating the context', markers, loading);
   }, [markers, loading]);
 
+  const handleShowMarkerChange = (value) => {
+    setClickedMarker(null);
+    setShowMarkers(value);
+  };
   return (
     <MarkersContext.Provider
       value={{
@@ -34,6 +39,8 @@ const MarkersProvider = ({ children }) => {
         clickedMarker,
         setClickedMarker,
         resetFilters,
+        showMarkers,
+        setShowMarkers: handleShowMarkerChange,
       }}
     >
       {children}

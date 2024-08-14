@@ -7,6 +7,8 @@ export default function SourcesPanel() {
   const { mapRef } = useContext(MapContext);
   const [sources, setSources] = useState([]);
 
+  const map = mapRef?.current.getMap();
+
   useEffect(() => {
     if (mapRef?.current) {
       loadSources(mapRef?.current);
@@ -18,11 +20,11 @@ export default function SourcesPanel() {
   };
 
   const handleRemoveSource = (e) => {
-    if (mapRef?.current) {
+    if (map) {
       const sourceId = e.target.getAttribute('data-source-id');
       if (sourceId) {
-        mapRef?.current?.removeSource(sourceId);
-        loadSources(mapRef?.current);
+        map.removeSource(sourceId);
+        loadSources(map);
       }
     }
   };

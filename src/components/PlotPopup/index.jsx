@@ -5,9 +5,14 @@ import LabelValueList from '../../ui-components/LabelValueList';
 import { calculatePolygonArea } from '../../utils/calculatePolygonArea';
 import { area } from '@turf/turf';
 import NdviChart from '../PlotNDVIChart';
+import { useContext } from 'react';
+import { PlotContext } from '@/contexts/PlotContext';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { plot } = popupInfo;
+  const { showPlots, clickedPlot } = useContext(PlotContext);
+
+  if (!showPlots || !clickedPlot) return null;
 
   return (
     <Popup
