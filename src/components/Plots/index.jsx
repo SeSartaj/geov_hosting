@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { PlotContext } from '../../contexts/PlotContext';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
-import { Popup } from 'react-map-gl/maplibre';
 import { useMap } from 'react-map-gl';
 import PlotPopup from '../PlotPopup';
 
@@ -18,6 +17,15 @@ export default function Plots() {
     paint: {
       'fill-color': '#e31717', // Plot fill color
       'fill-opacity': 0.2,
+    },
+  };
+
+  const ndviLayerStyle = {
+    id: 'ndvi-layer',
+    type: 'raster',
+    source: 'ndvi-source',
+    paint: {
+      'raster-opacity': 0.7,
     },
   };
 
@@ -85,6 +93,7 @@ export default function Plots() {
       >
         <Layer {...layerStyle} />
       </Source>
+
       {clickedPlot && (
         <PlotPopup
           popupInfo={clickedPlot}

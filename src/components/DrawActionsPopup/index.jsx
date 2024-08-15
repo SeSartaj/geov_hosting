@@ -11,8 +11,10 @@ export default function DrawActionsPopup({ feature }) {
   const [showPopup, setShowPopup] = useState(true);
   const [drawMode, setDrawMode] = useState('');
 
+  const mapInstance = mapRef?.current;
+
   useEffect(() => {
-    if (!drawRef || !mapRef) return;
+    if (!drawRef || !mapInstance) return;
 
     const checkDrawMode = () => {
       const mode = drawRef?.current.getMode();
@@ -21,16 +23,16 @@ export default function DrawActionsPopup({ feature }) {
     };
 
     // Listen for mode change events
-    mapRef?.current.on('draw.modechange', checkDrawMode);
+    mapInstance.on('draw.modechange', checkDrawMode);
 
     // Initial check on component mount
     checkDrawMode();
 
     // Cleanup event listener on component unmount
     return () => {
-      mapRef?.current.off('draw.modechange', checkDrawMode);
+      mapInstance.off('draw.modechange', checkDrawMode);
     };
-  }, [drawRef, mapRef]);
+  }, [drawRef, mapInstance]);
 
   if (!feature || !showPopup) return null;
 

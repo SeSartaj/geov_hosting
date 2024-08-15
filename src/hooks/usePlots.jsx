@@ -1,3 +1,5 @@
+import { getNDVILayerUrl } from '@/utils/getNDVILayerUrl';
+import { bbox } from '@turf/turf';
 import { useEffect, useState } from 'react';
 const EMPTY_FILTERS = {};
 
@@ -86,13 +88,19 @@ const DUMMY_PLOTS = [
 ];
 
 export const usePlots = () => {
-  const [plots, setPlots] = useState(DUMMY_PLOTS);
+  const [plots, setPlots] = useState(
+    DUMMY_PLOTS.forEach((p) => {
+      p.properties.bbox = bbox(p);
+      p.properties.ndviUrl = getNDVILayerUrl(p);
+    })
+  );
   const [unfilteredPlots, setUnfilteredPlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [plotFilters, setPlotFilters] = useState(EMPTY_FILTERS);
 
   const resetFilters = () => {
     setPlotFilters(EMPTY_FILTERS);
+    ``;
   };
 
   const filterPlots = (unfilteredPlots) => {
@@ -100,6 +108,7 @@ export const usePlots = () => {
   };
 
   const addNewPlot = (newPlot) => {
+    newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
     setPlots((prev) => [...prev, newPlot]);
   };
 
@@ -118,6 +127,7 @@ export const usePlots = () => {
   };
 
   useEffect(() => {
+    console.log('plots are ', plots);
     setPlots(filterPlots(unfilteredPlots));
   }, [plotFilters]);
 
@@ -130,6 +140,8 @@ export const usePlots = () => {
 
     fetchData();
   }, []);
+
+  console.log('plots', plots);
 
   return {
     plots,

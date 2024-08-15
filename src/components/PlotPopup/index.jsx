@@ -38,6 +38,14 @@ export default function PlotPopup({ popupInfo, onClose }) {
             },
             { label: 'Average NDVI', value: 0.3 },
             { label: 'Crop', value: 'Potato' },
+            {
+              label: 'NDVI URL',
+              value: (
+                <a href={`${plot?.properties?.ndviUrl}`} target='_blank'>
+                  download
+                </a>
+              ),
+            },
           ]}
         />
       </div>
