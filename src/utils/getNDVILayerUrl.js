@@ -12,8 +12,8 @@ export const getNDVILayerUrl = (plot) => {
     MAXCC: 20,
     REQUEST: 'GetMap',
     FORMAT: 'image/jpeg',
-    WIDTH: 320,
-    HEIGHT: 320,
+    WIDTH: 256,
+    HEIGHT: 256,
     TIME: '2024-03-29/2024-05-29',
     BBOX: `${b[0]},${b[1]},${b[2]},${b[3]}`,
   });

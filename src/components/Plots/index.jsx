@@ -11,21 +11,23 @@ export default function Plots() {
   const { drawRef, mapRef } = useContext(MapContext);
   const { current: map } = useMap();
 
-  const layerStyle = {
+  const plotLineStyle = {
+    id: 'plots-line-layer',
+    type: 'line',
+    paint: {
+      // 'fill-color': '#e31717', // Plot fill color
+      // 'fill-opacity': 0.2,
+      'line-color': '#e31717', // Plot outline color
+      'line-width': 2, // Outline width set to 2px
+    },
+  };
+
+  const plotFillStyle = {
     id: 'plots-layer',
     type: 'fill',
     paint: {
       'fill-color': '#e31717', // Plot fill color
-      'fill-opacity': 0.2,
-    },
-  };
-
-  const ndviLayerStyle = {
-    id: 'ndvi-layer',
-    type: 'raster',
-    source: 'ndvi-source',
-    paint: {
-      'raster-opacity': 0.7,
+      'fill-opacity': 0,
     },
   };
 
@@ -66,6 +68,15 @@ export default function Plots() {
     map.getCanvas().style.cursor = '';
   };
 
+  const ndviLayerStyle = (plotId) => ({
+    id: `ndvi-layer-${plotId}`,
+    type: 'raster',
+    source: `ndvi-source-${plotId}`,
+    paint: {
+      'raster-opacity': 0.7,
+    },
+  });
+
   useEffect(() => {
     if (map) {
       map.on('click', 'plots-layer', handleMapClick);
@@ -91,7 +102,36 @@ export default function Plots() {
         type='geojson'
         data={{ type: 'FeatureCollection', features: plots }}
       >
-        <Layer {...layerStyle} />
+        <Layer {...plotLineStyle} />
+        <Layer {...plotFillStyle} />
+        {/* {plots.map((plot, index) => {
+          const ndviUrl = plot.properties.ndviUrl;
+          const bbox = plot.properties.bbox; // Assuming your plot has a bbox property
+
+          // Check if ndviUrl and bbox are defined
+          if (!ndviUrl || !bbox) {
+            console.warn(`Plot ${index} is missing ndviUrl or bbox`);
+            return null;
+          }
+
+          return (
+            <Source
+              key={plot.id}
+              id={`ndvi-source-${plot.id}`}
+              type='raster'
+              tiles={[ndviUrl]} // NDVI URL from plot properties
+              tileSize={256}
+              // bounds={bbox} // Define the bounds to clip the NDVI to the plot boundary
+            >
+              <Layer
+                // minzoom={12}
+                // maxzoom={22}
+                {...ndviLayerStyle(plot.id)}
+                beforeId='plots-layer'
+              />
+            </Source>
+          );
+        })} */}
       </Source>
 
       {clickedPlot && (

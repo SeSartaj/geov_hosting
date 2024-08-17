@@ -5,12 +5,32 @@ import LabelValueList from '../../ui-components/LabelValueList';
 import { calculatePolygonArea } from '../../utils/calculatePolygonArea';
 import { area } from '@turf/turf';
 import NdviChart from '../PlotNDVIChart';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PlotContext } from '@/contexts/PlotContext';
+import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { plot } = popupInfo;
   const { showPlots, clickedPlot } = useContext(PlotContext);
+  const [weeksBefore, setWeeksBefore] = useState(0);
+
+  const handleNDVIImageDownload = async () => {
+    const ndviDataUrl = await fetchNDVIImage(plot, {
+      weeksBefore: weeksBefore,
+    });
+    if (ndviDataUrl) {
+      // create a link and click it to download the image
+      const link = document.createElement('a');
+      link.href = ndviDataUrl;
+      // include current date - weeks before in the name
+      link.download = `${plot.properties.name}_${new Date(
+        new Date().setDate(new Date().getDate() - weeksBefore * 7 - 14)
+      ).toISOString()}__NDVI.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   if (!showPlots || !clickedPlot) return null;
 
@@ -23,13 +43,13 @@ export default function PlotPopup({ popupInfo, onClose }) {
       onClose={onClose}
       anchor='top'
       style={{ width: 240 }}
-      className='plot-popup'
+      className='plot-popup overflow-y-hidden max-h-96'
     >
-      <div className='popup-header'>
+      <div className='popup-header dark:text-gray-100 font-black text-[14px]'>
         <h3>{plot.properties.name}</h3>
       </div>
       <hr />
-      <div className='popup-content'>
+      <div className='popup-content '>
         <LabelValueList
           list={[
             {
@@ -41,16 +61,29 @@ export default function PlotPopup({ popupInfo, onClose }) {
             {
               label: 'NDVI URL',
               value: (
-                <a href={`${plot?.properties?.ndviUrl}`} target='_blank'>
-                  download
-                </a>
+                <>
+                  <input
+                    type='range'
+                    min='0'
+                    max='52'
+                    value={weeksBefore}
+                    onChange={(e) => setWeeksBefore(e.target.value)}
+                    style={{ direction: 'rtl' }}
+                  />
+                  {new Date(
+                    new Date().setDate(new Date().getDate() - weeksBefore * 7)
+                  ).toLocaleDateString()}
+                  <MyButton onClick={handleNDVIImageDownload}>
+                    download
+                  </MyButton>
+                </>
               ),
             },
           ]}
         />
+        <span className='lvi-label'>NDVI history: </span>
+        <NdviChart plot={plot} />
       </div>
-      <span className='lvi-label'>NDVI history: </span>
-      <NdviChart />
     </Popup>
   );
 }

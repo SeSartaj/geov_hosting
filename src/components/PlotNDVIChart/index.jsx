@@ -2,6 +2,19 @@ import { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { BiLoader } from 'react-icons/bi';
+import { fetchMeanNDVI } from '@/api/sentinalHubApi';
+
+function parseNDVIData(data) {
+  if (!data) return;
+  if (!data.length > 0) return;
+
+  return data.map((entry) => {
+    return {
+      x: new Date(entry.interval.from).getTime(), // Convert date to timestamp
+      y: entry.outputs.data.bands.B0.stats.mean, // Extract mean NDVI value
+    };
+  });
+}
 
 const SAMPLE_NDVI_DATA = [
   [1721728800000, 0.23],
@@ -22,8 +35,8 @@ const transformNdviData = (data) => {
 const transformedNdviData = transformNdviData(SAMPLE_NDVI_DATA);
 
 const NdviChart = ({ plot }) => {
-  const [ndviData, setNdviData] = useState(transformedNdviData);
-  const [loading, setLoading] = useState(false);
+  const [ndviData, setNdviData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const options = {
     chart: {
@@ -97,16 +110,52 @@ const NdviChart = ({ plot }) => {
       enabled: false, // Disable the legend
     },
   };
+  const ndviChartOptions = {
+    chart: {
+      type: 'line',
+      margin: [0, 0, 0, 0], // Remove margins
+      height: 120, // Adjust height to reduce the size of the chart
+    },
+    title: {
+      text: '', // Remove the chart title
+    },
+    xAxis: {
+      type: 'datetime',
+      title: {
+        text: null, // Remove x-axis title
+      },
+    },
+    yAxis: {
+      title: {
+        text: null, // Remove y-axis title
+      },
+      min: 0,
+      max: 1,
+    },
+    series: [
+      {
+        name: 'NDVI',
+        data: parseNDVIData(ndviData),
+        tooltip: {
+          valueDecimals: 2,
+        },
+      },
+    ],
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         // this is temporary for testing, user marker.id instead
         // const data = await getNdviData(8386);
-        setNdviData(transformedNdviData);
+
+        const data = await fetchMeanNDVI(plot);
+        console.log('ndvi data', ndviData);
+        if (data) {
+          setNdviData(data);
+        }
       } catch (error) {
-        console.log('Error fetching NDVI data');
+        console.log('Error fetching NDVI data', error);
       } finally {
         setLoading(false);
       }
@@ -117,7 +166,7 @@ const NdviChart = ({ plot }) => {
 
   if (loading) return <BiLoader />;
 
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  return <HighchartsReact highcharts={Highcharts} options={ndviChartOptions} />;
 };
 
 export default NdviChart;

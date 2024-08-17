@@ -1,2 +1,8 @@
 .plot-popup {
+  max-height: 400px;
+}
+
+.popup-content {
+  height: 100%;
+  overflow-y: scroll;
 }
