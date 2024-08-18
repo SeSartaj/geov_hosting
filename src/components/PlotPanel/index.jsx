@@ -1,88 +1,21 @@
 import { useContext, useDebugValue, useEffect, useState } from 'react';
 import { PlotContext } from '../../contexts/PlotContext';
-import { MapContext } from '../../contexts/MapContext';
-import { LngLatBounds, Padding } from 'maplibre-gl';
 import { calculatePolygonArea } from '../../utils/calculatePolygonArea';
 import { squareMetersToAcres } from '../../utils/squareMetersToAcres';
 import { BiPencil } from 'react-icons/bi';
 import ToggleButton from '@/ui-components/toggleButton';
+import MyButton from '@/ui-components/MyButton';
 
 export default function PlotPanel() {
-  const { plots, updatePlot, showPlots, setShowPlots } =
-    useContext(PlotContext);
-  const { mapRef, drawRef } = useContext(MapContext);
-  const [editingPlot, setEditingPlot] = useState(null);
-
-  const map = mapRef.current.getMap();
-  const draw = drawRef.current;
-
-  const handleDrawComplete = (event) => {
-    console.log('mode', event.mode);
-    // delete draws after completion
-    console.log('event', event);
-    console.log('deleting edited plot drawing layer', editingPlot);
-    if (event.mode === 'simple_select') {
-      draw.delete([editingPlot?.id]);
-    }
-  };
-  const handleDrawChange = (event) => {
-    // Update the plot when it is edited
-    if (event.features && event.features.length > 0) {
-      updatePlot(event.features[0]);
-    }
-  };
-
-  const handleFlyToPlot = (coordinates) => {
-    const map = mapRef.current.getMap();
-    if (map) {
-      const bounds = new LngLatBounds();
-
-      coordinates.forEach((polygon) => {
-        polygon.forEach((coord) => {
-          bounds.extend([coord[0], coord[1]]);
-        });
-      });
-
-      map.fitBounds(bounds, {
-        padding: 150,
-        essential: true,
-      });
-    }
-  };
-
-  const handleEditPlot = (plot) => {
-    console.log('plot to be edited', plot);
-    if (map) {
-      console.log('editing inside');
-      const draw = drawRef.current;
-      handleFlyToPlot(plot.geometry.coordinates);
-      if (draw) {
-        // remove anything drawn before
-        draw.deleteAll();
-        // add the plot to draw layer
-        draw.add(plot);
-        setEditingPlot(plot);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (map && draw) {
-      // Listen to draw.update event for edits
-      map.on('draw.update', handleDrawChange);
-      map.on('draw.modechange', handleDrawComplete);
-
-      // Clean up the event listeners when the component unmounts
-      return () => {
-        map.off('draw.update', handleDrawChange);
-        map.off('draw.modechange', handleDrawComplete);
-      };
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log('editingPlot changed', editingPlot);
-  }, [editingPlot]);
+  const {
+    plots,
+    showPlots,
+    setShowPlots,
+    handleFlyToPlot,
+    handleEditPlot,
+    weeksBefore,
+    setWeeksBefore,
+  } = useContext(PlotContext);
 
   return (
     <div className='panel-container'>
@@ -96,6 +29,21 @@ export default function PlotPanel() {
           onToggle={setShowPlots}
         />
       </div>
+      <hr className='my-1' />
+      <input
+        type='range'
+        min='0'
+        max='52'
+        value={weeksBefore}
+        onChange={(e) => setWeeksBefore(e.target.value)}
+        style={{ direction: 'rtl' }}
+        className='w-full'
+      />
+      <span className='flex flex-row justify-between items-center'>
+        {new Date(
+          new Date().setDate(new Date().getDate() - weeksBefore * 7)
+        ).toLocaleDateString()}
+      </span>
       <hr className='my-2' />
       <ul className='overflow-y-scroll'>
         {plots.map((plot, index) => (

@@ -22,6 +22,7 @@ const DUMMY_PLOTS = [
     properties: {
       name: 'Plot 1',
       farm: 'Farm 1',
+      id: 'lmvkmsdmweioldmfsk',
     },
   },
   {
@@ -42,6 +43,7 @@ const DUMMY_PLOTS = [
     properties: {
       name: 'Plot 2',
       farm: 'Farm 1',
+      id: 'idskkaldmlvksdkds',
     },
   },
   {
@@ -62,16 +64,19 @@ const DUMMY_PLOTS = [
     properties: {
       name: 'Plot 3',
       farm: 'Farm 1',
+      id: '17cf8c98320177b926eew6ab',
     },
   },
   {
-    id: '195998dfd94a7cf8c98320177b9266ab',
+    id: '17cf8c98320177b926eew6ab',
     type: 'Feature',
     properties: {
       name: 'plot 1 3',
       description: 'ksdkf',
+      id: '17cf8c98320177b926eew6ab',
     },
     geometry: {
+      type: 'Polygon',
       coordinates: [
         [
           [-72.30484165371566, -40.08026576811746],
@@ -82,11 +87,10 @@ const DUMMY_PLOTS = [
           [-72.30484165371566, -40.08026576811746],
         ],
       ],
-      type: 'Polygon',
     },
   },
   {
-    id: 'e056775150d0a46521eead375d1f68b1',
+    id: 'd0a46521eead375d1f68b1',
     type: 'Feature',
     properties: {
       name: 'plot 23`ksd',

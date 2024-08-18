@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { getMapSettings } from '@/api/mapApi';
 import { usePrefersDarkMode } from '@/hooks/usePrefersDarkMode';
+import useAccessToken from '@/hooks/useAccessToken';
 
 // Create a new context for the map
 const SettingsContext = createContext();
@@ -16,6 +17,7 @@ const SettingsProvider = ({ children }) => {
     },
   });
   const isDarkMode = usePrefersDarkMode();
+  const accessToken = useAccessToken();
 
   const [initialViewState, setInitialViewState] = useState(null);
 
@@ -34,7 +36,13 @@ const SettingsProvider = ({ children }) => {
 
   return (
     <SettingsContext.Provider
-      value={{ settings, setSettings, isDarkMode, initialViewState }}
+      value={{
+        settings,
+        setSettings,
+        isDarkMode,
+        initialViewState,
+        accessToken,
+      }}
     >
       {children}
     </SettingsContext.Provider>

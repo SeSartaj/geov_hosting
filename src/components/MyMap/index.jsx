@@ -1,8 +1,8 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './mapbox-draw-style.css';
 
-import Map, { Layer, Source } from 'react-map-gl/maplibre';
-import { useContext, useEffect, useState } from 'react';
+import Map from 'react-map-gl/maplibre';
+import { useContext } from 'react';
 import { FullscreenControl } from 'react-map-gl/maplibre';
 
 import { MapContext } from '../../contexts/MapContext';
@@ -14,8 +14,6 @@ import PAWStatusPieChart from '../PAWStatusPieChart';
 import Plots from '../Plots';
 import { DrawPolygonControl } from '../DrawPolygonControl';
 import Spinner from '@/ui-components/Spinner';
-import { NDVI_LAYER_URL } from '@/api/sentinalHubApi';
-import PlotNdvi from '../PlotNdvi';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -32,7 +30,7 @@ export default function MyMap() {
       style={{ width: '100%', height: '80vh' }}
       mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}
       attributionControl={false}
-      // reuseMaps
+      reuseMaps
     >
       <FullscreenControl position='top-right' />
       <Sidebar />
@@ -40,15 +38,6 @@ export default function MyMap() {
       <Markers />
       <MarkerPopup />
       <Plots />
-      {/* <PlotNdvi /> */}
-      {/* <Source id='ndvi' type='raster' tiles={[NDVI_LAYER_URL]} tileSize={256} />
-      <Layer
-        id='ndvi-layer'
-        type='raster'
-        source='ndvi'
-        paint={{ 'raster-opacity': 0.6 }}
-      /> */}
-      {/* <AddNewPlotUI /> */}
       <DrawPolygonControl />
     </Map>
   );

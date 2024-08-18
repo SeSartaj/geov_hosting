@@ -4,7 +4,7 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import './mapbox-draw-style.css';
 import './styles.css';
 import DrawActionsPopup from '../DrawActionsPopup';
-import { useControl, useMap } from 'react-map-gl';
+import { useControl, useMap } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
 
 const DRAW_LAYERS = [
@@ -17,10 +17,9 @@ const DRAW_LAYERS = [
 
 export function DrawPolygonControl() {
   const [features, setFeatures] = useState({});
-  const [mode, setMode] = useState('');
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [hoveredFeature, setHoveredFeature] = useState(null);
-  const { drawRef, mapRef } = useContext(MapContext);
+  const { drawRef, mapRef, mode, setMode } = useContext(MapContext);
   // Set the custom classes for MapLibre
   constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
   constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
@@ -89,7 +88,6 @@ export function DrawPolygonControl() {
     // when popup is deleted, the popup should disappear
     console.log('selection changed', e);
     // print all drawn features to consule
-    console.log('selected Ids', drawRef.current.getSelectedIds());
     setSelectedFeatures(drawRef.current.getSelected());
   };
 
@@ -103,8 +101,6 @@ export function DrawPolygonControl() {
       mapInstance.off('draw.selectionchange', handleSelectionChange);
     };
   }, [drawRef]);
-
-  console.log('selected Features', selectedFeatures, mode);
 
   if (selectedFeatures) {
     return (

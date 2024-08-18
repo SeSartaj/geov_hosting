@@ -49,6 +49,7 @@ const evalscript = `
   }
   `;
 
+// gets client id and secret from the environment
 export async function getAccessToken() {
   const tokenUrl = 'https://services.sentinel-hub.com/oauth/token';
 
@@ -72,8 +73,31 @@ export async function getAccessToken() {
   return data.access_token;
 }
 
-export async function fetchMeanNDVI(plot) {
-  const accessToken = await getAccessToken();
+export async function fetchAccessToken(clientId, clientSecret) {
+  const url = 'https://services.sentinel-hub.com/oauth/token';
+  const body = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: clientId,
+    client_secret: clientSecret,
+  });
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body.toString(),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch access token');
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+export async function fetchMeanNDVI(plot, { accessToken }) {
   const sentinelHubStatUrl =
     'https://services.sentinel-hub.com/api/v1/statistics';
 
@@ -132,5 +156,55 @@ export async function fetchMeanNDVI(plot) {
   } catch (error) {
     console.error('Error fetching NDVI statistics:', error);
     return null;
+  }
+}
+
+export async function getSatellitePassDates(aoi, startDate, endDate) {
+  // if start and end dates are not provided, use the last 6 months
+  if (!startDate || !endDate) {
+    const today = new Date();
+    startDate = new Date(today.setMonth(today.getMonth() - 6))
+      .toISOString()
+      .split('T')[0]; // YYYY-MM-DD
+    endDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  }
+
+  const formattedStartDate = `${startDate}T00:00:00Z`;
+  const formattedEndDate = `${endDate}T23:59:59Z`;
+
+  const accessToken = await getAccessToken();
+  const url = 'https://services.sentinel-hub.com/api/v1/catalog/search';
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  };
+
+  const body = {
+    bbox: aoi,
+    datetime: `${formattedStartDate}/${formattedEndDate}`,
+    collections: ['sentinel-2-l1c'],
+    limit: 50,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Extract dates from the response
+    const dates = data.features.map((feature) => feature.properties.datetime);
+
+    return dates;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
   }
 }

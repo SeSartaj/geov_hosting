@@ -1,15 +1,120 @@
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { PlotContext } from '../../contexts/PlotContext';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
-import { useMap } from 'react-map-gl';
+import { useMap } from 'react-map-gl/maplibre';
 import PlotPopup from '../PlotPopup';
+import useAccessToken from '@/hooks/useAccessToken';
+import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
+import { bbox } from '@turf/turf';
+import debounce from '@/utils/debounce';
 
 export default function Plots() {
-  const { plots, showPlots, clickedPlot, setClickedPlot } =
-    useContext(PlotContext);
+  const {
+    plots,
+    showPlots,
+    clickedPlot,
+    setClickedPlot,
+    weeksBefore,
+    ndviLoading,
+    setNdviLoading,
+  } = useContext(PlotContext);
   const { drawRef, mapRef } = useContext(MapContext);
-  const { current: map } = useMap();
+
+  const accessToken = useAccessToken();
+  const map = mapRef?.current?.getMap();
+
+  const addNDVIImageToMap = useCallback(
+    (imageUrl, plot, { map }) => {
+      if (!map) throw new Error('map is not defined');
+
+      console.log('plotss', plot);
+      if (!plot || !plot.geometry || plot.geometry.type !== 'Polygon')
+        return null;
+
+      // const { geometry } = plot;
+
+      // Calculate the bounding box [minX, minY, maxX, maxY]
+      const [minX, minY, maxX, maxY] = bbox(plot.geometry);
+
+      // Define the bounds of the image as the four corners of the bounding box
+      const bounds = [
+        [minX, maxY], // top-left corner
+        [maxX, maxY], // top-right corner
+        [maxX, minY], // bottom-right corner
+        [minX, minY], // bottom-left corner
+      ];
+      // Check if the source and layer with the same id already exist
+      const sourceId = `ndviImageSource-${plot.properties.id}-${weeksBefore}`;
+      const layerId = `ndviImageLayer-${plot.properties.id}-${weeksBefore}`;
+
+      if (map.getLayer(layerId)) {
+        map.removeLayer(layerId);
+      }
+
+      if (map.getSource(sourceId)) {
+        map.removeSource(sourceId);
+      }
+
+      // Add the image as a raster layer
+      map.addSource(sourceId, {
+        type: 'image',
+        url: imageUrl,
+        coordinates: bounds,
+      });
+
+      map.addLayer({
+        id: layerId,
+        type: 'raster',
+        source: sourceId,
+        paint: {
+          'raster-opacity': 0.85,
+        },
+      });
+    },
+    [weeksBefore]
+  );
+
+  const getNdviLayerId = (plot) => {
+    return `ndviImageLayer-${plot.properties.id}-${weeksBefore}`;
+  };
+
+  const handleNDVIImageDownload = useCallback(
+    async (plot, { accessToken, map }) => {
+      // clone the plot object to avoid mutating the original object
+      if (!map) throw new Error('map is not defined');
+
+      // Check if the ndvi layer for this plot is already added to the map
+      const layerId = `ndviImageLayer-${plot.properties.id}-${weeksBefore}`;
+      console.log('plotid', layerId);
+      if (map.getLayer(layerId)) {
+        console.log('NDVI layer already added for this plot');
+        return;
+      }
+      try {
+        // if the plot is already loading, return
+        if (ndviLoading.includes(plot.properties.id)) return;
+        setNdviLoading([...ndviLoading, plot.properties.id]);
+        const ndviDataUrl = await fetchNDVIImage(plot, {
+          weeksBefore: weeksBefore,
+          accessToken: accessToken,
+        });
+
+        if (!plot) throw new Error('plot is not defined');
+        console.log('mapp', map);
+
+        if (ndviDataUrl) {
+          addNDVIImageToMap(ndviDataUrl, plot, { map });
+        }
+      } catch (error) {
+        console.log('error in loading ndvi layer');
+      } finally {
+        setNdviLoading(ndviLoading.filter((id) => id !== plot.properties.id));
+      }
+      // Add the image to the map
+    },
+    [weeksBefore, addNDVIImageToMap]
+  );
 
   const plotLineStyle = {
     id: 'plots-line-layer',
@@ -68,20 +173,63 @@ export default function Plots() {
     map.getCanvas().style.cursor = '';
   };
 
-  const ndviLayerStyle = (plotId) => ({
-    id: `ndvi-layer-${plotId}`,
-    type: 'raster',
-    source: `ndvi-source-${plotId}`,
-    paint: {
-      'raster-opacity': 0.7,
-    },
-  });
+  const isBoundingBoxIntersecting = useCallback((plotBounds, mapBounds) => {
+    const [minX, minY, maxX, maxY] = plotBounds;
+    const [[mapMinX, mapMinY], [mapMaxX, mapMaxY]] = mapBounds.toArray();
+
+    // Check for intersection
+    return !(
+      minX > mapMaxX ||
+      maxX < mapMinX ||
+      minY > mapMaxY ||
+      maxY < mapMinY
+    );
+  }, []);
+
+  const handleViewportChange = useCallback(() => {
+    if (!map) return;
+    // Get the current zoom level
+    const zoom = map.getZoom();
+
+    // Check if the zoom level is within the desired range
+    const zoomLevelThreshold = 10; // Define the zoom level threshold
+    if (zoom >= zoomLevelThreshold) {
+      const bounds = map.getBounds();
+
+      // Check for each plot if it's visible in the current map view
+      plots.forEach((plot) => {
+        const plotBounds = bbox(plot); // Get bounding box of the plot
+
+        // Check if the plot's bounding box intersects with the map's bounds
+        if (isBoundingBoxIntersecting(plotBounds, bounds)) {
+          // Call the function to download and add NDVI image
+          handleNDVIImageDownload(plot, { accessToken, map });
+        }
+      });
+    }
+  }, [
+    map,
+    plots,
+    accessToken,
+    handleNDVIImageDownload,
+    isBoundingBoxIntersecting,
+  ]);
+
+  useEffect(() => {
+    const debouncedHandleViewportChange = debounce(handleViewportChange, 500);
+    debouncedHandleViewportChange();
+    return () => {
+      debouncedHandleViewportChange.cancel();
+    };
+  }, [weeksBefore, handleViewportChange]);
 
   useEffect(() => {
     if (map) {
       map.on('click', 'plots-layer', handleMapClick);
       map.on('mouseenter', 'plots-layer', handleMouseEnter);
       map.on('mouseleave', 'plots-layer', handleMouseLeave);
+      map.on('moveend', handleViewportChange);
+      map.on('zoomend', handleViewportChange);
     }
 
     return () => {
@@ -89,6 +237,8 @@ export default function Plots() {
         map.off('click', 'plots-layer', handleMapClick);
         map.off('mouseenter', 'plots-layer', handleMouseEnter);
         map.off('mouseleave', 'plots-layer', handleMouseLeave);
+        map.off('moveend', handleViewportChange);
+        map.off('zoomend', handleViewportChange);
       }
     };
   }, [map, showPlots]);
@@ -104,34 +254,6 @@ export default function Plots() {
       >
         <Layer {...plotLineStyle} />
         <Layer {...plotFillStyle} />
-        {/* {plots.map((plot, index) => {
-          const ndviUrl = plot.properties.ndviUrl;
-          const bbox = plot.properties.bbox; // Assuming your plot has a bbox property
-
-          // Check if ndviUrl and bbox are defined
-          if (!ndviUrl || !bbox) {
-            console.warn(`Plot ${index} is missing ndviUrl or bbox`);
-            return null;
-          }
-
-          return (
-            <Source
-              key={plot.id}
-              id={`ndvi-source-${plot.id}`}
-              type='raster'
-              tiles={[ndviUrl]} // NDVI URL from plot properties
-              tileSize={256}
-              // bounds={bbox} // Define the bounds to clip the NDVI to the plot boundary
-            >
-              <Layer
-                // minzoom={12}
-                // maxzoom={22}
-                {...ndviLayerStyle(plot.id)}
-                beforeId='plots-layer'
-              />
-            </Source>
-          );
-        })} */}
       </Source>
 
       {clickedPlot && (

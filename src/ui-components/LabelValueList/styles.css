@@ -8,6 +8,12 @@
   align-items: center;
   border-bottom: 1px solid grey;
 }
+
+.block-label-value-item {
+  display: block;
+  border-bottom: 1px solid grey;
+}
+
 .lvi-label {
   color: rgb(59, 59, 59);
 }

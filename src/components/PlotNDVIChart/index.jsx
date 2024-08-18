@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { BiLoader } from 'react-icons/bi';
 import { fetchMeanNDVI } from '@/api/sentinalHubApi';
+import Spinner from '@/ui-components/Spinner';
+import useAccessToken from '@/hooks/useAccessToken';
 
 function parseNDVIData(data) {
   if (!data) return;
@@ -16,51 +17,34 @@ function parseNDVIData(data) {
   });
 }
 
-const SAMPLE_NDVI_DATA = [
-  [1721728800000, 0.23],
-  [1721754000000, 0.45],
-  [1721757600000, 0.34],
-  [1721977200000, 0.15],
-  [1721980800000, 0.2],
-  [1721984400000, 0.23],
-];
-
-const transformNdviData = (data) => {
-  return data.map(([timestamp, ndvi]) => ({
-    time: timestamp,
-    ndvi,
-  }));
-};
-
-const transformedNdviData = transformNdviData(SAMPLE_NDVI_DATA);
-
 const NdviChart = ({ plot }) => {
   const [ndviData, setNdviData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const accessToken = useAccessToken();
 
-  const options = {
+  const ndviChartOptions = {
     chart: {
       type: 'line',
-      height: 100,
+      margin: [0, 0, 0, 0],
+      height: 120,
     },
     title: {
-      text: null, // No title
+      text: '',
     },
     xAxis: {
-      categories: ndviData.map((d) => new Date(d.time).toLocaleDateString()),
-      tickLength: 0, // Hide ticks
-      labels: {
-        enabled: false, // Hide labels
+      type: 'datetime',
+      title: {
+        text: null,
       },
     },
     yAxis: {
       min: -1,
       max: 1,
       title: {
-        text: null, // No title
+        text: null,
       },
-      gridLineWidth: 0, // Remove horizontal grid lines
-      lineWidth: 0, // Remove the axis line itself
+      gridLineWidth: 0,
+      lineWidth: 0,
       plotBands: [
         {
           from: -1,
@@ -69,7 +53,7 @@ const NdviChart = ({ plot }) => {
         },
         {
           from: 0,
-          to: 0.2,
+          to: 0.1,
           color: 'rgba(165, 42, 42, 0.3)', // Brown
         },
         {
@@ -78,59 +62,19 @@ const NdviChart = ({ plot }) => {
           color: 'rgba(144, 238, 144, 0.3)', // Light green
         },
         {
-          from: 0.5,
-          to: 1,
+          from: 0.6,
+          to: 0.9,
           color: 'rgba(0, 128, 0, 0.3)', // Green
+        },
+        {
+          from: 0.9,
+          to: 1,
+          color: 'rgba(34, 139, 34, 0.3)', // Darker green
         },
       ],
       labels: {
         enabled: false,
       },
-    },
-    tooltip: {
-      formatter: function () {
-        return `Date: ${this.x}<br>NDVI: ${this.y}`;
-      },
-    },
-    series: [
-      {
-        name: 'NDVI',
-        data: ndviData.map((d) => d.ndvi),
-        color: '#333',
-        lineWidth: 1,
-        marker: {
-          enabled: false, // Hide dots
-        },
-      },
-    ],
-    credits: {
-      enabled: false, // Disable the Highcharts watermark
-    },
-    legend: {
-      enabled: false, // Disable the legend
-    },
-  };
-  const ndviChartOptions = {
-    chart: {
-      type: 'line',
-      margin: [0, 0, 0, 0], // Remove margins
-      height: 120, // Adjust height to reduce the size of the chart
-    },
-    title: {
-      text: '', // Remove the chart title
-    },
-    xAxis: {
-      type: 'datetime',
-      title: {
-        text: null, // Remove x-axis title
-      },
-    },
-    yAxis: {
-      title: {
-        text: null, // Remove y-axis title
-      },
-      min: 0,
-      max: 1,
     },
     series: [
       {
@@ -138,9 +82,37 @@ const NdviChart = ({ plot }) => {
         data: parseNDVIData(ndviData),
         tooltip: {
           valueDecimals: 2,
+          pointFormatter: function () {
+            let description = '';
+            if (this.y < 0) {
+              description = 'Water bodies, clouds, snow';
+            } else if (this.y >= 0 && this.y < 0.1) {
+              description = 'Bare soil, sand, rock';
+            } else if (this.y >= 0.2 && this.y < 0.5) {
+              description = 'Shrubs, grasslands, sparse vegetation';
+            } else if (this.y >= 0.6 && this.y < 0.9) {
+              description = 'Dense vegetation, forests, crops';
+            } else if (this.y >= 0.9 && this.y <= 1) {
+              description = 'well-irrigated and healthy crops';
+            }
+            return `<b>${this.series.name}</b>: ${this.y.toFixed(
+              2
+            )}<br/>${description}`;
+          },
+        },
+        color: '#333',
+        lineWidth: 1,
+        marker: {
+          enabled: false,
         },
       },
     ],
+    credits: {
+      enabled: false,
+    },
+    legend: {
+      enabled: false,
+    },
   };
 
   useEffect(() => {
@@ -148,9 +120,7 @@ const NdviChart = ({ plot }) => {
       try {
         // this is temporary for testing, user marker.id instead
         // const data = await getNdviData(8386);
-
-        const data = await fetchMeanNDVI(plot);
-        console.log('ndvi data', ndviData);
+        const data = await fetchMeanNDVI(plot, { accessToken });
         if (data) {
           setNdviData(data);
         }
@@ -164,7 +134,7 @@ const NdviChart = ({ plot }) => {
     fetchData();
   }, []);
 
-  if (loading) return <BiLoader />;
+  if (loading) return <Spinner />;
 
   return <HighchartsReact highcharts={Highcharts} options={ndviChartOptions} />;
 };
