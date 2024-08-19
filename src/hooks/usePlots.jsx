@@ -71,9 +71,9 @@ const DUMMY_PLOTS = [
     id: '17cf8c98320177b926eew6ab',
     type: 'Feature',
     properties: {
+      id: '17cf8c98320177b926eew6ab',
       name: 'plot 1 3',
       description: 'ksdkf',
-      id: '17cf8c98320177b926eew6ab',
     },
     geometry: {
       type: 'Polygon',

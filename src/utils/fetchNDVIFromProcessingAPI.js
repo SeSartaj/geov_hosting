@@ -56,6 +56,8 @@ function evaluatePixel(samples) {
 }
 `;
 
+const ndviCache = {};
+
 async function fetchNDVIFromProcessingAPI(
   plot,
   { weeksBefore = 0, accessToken }
@@ -69,13 +71,20 @@ async function fetchNDVIFromProcessingAPI(
       new Date().setDate(new Date().getDate() - weeksBefore * 7)
     ).toISOString(),
   };
+
+  const cacheKey = `${plot.properties.id}-${weeksBefore}`;
+
+  // Check if the URL is already in the cache
+  if (ndviCache[cacheKey]) {
+    console.log('NDVI data found in cache');
+    return ndviCache[cacheKey];
+  }
+
   console.log('access Token', accessToken);
   const bboxCoords = convertBboxToEPSG3857(bbox(plot));
   if (!bboxCoords) {
     throw new Error('Invalid BBOX');
   }
-
-  console.log('bboxCoords', bboxCoords);
 
   const sentinelHubUrl = 'https://services.sentinel-hub.com/api/v1/process';
 
@@ -136,6 +145,9 @@ async function fetchNDVIFromProcessingAPI(
       return null;
     }
     const url = URL.createObjectURL(blob);
+
+    // Store the URL in the cache
+    ndviCache[cacheKey] = url;
     return url;
   } catch (error) {
     console.error('Error fetching NDVI data:', error);

@@ -20,7 +20,6 @@ export default function Plots() {
     setNdviLoading,
   } = useContext(PlotContext);
   const { drawRef, mapRef } = useContext(MapContext);
-
   const accessToken = useAccessToken();
   const map = mapRef?.current?.getMap();
 
@@ -45,8 +44,8 @@ export default function Plots() {
         [minX, minY], // bottom-left corner
       ];
       // Check if the source and layer with the same id already exist
-      const sourceId = `ndviImageSource-${plot.properties.id}-${weeksBefore}`;
-      const layerId = `ndviImageLayer-${plot.properties.id}-${weeksBefore}`;
+      const sourceId = `ndviImageSource-${plot.properties.id}`;
+      const layerId = `ndviImageLayer-${plot.properties.id}`;
 
       if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
@@ -80,16 +79,21 @@ export default function Plots() {
   };
 
   const handleNDVIImageDownload = useCallback(
-    async (plot, { accessToken, map }) => {
+    async (plot, { accessToken, map, timeTravel }) => {
       // clone the plot object to avoid mutating the original object
       if (!map) throw new Error('map is not defined');
 
       // Check if the ndvi layer for this plot is already added to the map
-      const layerId = `ndviImageLayer-${plot.properties.id}-${weeksBefore}`;
-      console.log('plotid', layerId);
+      const layerId = `ndviImageLayer-${plot.properties.id}`;
+
       if (map.getLayer(layerId)) {
-        console.log('NDVI layer already added for this plot');
-        return;
+        if (timeTravel) {
+          console.log('only time travel');
+          map.removeLayer(layerId);
+        } else {
+          console.log('NDVI layer already added for this plot');
+          return;
+        }
       }
       try {
         // if the plot is already loading, return
@@ -186,42 +190,49 @@ export default function Plots() {
     );
   }, []);
 
-  const handleViewportChange = useCallback(() => {
-    if (!map) return;
-    // Get the current zoom level
-    const zoom = map.getZoom();
+  const handleViewportChange = useCallback(
+    ({ timeTravel = false }) => {
+      if (!map) return;
+      // Get the current zoom level
+      const zoom = map.getZoom();
 
-    // Check if the zoom level is within the desired range
-    const zoomLevelThreshold = 10; // Define the zoom level threshold
-    if (zoom >= zoomLevelThreshold) {
-      const bounds = map.getBounds();
+      // Check if the zoom level is within the desired range
+      const zoomLevelThreshold = 10; // Define the zoom level threshold
+      if (zoom >= zoomLevelThreshold) {
+        const bounds = map.getBounds();
 
-      // Check for each plot if it's visible in the current map view
-      plots.forEach((plot) => {
-        const plotBounds = bbox(plot); // Get bounding box of the plot
+        // Check for each plot if it's visible in the current map view
+        plots.forEach((plot) => {
+          const plotBounds = bbox(plot); // Get bounding box of the plot
 
-        // Check if the plot's bounding box intersects with the map's bounds
-        if (isBoundingBoxIntersecting(plotBounds, bounds)) {
-          // Call the function to download and add NDVI image
-          handleNDVIImageDownload(plot, { accessToken, map });
-        }
-      });
-    }
-  }, [
-    map,
-    plots,
-    accessToken,
-    handleNDVIImageDownload,
-    isBoundingBoxIntersecting,
-  ]);
+          // Check if the plot's bounding box intersects with the map's bounds
+          if (isBoundingBoxIntersecting(plotBounds, bounds)) {
+            // Call the function to download and add NDVI image
+            handleNDVIImageDownload(plot, { accessToken, map, timeTravel });
+          }
+        });
+      }
+    },
+    [
+      map,
+      plots,
+      accessToken,
+      handleNDVIImageDownload,
+      isBoundingBoxIntersecting,
+    ]
+  );
+
+  const handleTimeTravel = useCallback(() => {
+    handleViewportChange({ timeTravel: true });
+  }, [handleViewportChange]);
 
   useEffect(() => {
-    const debouncedHandleViewportChange = debounce(handleViewportChange, 500);
+    const debouncedHandleViewportChange = debounce(handleTimeTravel, 500);
     debouncedHandleViewportChange();
     return () => {
       debouncedHandleViewportChange.cancel();
     };
-  }, [weeksBefore, handleViewportChange]);
+  }, [weeksBefore, handleTimeTravel]);
 
   useEffect(() => {
     if (map) {

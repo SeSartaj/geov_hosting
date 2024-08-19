@@ -16,6 +16,7 @@ export const getNDVILayerUrl = (plot) => {
     HEIGHT: 256,
     TIME: '2024-03-29/2024-05-29',
     BBOX: `${b[0]},${b[1]},${b[2]},${b[3]}`,
+    logo: 'false',
   });
 
   return `${baseUrl}?${params.toString()}`;

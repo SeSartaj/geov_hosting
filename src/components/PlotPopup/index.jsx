@@ -28,23 +28,23 @@ export default function PlotPopup({ popupInfo, onClose }) {
       accessToken: accessToken,
     });
 
-    // if (ndviDataUrl) {
-    //   // create a link and click it to download the image
-    //   const link = document.createElement('a');
-    //   link.href = ndviDataUrl;
-    //   // include current date - weeks before in the name
-    //   link.download = `${plot.properties.name}_${new Date(
-    //     new Date().setDate(new Date().getDate() - weeksBefore * 7 - 14)
-    //   ).toISOString()}__NDVI.jpg`;
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // }
-
-    if (!plot) throw new Error('plot is not defined');
     if (ndviDataUrl) {
-      addNDVIImageToMap(ndviDataUrl, plot);
+      // create a link and click it to download the image
+      const link = document.createElement('a');
+      link.href = ndviDataUrl;
+      // include current date - weeks before in the name
+      link.download = `${plot.properties.name}_${new Date(
+        new Date().setDate(new Date().getDate() - weeksBefore * 7 - 14)
+      ).toISOString()}__NDVI.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
+
+    // if (!plot) throw new Error('plot is not defined');
+    // if (ndviDataUrl) {
+    //   addNDVIImageToMap(ndviDataUrl, plot);
+    // }
     // Add the image to the map
   };
 
