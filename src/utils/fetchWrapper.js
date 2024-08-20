@@ -7,6 +7,7 @@ export const fetchWrapper = async (url, options = {}) => {
   };
 
   console.log('options from fetchWrapper', options);
+  console.log('headers', headers);
 
   try {
     const response = await fetch(url, { ...options, headers });

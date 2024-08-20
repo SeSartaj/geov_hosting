@@ -1,25 +1,31 @@
-import React, { useEffect, useContext, useState } from 'react';
+import './styles.css';
+
+import { useEffect, useContext, useState } from 'react';
 import { Popup } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
 import AddPlotModal from '../AddPlotModal';
 import AddNewMarkerModal from '../AddNewMarkerModal';
 
-import './styles.css';
-
 export default function DrawActionsPopup({ feature }) {
-  const { drawRef, mapRef } = useContext(MapContext);
-  const [showPopup, setShowPopup] = useState(true);
+  const { drawRef, mapRef, setShowDrawActionPopup } = useContext(MapContext);
   const [drawMode, setDrawMode] = useState('');
 
   const mapInstance = mapRef?.current;
 
+  const handleDeleteFeature = () => {
+    if (drawRef?.current) {
+      drawRef.current.delete(feature.id);
+    }
+    setDrawMode('');
+    setShowDrawActionPopup(false);
+  };
+
+  // keep the drawMode updated
   useEffect(() => {
     if (!drawRef || !mapInstance) return;
 
     const checkDrawMode = () => {
-      const mode = drawRef?.current.getMode();
-      console.log('mooode is ', mode);
-      setDrawMode(mode);
+      setDrawMode(drawRef?.current.getMode());
     };
 
     // Listen for mode change events
@@ -28,21 +34,18 @@ export default function DrawActionsPopup({ feature }) {
     // Initial check on component mount
     checkDrawMode();
 
-    // Cleanup event listener on component unmount
     return () => {
       mapInstance.off('draw.modechange', checkDrawMode);
     };
   }, [drawRef, mapInstance]);
 
-  if (!feature || !showPopup) return null;
+  // if nothing is drawn, don't show any popup
+  if (!feature) return null;
 
-  console.log('popup is rendering');
-
+  // show the popup only when drawing is complete
   if (drawMode !== 'simple_select') {
     return null;
   }
-
-  console.log('feature', feature);
 
   if (feature.geometry.type == 'Point') {
     return (
@@ -52,10 +55,14 @@ export default function DrawActionsPopup({ feature }) {
         closeOnClick={true}
         anchor='top'
       >
-        <AddNewMarkerModal feature={feature} />
+        <AddNewMarkerModal
+          feature={feature}
+          deleteFeature={handleDeleteFeature}
+        />
       </Popup>
     );
   }
+
   return (
     <Popup
       latitude={feature.geometry.coordinates[0][0][1]}
@@ -63,7 +70,7 @@ export default function DrawActionsPopup({ feature }) {
       closeOnClick={true}
       anchor='top'
     >
-      <AddPlotModal polygon={feature} />
+      <AddPlotModal polygon={feature} deleteFeature={handleDeleteFeature} />
     </Popup>
   );
 }

@@ -1554,15 +1554,19 @@ const DUMMY_RESPONSE = [
 ];
 
 export const getMarkers = async () => {
-  // const response = await fetchWrapper(`${API_URL}marker/primary/`);
-  // return response.json();
-  return DUMMY_RESPONSE;
+  const response = await fetchWrapper(`${API_URL}marker/primary/`);
+  return response.json();
+  // return DUMMY_RESPONSE;
 };
 
 export const createMarker = async (data) => {
-  const response = await fetchWrapper(`${API_URL}marker`, {
+  const response = await fetchWrapper(`${API_URL}marker/`, {
     method: 'POST',
     body: JSON.stringify(data),
+    // set type to json
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
 
   if (response.ok) {

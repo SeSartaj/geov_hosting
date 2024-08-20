@@ -39,7 +39,10 @@ export const useMarkers = () => {
   };
 
   const addNewMarker = (newMarker) => {
+    console.log('newMarker from addNewMarker', newMarker);
     createMarker(newMarker).then((createdMarker) => {
+      if (!createdMarker) return;
+      console.log('createdMarker', createdMarker);
       setMarkers([...markers, transformMarker(createdMarker)]);
     });
   };
@@ -49,6 +52,7 @@ export const useMarkers = () => {
   };
 
   useEffect(() => {
+    console.log('markers', markers);
     setMarkers(filterMarkers(unfilteredMarkers));
   }, [markerFilters]);
 

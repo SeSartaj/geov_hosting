@@ -9,7 +9,7 @@ const MapContext = createContext();
 const MapProvider = ({ children }) => {
   const { settings } = useContext(SettingsContext);
   const [mode, setMode] = useState('view');
-  console.log('reseting mapStyle in mapprovider');
+  const [showDrawActionPopup, setShowDrawActionPopup] = useState(false);
   const [mapStyle, setMapStyle] = useState(
     BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url
   );
@@ -36,6 +36,8 @@ const MapProvider = ({ children }) => {
         setSources,
         mode,
         setMode,
+        showDrawActionPopup,
+        setShowDrawActionPopup,
       }}
     >
       {children}
