@@ -4,22 +4,20 @@ import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import './mapbox-draw-style.css';
 import './styles.css';
 import DrawActionsPopup from '../DrawActionsPopup';
-import { useControl, useMap } from 'react-map-gl/maplibre';
+import { useControl } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
-
-const DRAW_LAYERS = [
-  'gl-draw-polygon-fill-inactive',
-  'gl-draw-polygon-fill-active',
-  'gl-draw-polygon-stroke-inactive',
-  'gl-draw-polygon-stroke-active',
-  // Add more draw layers if necessary (e.g., for points, lines, etc.)
-];
 
 export function DrawPolygonControl() {
   const [features, setFeatures] = useState({});
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [hoveredFeature, setHoveredFeature] = useState(null);
-  const { drawRef, mapRef, mode, setMode } = useContext(MapContext);
+  const {
+    drawRef,
+    mapRef,
+    setMode,
+    showDrawActionPopup,
+    setShowDrawActionPopup,
+  } = useContext(MapContext);
   // Set the custom classes for MapLibre
   constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
   constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
@@ -85,10 +83,12 @@ export function DrawPolygonControl() {
   const handleSelectionChange = (e) => {
     // what if more than one feature is selected? where will the
     // popup be displayed?
-    // when popup is deleted, the popup should disappear
+    // when feature is deleted, the popup should disappear
     console.log('selection changed', e);
     // print all drawn features to consule
-    setSelectedFeatures(drawRef.current.getSelected());
+    const selected = drawRef.current.getSelected();
+    setSelectedFeatures(selected);
+    setShowDrawActionPopup(selected.features.length > 0);
   };
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export function DrawPolygonControl() {
     };
   }, [drawRef]);
 
-  if (selectedFeatures) {
+  if (selectedFeatures && showDrawActionPopup) {
     return (
       <div>
         {selectedFeatures?.features?.map((feature) => (

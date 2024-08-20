@@ -13,7 +13,7 @@ import { getStationOptions } from '@/api/stationApi';
 import { getAllGraphOptions, getPawGraphOptions } from '@/api/graphsApi';
 import { SettingsContext } from '@/contexts/SettingsContext';
 
-const AddNewMarkerModal = ({ feature }) => {
+const AddNewMarkerModal = ({ feature, deleteFeature }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
   const [farmOptions, setFarmOptions] = useState([]);
@@ -32,6 +32,11 @@ const AddNewMarkerModal = ({ feature }) => {
     latitude: feature?.geometry?.coordinates[1],
   });
 
+  const handleClose = () => {
+    deleteFeature();
+    setOpen(false);
+  };
+
   const handleNewMarkerCreation = (e) => {
     e.preventDefault();
 
@@ -48,8 +53,8 @@ const AddNewMarkerModal = ({ feature }) => {
       use_custom_location: true,
     };
     addNewMarker(newMarker);
-
-    setOpen(false);
+    deleteFeature();
+    handleClose();
   };
 
   useEffect(() => {
@@ -162,7 +167,7 @@ const AddNewMarkerModal = ({ feature }) => {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <MyButton variant='text' onClick={() => setOpen(false)}>
+          <MyButton variant='text' onClick={handleClose}>
             cancel
           </MyButton>
           <MyButton type='submit'>Add Marker</MyButton>
