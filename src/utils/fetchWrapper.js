@@ -1,15 +1,15 @@
 const base64Credentials = btoa(`demo:demo`);
 
-export const fetchWrapper = async (
-  url,
-  options = {
-    headers: {
-      Authorization: `Basic ${base64Credentials}`,
-    },
-  }
-) => {
+export const fetchWrapper = async (url, options = {}) => {
+  const headers = {
+    Authorization: `Basic ${base64Credentials}`,
+    ...options?.headers,
+  };
+
+  console.log('options from fetchWrapper', options);
+
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url, { ...options, headers });
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
