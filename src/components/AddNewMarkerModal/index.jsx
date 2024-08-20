@@ -4,16 +4,14 @@ import MyButton from '../../ui-components/MyButton';
 import { useContext, useEffect, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
-import Select from 'react-select';
 import { BiPin } from 'react-icons/bi';
 import Input from '@/ui-components/Input';
-import InlineInputField from '@/ui-components/InlineInputField';
 import MyReactSelect from '@/ui-components/MyReactSelect';
-import InputField from '@/ui-components/InputField';
 import FormGroup from '@/ui-components/FormGroup';
 import { getFarmOptions } from '@/api/farmApi';
 import { getStationOptions } from '@/api/stationApi';
 import { getAllGraphOptions, getPawGraphOptions } from '@/api/graphsApi';
+import { SettingsContext } from '@/contexts/SettingsContext';
 
 const AddNewMarkerModal = ({ feature }) => {
   const [open, setOpen] = useState(false);
@@ -22,39 +20,33 @@ const AddNewMarkerModal = ({ feature }) => {
   const [stationOptions, setStationOptions] = useState([]);
   const [pawGraphOptions, setPawGraphOptions] = useState([]);
   const [allGraphOptions, setAllGraphOptions] = useState([]);
-  const { markers, addNewMarker } = useContext(MarkersContext);
+  const { addNewMarker } = useContext(MarkersContext);
+  const { settings } = useContext(SettingsContext);
   const [formData, setFormData] = useState({
+    name: '',
     station: '',
     farm: '',
     paw_graphs: [],
     graphs: [],
+    longitude: feature?.geometry?.coordinates[0],
+    latitude: feature?.geometry?.coordinates[1],
   });
 
   const handleNewMarkerCreation = (e) => {
     e.preventDefault();
 
-    // Create a new FormData object
-    const formData = new FormData(e.target);
-
-    // Get all form values
-    const name = formData.get('name');
-    const description = formData.get('description');
-    const longitude = formData.get('longitude');
-    const latitude = formData.get('latitude');
-
-    console.log('lat', latitude, 'long', longitude);
-
-    // Create a new marker object
+    console.log('formData', formData);
     const newMarker = {
-      name: name,
-      farm: formData.farm,
-      device: formData.station,
-
-      longitude: feature?.geometry?.coordinates[0],
-      latitude: feature?.geometry?.coordinates[1],
+      marker_map: settings.mapId,
+      device: formData.station.value,
+      paw_graphs: formData.paw_graphs.map((g) => g.value),
+      graphs: formData.graphs.map((g) => g.value),
+      lng: formData.longitude,
+      lat: formData.latitude,
+      location_name: formData.name,
+      farm: formData.farm.value,
+      use_custom_location: true,
     };
-
-    console.log('newMarker', newMarker);
     addNewMarker(newMarker);
 
     setOpen(false);
@@ -94,7 +86,17 @@ const AddNewMarkerModal = ({ feature }) => {
     >
       <form onSubmit={handleNewMarkerCreation}>
         <div className='flex flex-col gap-1 '>
-          <FormGroup label='Station:'>
+          <FormGroup label='Name:'>
+            <Input
+              name='name'
+              className='w-full'
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+          </FormGroup>
+          <FormGroup label='Station (device):'>
             <MyReactSelect
               className='w-full'
               value={formData.station}
@@ -134,7 +136,10 @@ const AddNewMarkerModal = ({ feature }) => {
           <FormGroup label='latitude:'>
             <Input
               className='w-full'
-              value={feature?.geometry?.coordinates[1].toFixed(7)}
+              value={formData.latitude}
+              onChange={(e) =>
+                setFormData({ ...formData, latitude: e.target.value })
+              }
               type='number'
               name='latitude'
               step='any'
@@ -144,7 +149,10 @@ const AddNewMarkerModal = ({ feature }) => {
           <FormGroup label='longitude:'>
             <Input
               className='w-full'
-              value={feature?.geometry?.coordinates[0].toFixed(7)}
+              value={formData.longitude}
+              onChange={(e) =>
+                setFormData({ ...formData, longitude: e.target.value })
+              }
               type='number'
               name='longitude'
               step='any'
