@@ -1,5 +1,5 @@
 # Geospatial Data Visualisation Tool
-
+[Moved to https://github.com/AgAnalyticsSpa/agvmap.git]
 ## Goal
 
 Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard.
