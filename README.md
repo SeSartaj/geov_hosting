@@ -41,10 +41,9 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [] map settings should be stored with user account or on the localhost.
 - [] add new marker
 - [x] when a plot is clicked show popup displaying time series data of that plot
-- [] use highcharts and get configs from mr. zakir
+- [x] use highcharts and get configs from mr. zakir
 - [] ESA Sen-ET (explore it) manual
 - [] Preline U
-- [] collapsable sidebar
 - [] translation translation file (i18n library) (ask zakir)
 - [] for design use kendo-react-ui with tailwindcss
 - [] npm i @formatjs/intl
@@ -66,4 +65,4 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 
 - ~[] when draw is started a popup shows up, however if clicked anywhere else, the popup disapears and doesn't show up again~
 - [] when a plot is added, ~the modal doesn't close up~ and the popup also doesn't close up.
-- [] when a marker is drawn on the map, error is thrown
+- ~[] when a marker is drawn on the map, error is thrown~
