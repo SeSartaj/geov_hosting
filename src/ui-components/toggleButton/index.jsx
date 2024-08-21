@@ -1,11 +1,12 @@
 import Tooltip from '@/components/Tooltip';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const ToggleButton = ({
   initialState = false,
   onToggle,
   onTooltip,
   offTooltip,
+  size = 'sm', // Default size is 'md'
 }) => {
   const [isOn, setIsOn] = useState(initialState);
 
@@ -16,18 +17,37 @@ const ToggleButton = ({
     }
   };
 
+  // Define size classes
+  const sizeClasses = {
+    sm: {
+      button: 'h-4 w-7',
+      circle: 'w-3 h-3',
+      translate: 'translate-x-3',
+    },
+    md: {
+      button: 'h-6 w-11',
+      circle: 'w-4 h-4',
+      translate: 'translate-x-5',
+    },
+    lg: {
+      button: 'h-8 w-14',
+      circle: 'w-6 h-6',
+      translate: 'translate-x-7',
+    },
+  };
+
   return (
     <Tooltip text={isOn ? onTooltip : offTooltip}>
       <button
         onClick={handleToggle}
-        className={`relative inline-flex items-center h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none ${
+        className={`relative inline-flex items-center rounded-full transition-colors duration-300 focus:outline-none ${
           isOn ? 'bg-blue-700' : 'bg-gray-300'
-        }`}
+        } ${sizeClasses[size].button}`}
       >
         <span
-          className={`inline-block w-4 h-4 transform rounded-full bg-white transition-transform duration-300 ${
-            isOn ? 'translate-x-5' : 'translate-x-1'
-          }`}
+          className={`inline-block transform rounded-full bg-white transition-transform duration-300 ${
+            isOn ? sizeClasses[size].translate : 'translate-x-1'
+          } ${sizeClasses[size].circle}`}
         />
       </button>
     </Tooltip>

@@ -8,22 +8,28 @@ import {
 import { AccordionItem } from '../Accordion';
 import './styles.css';
 
-function LabelValueList({ list = [] }) {
+function LabelValueList({ list = [], itemClasses }) {
   return (
     <div className='label-value-list'>
-      {list.map(({ label, value, variant }) => {
+      {list.map(({ label, value, variant, labelEnd }) => {
         if (variant == 'collapsable') {
           return (
-            <div className='block-label-value-item ' key={label}>
+            <div
+              className={`block-label-value-item mb-1 ${itemClasses}`}
+              key={label}
+            >
               <AccordionItem
                 key={label}
                 label={({ show, setShow }) => (
-                  <span
-                    className='lvi-label dark:text-gray-400 flex items-center cursor-pointer'
-                    onClick={() => setShow(!show)}
-                  >
-                    {show ? <BiCaretDown /> : <BiCaretRight />}
-                    {label}
+                  <span className='lvi-label dark:text-gray-400 flex items-center  justify-between'>
+                    <span
+                      className='flex items-center cursor-pointer select-none'
+                      onClick={() => setShow(!show)}
+                    >
+                      {show ? <BiCaretDown /> : <BiCaretRight />}
+                      {label}
+                    </span>
+                    <span>{labelEnd && labelEnd}</span>
                   </span>
                 )}
               >
