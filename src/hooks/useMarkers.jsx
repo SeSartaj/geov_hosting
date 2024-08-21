@@ -9,12 +9,14 @@ const EMPTY_FILTERS = {
 };
 export const useMarkers = () => {
   const [markers, setMarkers] = useState([]);
+  const [showMarkers, setShowMarkers] = useState(false);
+
   const [unfilteredMarkers, setUnfilteredMarkers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [markerFilters, setMarkerFilters] = useState(EMPTY_FILTERS);
 
   const filterMarkers = (markers) => {
-    console.log('filtering', markers);
+    setLoading(true);
     let filteredMarkers = markers;
     if (markerFilters.type) {
       filteredMarkers = filteredMarkers.filter(
@@ -33,7 +35,7 @@ export const useMarkers = () => {
         (m) => m.paw_status === markerFilters.paw_status
       );
     }
-    console.log('after filter', filteredMarkers);
+    setLoading(false);
 
     return filteredMarkers;
   };
@@ -57,8 +59,9 @@ export const useMarkers = () => {
   }, [markerFilters]);
 
   useEffect(() => {
-    console.log('fetching marker data');
+    if (!showMarkers) return;
     const fetchData = async () => {
+      setLoading(true);
       try {
         const data = await getMarkers();
         // modify the markers
@@ -75,10 +78,12 @@ export const useMarkers = () => {
     };
 
     fetchData();
-  }, []);
+  }, [showMarkers]);
 
   return {
     markers,
+    showMarkers,
+    setShowMarkers,
     setMarkers,
     addNewMarker,
     loading,

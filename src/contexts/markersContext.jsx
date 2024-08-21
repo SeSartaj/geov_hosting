@@ -7,10 +7,11 @@ const MarkersContext = createContext();
 
 const MarkersProvider = ({ children }) => {
   const [clickedMarker, setClickedMarker] = useState(null);
-  const [showMarkers, setShowMarkers] = useState(true);
   const {
     markers,
     setMarkers,
+    showMarkers,
+    setShowMarkers,
     addNewMarker,
     loading,
     markerFilters,
@@ -18,19 +19,17 @@ const MarkersProvider = ({ children }) => {
     resetFilters,
   } = useMarkers();
 
-  useEffect(() => {
-    console.log('markers have changed, updating the context', markers, loading);
-  }, [markers, loading]);
-
   const handleShowMarkerChange = (value) => {
     setClickedMarker(null);
     setShowMarkers(value);
   };
+
   return (
     <MarkersContext.Provider
       value={{
         // replace markersData with markers
         markersData: markers,
+        loading,
         markers,
         setMarkers,
         addNewMarker,

@@ -9,6 +9,7 @@ import InlineInputField from '@/ui-components/InlineInputField';
 import Tooltip from '../Tooltip';
 import { BiReset } from 'react-icons/bi';
 import ToggleButton from '@/ui-components/toggleButton';
+import Spinner from '@/ui-components/Spinner';
 
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
@@ -19,6 +20,7 @@ export default function MarkerPanel() {
     resetFilters,
     showMarkers,
     setShowMarkers,
+    loading,
   } = useContext(MarkersContext);
 
   const handleMarkerClick = (e) => {
@@ -32,7 +34,7 @@ export default function MarkerPanel() {
   };
 
   return (
-    <>
+    <div className='panel-container'>
       <div className='panel-header-action pb-3'>
         <h3 className='text-lg'>Markers</h3>
         {/* <AddNewMarkerModal /> */}
@@ -104,19 +106,23 @@ export default function MarkerPanel() {
       </span>
 
       <div className='panel-content'>
-        {markersData?.map((marker) => (
-          <div key={marker.id} className='marker-item'>
-            <div
-              className='marker-item-info p-2 border border-solid border-collapse dark:border-gray-500'
-              data-marker-id={marker.id}
-              onClick={handleMarkerClick}
-              style={{ cursor: 'pointer' }}
-            >
-              <h4>{marker.title}</h4>
+        {loading ? (
+          <Spinner />
+        ) : (
+          markersData?.map((marker) => (
+            <div key={marker.id} className='marker-item'>
+              <div
+                className='marker-item-info p-2 border border-solid border-collapse dark:border-gray-500'
+                data-marker-id={marker.id}
+                onClick={handleMarkerClick}
+                style={{ cursor: 'pointer' }}
+              >
+                <h4>{marker.title}</h4>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
-    </>
+    </div>
   );
 }
