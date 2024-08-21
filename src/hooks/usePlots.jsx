@@ -1,4 +1,4 @@
-import { createPlot, getPlots } from '@/api/plotApi';
+import { createPlot, getPlots, updatePlot } from '@/api/plotApi';
 import { getNDVILayerUrl } from '@/utils/getNDVILayerUrl';
 import isEmptyObject from '@/utils/isEmptyObject';
 import { bbox } from '@turf/turf';
@@ -126,7 +126,7 @@ export const usePlots = () => {
     })
   );
   const [unfilteredPlots, setUnfilteredPlots] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [plotFilters, setPlotFilters] = useState(EMPTY_FILTERS);
 
   const resetFilters = () => {
@@ -139,7 +139,6 @@ export const usePlots = () => {
   };
 
   const addNewPlot = (newPlot) => {
-    console.log('new plot', newPlot);
     // newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
     createPlot(newPlot).then((createdPlot) => {
       if (!createdPlot) return;
@@ -149,34 +148,43 @@ export const usePlots = () => {
   };
 
   const getPlotsList = useCallback(() => {
-    getPlots().then((plots) => {
-      setPlots(
-        plots
-          .map((p) => {
-            if (isEmptyObject(p.options)) return null;
-            const plot = p.options;
-            console.log('bbox', plot);
-            plot.properties.bbox = bbox(plot);
-            plot.properties.ndviUrl = getNDVILayerUrl(plot);
-            plot.properties.id = plot.id;
-            return plot;
-          })
-          .filter((plot) => plot !== null) // Filter out null plots
-      );
-    });
+    setLoading(true);
+    getPlots()
+      .then((p) => {
+        setPlots(
+          p
+            .map((plot) => {
+              if (isEmptyObject(plot?.options)) return null;
+              plot.options.properties.id = plot?.options?.id;
+              plot.options.properties.name = plot?.name;
+              return plot;
+            })
+            .filter((p) => p !== null)
+        );
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  const updatePlot = (updatedPlot) => {
+  const handlePlotUpdate = (updatedPlot) => {
     console.log('updating plot', updatedPlot);
+    // locally change the plot location
     setPlots((prev) => {
-      const index = prev.findIndex((plot) => plot.id === updatedPlot.id);
-      if (index === -1) {
-        return prev;
-      }
+      const updatedPlots = prev.map((plot) => {
+        if (
+          plot?.options?.properties.id === updatedPlot?.options?.properties?.id
+        ) {
+          return updatedPlot;
+        }
+        return plot;
+      });
 
-      const newPlots = [...prev];
-      newPlots[index] = updatedPlot;
-      return newPlots;
+      return updatedPlots;
+    });
+
+    updatePlot(updatedPlot).then(() => {
+      getPlotsList();
     });
   };
 
@@ -196,7 +204,7 @@ export const usePlots = () => {
     loading,
     plotFilters,
     addNewPlot,
-    updatePlot,
+    handlePlotUpdate,
     setPlotFilters,
     resetFilters,
   };

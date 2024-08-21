@@ -116,7 +116,6 @@ const DUMMY_PLOTS = [
 export const getPlots = async () => {
   const response = await fetchWrapper(`${API_URL}plot/`);
   const data = await response.json();
-  console.log('getPlots', data);
   return data;
   // return DUMMY_PLOTS;
 };
@@ -124,6 +123,21 @@ export const getPlots = async () => {
 export const createPlot = async (data) => {
   const response = await fetchWrapper(`${API_URL}plot/`, {
     method: 'POST',
+    body: JSON.stringify(data),
+    // set type to json
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (response.ok) {
+    return response.json();
+  }
+};
+
+export const updatePlot = async (data) => {
+  const response = await fetchWrapper(`${API_URL}plot/${data.id}`, {
+    method: 'PUT',
     body: JSON.stringify(data),
     // set type to json
     headers: {

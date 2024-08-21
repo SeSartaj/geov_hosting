@@ -8,6 +8,7 @@ import useAccessToken from '@/hooks/useAccessToken';
 import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
 import { bbox } from '@turf/turf';
 import debounce from '@/utils/debounce';
+import isEmptyObject from '@/utils/isEmptyObject';
 
 export default function Plots() {
   const {
@@ -74,10 +75,6 @@ export default function Plots() {
     },
     [weeksBefore]
   );
-
-  const getNdviLayerId = (plot) => {
-    return `ndviImageLayer-${plot.properties.id}-${weeksBefore}`;
-  };
 
   const handleNDVIImageDownload = useCallback(
     async (plot, { accessToken, map, timeTravel }) => {
@@ -206,12 +203,18 @@ export default function Plots() {
 
         // Check for each plot if it's visible in the current map view
         plots.forEach((plot) => {
-          const plotBounds = bbox(plot); // Get bounding box of the plot
+          // if plot has no geomtry, don't try to download NDVI image
+          if (isEmptyObject(plot.options)) return null;
+          const plotBounds = bbox(plot?.options); // Get bounding box of the plot
 
           // Check if the plot's bounding box intersects with the map's bounds
           if (isBoundingBoxIntersecting(plotBounds, bounds)) {
             // Call the function to download and add NDVI image
-            handleNDVIImageDownload(plot, { accessToken, map, timeTravel });
+            handleNDVIImageDownload(plot?.options, {
+              accessToken,
+              map,
+              timeTravel,
+            });
           }
         });
       }
@@ -264,7 +267,10 @@ export default function Plots() {
       <Source
         id='plots'
         type='geojson'
-        data={{ type: 'FeatureCollection', features: plots }}
+        data={{
+          type: 'FeatureCollection',
+          features: plots.map((p) => p?.options),
+        }}
       >
         <Layer {...plotLineStyle} />
         <Layer {...plotFillStyle} />

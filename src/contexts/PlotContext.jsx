@@ -9,15 +9,16 @@ import PropTypes from 'prop-types';
 import { usePlots } from '../hooks/usePlots';
 import { MapContext } from './MapContext';
 import { LngLatBounds } from 'maplibre-gl';
+import { updatePlot } from '@/api/plotApi';
 
 // Create a new context for the map
 const PlotContext = createContext();
 
 const PlotProvider = ({ children }) => {
   const { mapRef, drawRef, mode, setMode } = useContext(MapContext);
-  const [setEditingPlot] = useState(null);
+  const [editingPlot, setEditingPlot] = useState(null);
   const [clickedPlot, setClickedPlot] = useState(null);
-  const { plots, addNewPlot, updatePlot } = usePlots();
+  const { plots, addNewPlot, handlePlotUpdate } = usePlots();
   const [showPlots, setShowPlots] = useState(true);
   const [weeksBefore, setWeeksBefore] = useState(0);
   const [ndviLoading, setNdviLoading] = useState([]);
@@ -65,37 +66,44 @@ const PlotProvider = ({ children }) => {
     }
   };
 
-  const handleDrawComplete = (event) => {
-    console.log('mode', event.mode);
-    // delete draws after completion
-    console.log('event', event);
-    if (event.mode === 'simple_select' && mode === 'editing-plot') {
-      draw.deleteAll();
-    }
-  };
+  const handleDrawComplete = useCallback(
+    (event) => {
+      console.log('mode', event.mode);
+      // delete draws after completion
+      console.log('event', event);
+      if (event.mode === 'simple_select' && mode === 'editing-plot') {
+        draw.deleteAll();
+      }
+    },
+    [draw, mode]
+  );
 
   const handleEditPlot = (plot) => {
     if (map) {
       const draw = drawRef.current;
-      handleFlyToPlot(plot.geometry.coordinates);
+      handleFlyToPlot(plot?.options.geometry.coordinates);
       if (draw) {
         setMode('editing-plot');
         // remove anything drawn before
         draw.deleteAll();
         // add the plot to draw layer
-        draw.add(plot);
+        draw.add(plot?.options);
         setEditingPlot(plot);
       }
     }
   };
 
-  const handleDrawChange = (event) => {
-    // Update the plot when it is edited
-    if (event.features && event.features.length > 0) {
-      console.log('eee', event.features[0]);
-      updatePlot(event.features[0]);
-    }
-  };
+  const handleDrawChange = useCallback(
+    (event) => {
+      // if editing a plot
+      console.log('handling draw change', event);
+      // Update the plot when it is edited
+      if (event.features && event.features.length > 0) {
+        handlePlotUpdate({ ...editingPlot, options: event.features[0] });
+      }
+    },
+    [editingPlot, handlePlotUpdate]
+  );
 
   useEffect(() => {
     if (map && draw) {
@@ -109,14 +117,13 @@ const PlotProvider = ({ children }) => {
         map.off('draw.modechange', handleDrawComplete);
       };
     }
-  }, []);
+  }, [map, draw, handleDrawChange, handleDrawComplete]);
 
   return (
     <PlotContext.Provider
       value={{
         plots,
         addNewPlot,
-        updatePlot,
         clickedPlot,
         setClickedPlot,
         showPlots,

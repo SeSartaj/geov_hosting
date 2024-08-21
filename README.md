@@ -1,5 +1,7 @@
 # Geospatial Data Visualisation Tool
+
 [Moved to https://github.com/AgAnalyticsSpa/agvmap.git]
+
 ## Goal
 
 Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard.
@@ -44,9 +46,9 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - [x] use highcharts and get configs from mr. zakir
 - [] ESA Sen-ET (explore it) manual
 - [] Preline U
-- [] translation translation file (i18n library) (ask zakir)
+- [] translation translation file (i18n library)
 - [] for design use kendo-react-ui with tailwindcss
-- [] npm i @formatjs/intl
+- [] when ndvi images are loading, show loader so user knows system status
 
 ## Observations
 
@@ -66,3 +68,6 @@ Implement a map component with custom layers fetched from a REST API, to be inte
 - ~[] when draw is started a popup shows up, however if clicked anywhere else, the popup disapears and doesn't show up again~
 - ~[] when a plot is added, the modal doesn't close up and the popup also doesn't close up.~
 - ~[] when a marker is drawn on the map, error is thrown~
+- [] when map style is changed, ndvi images are lost
+- [] when plot geometry is edited, new ndvi image is not downloaded
+- []

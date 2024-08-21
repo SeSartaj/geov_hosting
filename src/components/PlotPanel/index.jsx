@@ -7,6 +7,7 @@ import ToggleButton from '@/ui-components/toggleButton';
 import MyButton from '@/ui-components/MyButton';
 import NdviLayerPanel from '../NdviLayerPanel';
 import LabelValueList from '@/ui-components/LabelValueList';
+import isEmptyObject from '@/utils/isEmptyObject';
 
 export default function PlotPanel() {
   const {
@@ -42,18 +43,23 @@ export default function PlotPanel() {
                     className='inline-flex justify-between items-center p-1 border border-collapse w-full'
                   >
                     <span
-                      onClick={() => handleFlyToPlot(plot.geometry.coordinates)}
+                      onClick={() =>
+                        handleFlyToPlot(plot?.options.geometry.coordinates)
+                      }
                       className='select-none cursor-pointer font-normal'
                     >
-                      {plot.properties.name}(
-                      {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(
-                        1
-                      )}
+                      {plot.name}(
+                      {!isEmptyObject(plot?.options) &&
+                        squareMetersToAcres(
+                          calculatePolygonArea(plot?.options)
+                        ).toFixed(1)}
                       acres)
                     </span>
-                    <span onClick={() => handleEditPlot(plot)}>
-                      <BiPencil className='action-icon' />
-                    </span>
+                    {!isEmptyObject(plot?.options) && (
+                      <span onClick={() => handleEditPlot(plot)}>
+                        <BiPencil className='action-icon' />
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>
