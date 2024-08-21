@@ -113,6 +113,7 @@ export default function PlotPopup({ popupInfo, onClose }) {
       <hr />
       <div className='popup-content '>
         <LabelValueList
+          itemClasses={' border-b border-gray-500 dark:border-gray-300'}
           list={[
             {
               label: 'Area (sqm)',

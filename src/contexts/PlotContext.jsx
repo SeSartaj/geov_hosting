@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import { usePlots } from '../hooks/usePlots';
 import { MapContext } from './MapContext';
@@ -9,12 +15,13 @@ const PlotContext = createContext();
 
 const PlotProvider = ({ children }) => {
   const { mapRef, drawRef, mode, setMode } = useContext(MapContext);
-  const [editingPlot, setEditingPlot] = useState(null);
+  const [setEditingPlot] = useState(null);
   const [clickedPlot, setClickedPlot] = useState(null);
-  const { plots, loading, addNewPlot, updatePlot } = usePlots();
+  const { plots, addNewPlot, updatePlot } = usePlots();
   const [showPlots, setShowPlots] = useState(true);
   const [weeksBefore, setWeeksBefore] = useState(0);
   const [ndviLoading, setNdviLoading] = useState([]);
+  const [showNdviLayer, setShowNdviLayer] = useState(true);
 
   const map = mapRef?.current?.getMap();
   const draw = drawRef?.current;
@@ -23,6 +30,22 @@ const PlotProvider = ({ children }) => {
     setClickedPlot(null);
     setShowPlots(value);
   };
+
+  const toggleNDVILayersVisibility = () => {
+    setNDVILayersVisibility(showNdviLayer ? 'none' : 'visible');
+    setShowNdviLayer(!showNdviLayer);
+  };
+
+  const setNDVILayersVisibility = useCallback(
+    (visibility) => {
+      map?.getStyle()?.layers?.forEach((layer) => {
+        if (layer.id.startsWith('ndviImageLayer')) {
+          map.setLayoutProperty(layer.id, 'visibility', visibility);
+        }
+      });
+    },
+    [map]
+  );
 
   const handleFlyToPlot = (coordinates) => {
     const map = mapRef.current.getMap();
@@ -69,6 +92,7 @@ const PlotProvider = ({ children }) => {
   const handleDrawChange = (event) => {
     // Update the plot when it is edited
     if (event.features && event.features.length > 0) {
+      console.log('eee', event.features[0]);
       updatePlot(event.features[0]);
     }
   };
@@ -104,6 +128,8 @@ const PlotProvider = ({ children }) => {
         setWeeksBefore,
         ndviLoading,
         setNdviLoading,
+        showNdviLayer,
+        toggleNDVILayersVisibility,
       }}
     >
       {children}

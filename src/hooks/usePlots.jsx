@@ -1,6 +1,8 @@
+import { createPlot, getPlots } from '@/api/plotApi';
 import { getNDVILayerUrl } from '@/utils/getNDVILayerUrl';
+import isEmptyObject from '@/utils/isEmptyObject';
 import { bbox } from '@turf/turf';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 const EMPTY_FILTERS = {};
 
 const DUMMY_PLOTS = [
@@ -47,7 +49,7 @@ const DUMMY_PLOTS = [
     },
   },
   {
-    id: 'kdkjsksksdladfd',
+    id: 'kdkjsksksdladfdkxm',
     type: 'Feature',
     geometry: {
       type: 'Polygon',
@@ -64,14 +66,14 @@ const DUMMY_PLOTS = [
     properties: {
       name: 'Plot 3',
       farm: 'Farm 1',
-      id: '17cf8c98320177b926eew6ab',
+      id: 'kdkjsksksdladfdkxm',
     },
   },
   {
-    id: '17cf8c98320177b926eew6ab',
+    id: ',mxcvmksdnfsjnfasdfas',
     type: 'Feature',
     properties: {
-      id: '17cf8c98320177b926eew6ab',
+      id: 'mxcvmksdnfsjnfasdfas',
       name: 'plot 1 3',
       description: 'ksdkf',
     },
@@ -90,9 +92,10 @@ const DUMMY_PLOTS = [
     },
   },
   {
-    id: 'd0a46521eead375d1f68b1',
+    id: 'd0a46521eead375d1f68b1c',
     type: 'Feature',
     properties: {
+      id: 'd0a46521eead375d1f68b1c',
       name: 'plot 23`ksd',
       description: 'ksd',
     },
@@ -136,9 +139,32 @@ export const usePlots = () => {
   };
 
   const addNewPlot = (newPlot) => {
-    newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
-    setPlots((prev) => [...prev, newPlot]);
+    console.log('new plot', newPlot);
+    // newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
+    createPlot(newPlot).then((createdPlot) => {
+      if (!createdPlot) return;
+      console.log('created Plot');
+      setPlots((prev) => [...prev, createdPlot.options]);
+    });
   };
+
+  const getPlotsList = useCallback(() => {
+    getPlots().then((plots) => {
+      setPlots(
+        plots
+          .map((p) => {
+            if (isEmptyObject(p.options)) return null;
+            const plot = p.options;
+            console.log('bbox', plot);
+            plot.properties.bbox = bbox(plot);
+            plot.properties.ndviUrl = getNDVILayerUrl(plot);
+            plot.properties.id = plot.id;
+            return plot;
+          })
+          .filter((plot) => plot !== null) // Filter out null plots
+      );
+    });
+  }, []);
 
   const updatePlot = (updatedPlot) => {
     console.log('updating plot', updatedPlot);
@@ -160,14 +186,8 @@ export const usePlots = () => {
   }, [plotFilters]);
 
   useEffect(() => {
-    console.log('fetching plot data');
-    const fetchData = async () => {
-      setUnfilteredPlots(DUMMY_PLOTS);
-      setPlots(DUMMY_PLOTS);
-    };
-
-    fetchData();
-  }, []);
+    getPlotsList(plotFilters);
+  }, [plotFilters, getPlotsList]);
 
   console.log('plots', plots);
 

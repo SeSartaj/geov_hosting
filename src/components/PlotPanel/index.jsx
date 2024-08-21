@@ -5,6 +5,8 @@ import { squareMetersToAcres } from '../../utils/squareMetersToAcres';
 import { BiPencil } from 'react-icons/bi';
 import ToggleButton from '@/ui-components/toggleButton';
 import MyButton from '@/ui-components/MyButton';
+import NdviLayerPanel from '../NdviLayerPanel';
+import LabelValueList from '@/ui-components/LabelValueList';
 
 export default function PlotPanel() {
   const {
@@ -13,55 +15,66 @@ export default function PlotPanel() {
     setShowPlots,
     handleFlyToPlot,
     handleEditPlot,
-    weeksBefore,
-    setWeeksBefore,
+    showNdviLayer,
+    toggleNDVILayersVisibility,
   } = useContext(PlotContext);
 
   return (
     <div className='panel-container'>
-      <div className='panel-header-action'>
-        <h3 style={{ margin: 0 }}>Plots</h3>
-        {/* <MyButton>Add new Plot</MyButton> */}
-        <ToggleButton
-          onTooltip='hide plots'
-          offTooltip='show plots'
-          initialState={showPlots}
-          onToggle={setShowPlots}
-        />
-      </div>
-      <hr className='my-1' />
-      <input
-        type='range'
-        min='0'
-        max='52'
-        value={weeksBefore}
-        onChange={(e) => setWeeksBefore(e.target.value)}
-        style={{ direction: 'rtl' }}
-        className='w-full'
+      <LabelValueList
+        list={[
+          {
+            variant: 'collapsable',
+            label: 'Plots',
+            labelEnd: (
+              <ToggleButton
+                onTooltip='hide plots'
+                offTooltip='show plots'
+                initialState={showPlots}
+                onToggle={setShowPlots}
+              />
+            ),
+            value: (
+              <ul className='overflow-y-scroll'>
+                {plots.map((plot, index) => (
+                  <li
+                    key={index}
+                    className='inline-flex justify-between items-center p-1 border border-collapse w-full'
+                  >
+                    <span
+                      onClick={() => handleFlyToPlot(plot.geometry.coordinates)}
+                      className='select-none cursor-pointer font-normal'
+                    >
+                      {plot.properties.name}(
+                      {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(
+                        1
+                      )}
+                      acres)
+                    </span>
+                    <span onClick={() => handleEditPlot(plot)}>
+                      <BiPencil className='action-icon' />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ),
+          },
+          {
+            variant: 'collapsable',
+            label: 'NDVI Layer',
+            value: <NdviLayerPanel />,
+            labelEnd: (
+              <ToggleButton
+                onTooltip={'hide NDVI layer'}
+                offTooltip={'show NDVI layer'}
+                initialState={showNdviLayer}
+                onToggle={toggleNDVILayersVisibility}
+              />
+            ),
+          },
+        ]}
+        itemClasses={'border p-1 m-0'}
       />
-      <span className='flex flex-row justify-between items-center'>
-        {new Date(
-          new Date().setDate(new Date().getDate() - weeksBefore * 7)
-        ).toLocaleDateString()}
-      </span>
-      <hr className='my-2' />
-      <ul className='overflow-y-scroll'>
-        {plots.map((plot, index) => (
-          <li
-            key={index}
-            className='inline-flex justify-between items-center p-2 border w-full'
-          >
-            <span onClick={() => handleFlyToPlot(plot.geometry.coordinates)}>
-              {plot.properties.name}(
-              {squareMetersToAcres(calculatePolygonArea(plot)).toFixed(1)}
-              acres)
-            </span>
-            <span onClick={() => handleEditPlot(plot)}>
-              <BiPencil className='action-icon' />
-            </span>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

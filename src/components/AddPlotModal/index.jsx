@@ -14,22 +14,27 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
     deleteFeature();
   };
 
-  const handlePlotCreation = (e) => {
+  const handlePlotCreation = async (e) => {
     e.preventDefault();
 
     // Create a new FormData object
     const formData = new FormData(e.target);
 
-    // Get all form values
+    // Get all form valuess
     const name = formData.get('name');
     const description = formData.get('description');
 
     polygon.properties = {
-      id: name,
       name,
       description,
     };
-    addNewPlot(polygon);
+
+    const newPlot = {
+      name: name,
+      options: polygon,
+    };
+
+    addNewPlot(newPlot);
     deleteFeature();
     handleClose();
   };

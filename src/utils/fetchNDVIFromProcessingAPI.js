@@ -62,6 +62,10 @@ async function fetchNDVIFromProcessingAPI(
   plot,
   { weeksBefore = 0, accessToken }
 ) {
+  if (!accessToken) {
+    console.error('No access token provided');
+    return null;
+  }
   // the range should be 2 weeks before the from date
   const dateRange = {
     from: new Date(

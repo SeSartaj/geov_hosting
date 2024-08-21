@@ -18,6 +18,7 @@ export default function Plots() {
     weeksBefore,
     ndviLoading,
     setNdviLoading,
+    showNdviLayer,
   } = useContext(PlotContext);
   const { drawRef, mapRef } = useContext(MapContext);
   const accessToken = useAccessToken();
@@ -91,7 +92,7 @@ export default function Plots() {
           console.log('only time travel');
           map.removeLayer(layerId);
         } else {
-          console.log('NDVI layer already added for this plot');
+          console.log('NDVI layer already added for this plot', layerId);
           return;
         }
       }
@@ -193,6 +194,8 @@ export default function Plots() {
   const handleViewportChange = useCallback(
     ({ timeTravel = false }) => {
       if (!map) return;
+      // if layer is not turned no, don't fetch the images
+      if (!showNdviLayer) return;
       // Get the current zoom level
       const zoom = map.getZoom();
 
