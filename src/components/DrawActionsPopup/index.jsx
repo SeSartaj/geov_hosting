@@ -7,7 +7,8 @@ import AddPlotModal from '../AddPlotModal';
 import AddNewMarkerModal from '../AddNewMarkerModal';
 
 export default function DrawActionsPopup({ feature }) {
-  const { drawRef, mapRef, setShowDrawActionPopup } = useContext(MapContext);
+  const { drawRef, mapRef, setShowDrawActionPopup, mode } =
+    useContext(MapContext);
   const [drawMode, setDrawMode] = useState('');
 
   const mapInstance = mapRef?.current;
@@ -46,6 +47,9 @@ export default function DrawActionsPopup({ feature }) {
   if (drawMode !== 'simple_select') {
     return null;
   }
+
+  // if editing plot, don't show it
+  if (mode !== 'simple_select') return null;
 
   if (feature.geometry.type == 'Point') {
     return (

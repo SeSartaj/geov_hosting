@@ -9,7 +9,7 @@ export default function BaseMapPanel() {
   const map = mapRef.current.getMap();
 
   return (
-    <div>
+    <div className='panel-container'>
       <span className='panel-header-action'>
         <h3>Base Map</h3>
         {/* <AddNewStyleModal /> */}

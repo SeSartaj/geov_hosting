@@ -5,7 +5,7 @@ import { getStationMarkerColor } from '../../utils/getStationMarkerColor';
 import './styles.css';
 
 export default function PAWStatusPieChart() {
-  const { markersData } = useContext(MarkersContext);
+  const { markersData, showMarkers } = useContext(MarkersContext);
 
   // Group markers by their paw_status
   const statusCounts = markersData.reduce((acc, marker) => {
@@ -22,6 +22,8 @@ export default function PAWStatusPieChart() {
     value: statusCounts[status],
     color: getStationMarkerColor(status),
   }));
+
+  if (!showMarkers || !data.length > 0) return null;
 
   return (
     <div className='paw-pie-chart'>

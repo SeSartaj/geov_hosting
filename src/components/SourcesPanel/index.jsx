@@ -29,7 +29,7 @@ export default function SourcesPanel() {
     }
   };
   return (
-    <div>
+    <div className='panel-container'>
       <div className='panel-header-action'>
         <h3 style={{ margin: 0 }}>Sources</h3>
         <AddNewSourceModal setSources={setSources} />

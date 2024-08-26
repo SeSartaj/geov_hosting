@@ -47,7 +47,7 @@ export default function LayerPanel() {
   };
 
   return (
-    <div>
+    <div className='panel-container'>
       <div className='panel-header-action'>
         <h3 style={{ margin: 0 }}>Map Layers</h3>
         <AddNewLayerModal setLayers={setLayers} />
