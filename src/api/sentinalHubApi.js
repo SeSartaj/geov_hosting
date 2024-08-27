@@ -1,5 +1,5 @@
 export const NDVI_LAYER_URL =
-  'https://services.sentinel-hub.com/ogc/wmts/17ffa220-b013-4a7f-8d5c-895b1b8ef22d?layer=NDVI&&tilematrixset=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}';
+  'https://services.sentinel-hub.com/ogc/wmts/89900a2e-d05a-4e89-9fb5-76d00c8b9919?layer=NDVI-WMTS&TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=10&TileMatrix={z}&TileCol={x}&TileRow={y}';
 
 const evalscript = `
   //VERSION=3

@@ -14,10 +14,6 @@ export default function Markers() {
   const [clusters, setClusters] = useState([]);
   const zoomThreshold = 5;
 
-  const layerStyle = {
-    id: 'markers-layer',
-  };
-
   const handleMarkerClick = (e, marker) => {
     console.log('clicked', marker);
     e.originalEvent.stopPropagation();
