@@ -6,9 +6,17 @@ import { SettingsContext } from './SettingsContext';
 // Create a new context for the map
 const MapContext = createContext();
 
+// create an enum for map modes
+const MAP_MODES = {
+  VIEW: 'view',
+  ADD_MARKER: 'add_marker',
+  ADD_PLOT: 'add_plot',
+};
+
 const MapProvider = ({ children }) => {
   const { settings } = useContext(SettingsContext);
-  const [mode, setMode] = useState('view');
+  const [mode, setMode] = useState(MAP_MODES.VIEW);
+  const [status, setStatus] = useState('idle');
   const [showDrawActionPopup, setShowDrawActionPopup] = useState(false);
   const [mapStyle, setMapStyle] = useState(
     BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url
@@ -36,6 +44,8 @@ const MapProvider = ({ children }) => {
         setSources,
         mode,
         setMode,
+        status,
+        setStatus,
         showDrawActionPopup,
         setShowDrawActionPopup,
       }}

@@ -8,6 +8,7 @@ import MyButton from '@/ui-components/MyButton';
 import NdviLayerPanel from '../NdviLayerPanel';
 import LabelValueList from '@/ui-components/LabelValueList';
 import isEmptyObject from '@/utils/isEmptyObject';
+import { MapContext } from '@/contexts/MapContext';
 
 export default function PlotPanel() {
   const {
@@ -19,6 +20,19 @@ export default function PlotPanel() {
     showNdviLayer,
     toggleNDVILayersVisibility,
   } = useContext(PlotContext);
+
+  const { mode } = useContext(MapContext);
+
+  useEffect(() => {
+    console.log('mode has changed', mode);
+    if (mode === 'editing-plot') {
+      console.log(showNdviLayer);
+      toggleNDVILayersVisibility('none');
+    } else {
+      console.log(showNdviLayer);
+      toggleNDVILayersVisibility('visible');
+    }
+  }, [mode]);
 
   return (
     <div className='panel-container'>
@@ -48,12 +62,13 @@ export default function PlotPanel() {
                       }
                       className='select-none cursor-pointer font-normal'
                     >
-                      {plot.name}(
+                      {plot.name}
+                      {/* (
                       {!isEmptyObject(plot?.options) &&
                         squareMetersToAcres(
                           calculatePolygonArea(plot?.options)
                         ).toFixed(1)}
-                      acres)
+                      acres) */}
                     </span>
                     {!isEmptyObject(plot?.options) && (
                       <span onClick={() => handleEditPlot(plot)}>

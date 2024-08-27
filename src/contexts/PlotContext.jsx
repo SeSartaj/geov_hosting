@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import { usePlots } from '../hooks/usePlots';
 import { MapContext } from './MapContext';
 import { LngLatBounds } from 'maplibre-gl';
-import { updatePlot } from '@/api/plotApi';
 
 // Create a new context for the map
 const PlotContext = createContext();
@@ -32,9 +31,18 @@ const PlotProvider = ({ children }) => {
     setShowPlots(value);
   };
 
-  const toggleNDVILayersVisibility = () => {
-    setNDVILayersVisibility(showNdviLayer ? 'none' : 'visible');
-    setShowNdviLayer(!showNdviLayer);
+  const toggleNDVILayersVisibility = (visibility) => {
+    if (typeof visibility === 'string') {
+      setNDVILayersVisibility(visibility);
+      setShowNdviLayer(visibility === 'visible');
+    } else if (typeof visibility === 'boolean') {
+      const s = visibility ? 'visible' : 'none';
+      setNDVILayersVisibility(s);
+      setShowNdviLayer(visibility);
+    } else {
+      setNDVILayersVisibility(showNdviLayer ? 'none' : 'visible');
+      setShowNdviLayer(!showNdviLayer);
+    }
   };
 
   const setNDVILayersVisibility = useCallback(
@@ -42,6 +50,17 @@ const PlotProvider = ({ children }) => {
       map?.getStyle()?.layers?.forEach((layer) => {
         if (layer.id.startsWith('ndviImageLayer')) {
           map.setLayoutProperty(layer.id, 'visibility', visibility);
+        }
+      });
+    },
+    [map]
+  );
+
+  const changeNdviLayerOpacity = useCallback(
+    (opacity) => {
+      map?.getStyle()?.layers?.forEach((layer) => {
+        if (layer.id.startsWith('ndviImageLayer')) {
+          map.setPaintProperty(layer.id, 'raster-opacity', opacity / 100);
         }
       });
     },
@@ -73,12 +92,14 @@ const PlotProvider = ({ children }) => {
       console.log('event', event);
       if (event.mode === 'simple_select' && mode === 'editing-plot') {
         draw.deleteAll();
+        setMode('view');
       }
     },
     [draw, mode]
   );
 
   const handleEditPlot = (plot) => {
+    console.log('plot', plot);
     if (map) {
       const draw = drawRef.current;
       handleFlyToPlot(plot?.options.geometry.coordinates);
@@ -136,7 +157,9 @@ const PlotProvider = ({ children }) => {
         ndviLoading,
         setNdviLoading,
         showNdviLayer,
+        setNDVILayersVisibility,
         toggleNDVILayersVisibility,
+        changeNdviLayerOpacity,
       }}
     >
       {children}

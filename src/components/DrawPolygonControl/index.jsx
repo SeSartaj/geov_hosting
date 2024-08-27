@@ -9,15 +9,11 @@ import { MapContext } from '../../contexts/MapContext';
 
 export function DrawPolygonControl() {
   const [features, setFeatures] = useState({});
+  const { mode, setMode } = useContext(MapContext);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [hoveredFeature, setHoveredFeature] = useState(null);
-  const {
-    drawRef,
-    mapRef,
-    setMode,
-    showDrawActionPopup,
-    setShowDrawActionPopup,
-  } = useContext(MapContext);
+  const { drawRef, mapRef, showDrawActionPopup, setShowDrawActionPopup } =
+    useContext(MapContext);
   // Set the custom classes for MapLibre
   constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
   constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';
@@ -36,6 +32,11 @@ export function DrawPolygonControl() {
   const onUpdate = onCreate;
 
   const onDelete = useCallback((e) => {
+    // when editing plot
+    if (mode === 'editing-plot') {
+      setMode('view');
+    }
+    console.log('mode after deleting', e.mode);
     setFeatures((currFeatures) => {
       const newFeatures = { ...currFeatures };
       for (const f of e.features) {
@@ -77,7 +78,9 @@ export function DrawPolygonControl() {
 
   const handleModeChange = (e) => {
     console.log('mode changed', e);
-    setMode(e.mode);
+    // when everything is cleared, set mode to view
+    console.log('mode: ', e.mode);
+    // setMode(e.mode);
   };
 
   const handleSelectionChange = (e) => {
