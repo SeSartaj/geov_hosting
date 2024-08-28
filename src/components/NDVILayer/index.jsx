@@ -8,20 +8,21 @@ import { Source, Layer } from 'react-map-gl/maplibre';
 export const BASE_URL =
   'https://services.sentinel-hub.com/ogc/wmts/89900a2e-d05a-4e89-9fb5-76d00c8b9919?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}';
 
-function getLayerURL({ layer, timeRange }) {
-  if (!layer || !timeRange) {
+function getLayerURL({ layer, dateRange }) {
+  if (!layer || !dateRange) {
     return null;
   }
-  const url = `${BASE_URL}&LAYER=${layer}&TIME=${timeRange}`;
+  // convert start and end to format to be sent with url
+  const TIME = `${dateRange.start}/${dateRange.end}`;
+  const url = `${BASE_URL}&LAYER=${layer}&TIME=${TIME}`;
   return url;
 }
 
 const NDVILayer = () => {
-  const [timeRange, setTimeRange] = useState('2024-03-29/2024-05-29');
-  const { layer, opacity } = useContext(RasterLayerContext);
+  const { layer, opacity, dateRange } = useContext(RasterLayerContext);
   console.log('ll', layer);
 
-  const url = getLayerURL({ layer: layer.value, timeRange: timeRange });
+  const url = getLayerURL({ layer: layer.value, dateRange: dateRange });
 
   console.log('url changed', url);
 

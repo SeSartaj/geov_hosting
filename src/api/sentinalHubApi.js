@@ -181,6 +181,12 @@ export async function getSatellitePassDates(aoi, startDate, endDate) {
     datetime: `${formattedStartDate}/${formattedEndDate}`,
     collections: ['sentinel-2-l1c'],
     limit: 50,
+    // only get those where cloud coverage is less than 20%
+    query: {
+      'eo:cloud_cover': {
+        lte: 20, // Max cloud coverage 20%
+      },
+    },
   };
 
   try {

@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
+import { parseDate } from '@internationalized/date';
 
 export const RasterLayerContext = createContext(null);
 
@@ -13,6 +14,10 @@ const layerOptions = [
 export function RasterLayerProvider({ children }) {
   const [layer, setLayer] = useState(layerOptions[0]);
   const [opacity, setOpacity] = useState(100);
+  const [dateRange, setDateRange] = useState({
+    start: parseDate('2024-01-01'),
+    end: parseDate('2024-12-31'),
+  });
 
   const handleOpacityChange = (e) => {
     setOpacity(e.target.value);
@@ -20,7 +25,15 @@ export function RasterLayerProvider({ children }) {
 
   return (
     <RasterLayerContext.Provider
-      value={{ layer, setLayer, opacity, handleOpacityChange, layerOptions }}
+      value={{
+        layer,
+        setLayer,
+        opacity,
+        handleOpacityChange,
+        layerOptions,
+        dateRange,
+        setDateRange,
+      }}
     >
       {children}
     </RasterLayerContext.Provider>
