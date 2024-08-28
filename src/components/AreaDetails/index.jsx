@@ -12,16 +12,18 @@ export default function AreaDetails() {
 
     const handleClick = (e) => {
       console.log('Clicked on map:', e);
-      const features = mapInstance.queryRenderedFeatures(e.point, {
-        layers: ['plots-layer'], // Replace with your actual layer ID
-      });
-
-      if (features.length > 0) {
-        // Clicked on a plot
-        const plot = features[0];
-        const coordinates = e.lngLat;
-        console.log('Coordinates:', coordinates);
-        console.log('Plot Details:', plot.properties); // Replace with actual plot details
+      // first check if plots-layer exist
+      if (mapInstance.getLayer('plots-layer')) {
+        const features = mapInstance.queryRenderedFeatures(e.point, {
+          layers: ['plots-layer'], // Replace with your actual layer ID
+        });
+        if (features.length > 0) {
+          // Clicked on a plot
+          const plot = features[0];
+          const coordinates = e.lngLat;
+          console.log('Coordinates:', coordinates);
+          console.log('Plot Details:', plot.properties); // Replace with actual plot details
+        }
       } else {
         // Clicked outside of plots
         const coordinates = e.lngLat;
