@@ -18,7 +18,7 @@ const Navigation = () => {
 
   return (
     <Tabs.Root
-      className='flex flex-col w-[300px] overflow-y-hidden'
+      className='flex flex-col w-[300px] h-full overflow-y-hidden'
       defaultValue='tab1'
     >
       <Tabs.List

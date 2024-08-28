@@ -5,22 +5,25 @@ import { MarkersProvider } from './contexts/markersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { PlotProvider } from './contexts/PlotContext';
 import { AccessTokenProvider } from './contexts/AccessTokenProvider';
+import { RasterLayerProvider } from './contexts/RasterLayerContext';
 
 function App() {
   return (
     <AccessTokenProvider>
       <SettingsProvider>
         <MapProvider>
-          <PlotProvider>
-            <MarkersProvider>
-              <div>
-                <h1>Dashboard</h1>
-              </div>
-              <div style={{ padding: 30, marginTop: 20 }}>
-                <MyMap />
-              </div>
-            </MarkersProvider>
-          </PlotProvider>
+          <RasterLayerProvider>
+            <PlotProvider>
+              <MarkersProvider>
+                <div>
+                  <h1>Dashboard</h1>
+                </div>
+                <div style={{ padding: 30, marginTop: 20 }}>
+                  <MyMap />
+                </div>
+              </MarkersProvider>
+            </PlotProvider>
+          </RasterLayerProvider>
         </MapProvider>
       </SettingsProvider>
     </AccessTokenProvider>

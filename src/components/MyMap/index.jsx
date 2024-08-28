@@ -16,6 +16,7 @@ import { DrawPolygonControl } from '../DrawPolygonControl';
 import Spinner from '@/ui-components/Spinner';
 import StatusBar from '../StatusBar';
 import NDVILayer from '../NDVILayer';
+import AreaDetails from '../Plots';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -43,6 +44,7 @@ export default function MyMap() {
       <Plots />
       <DrawPolygonControl />
       <StatusBar />
+      <AreaDetails />
     </Map>
   );
 }

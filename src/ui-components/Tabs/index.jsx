@@ -20,7 +20,7 @@ export function TabTrigger({ value, children, tooltipText, portalContainer }) {
 export function TabContent({ value, children }) {
   return (
     <Tabs.Content
-      className='flex flex-col flex-1  overflow-scroll state-inactive:hidden bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200'
+      className='flex flex-col flex-1 h-full overflow-scroll state-inactive:hidden bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200'
       value={value}
     >
       {children}
