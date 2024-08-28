@@ -276,12 +276,12 @@ export default function Plots() {
         <Layer {...plotFillStyle} />
       </Source>
 
-      {clickedPlot && (
+      {/* {clickedPlot && (
         <PlotPopup
           popupInfo={clickedPlot}
           onClose={() => setClickedPlot(null)}
         />
-      )}
+      )} */}
     </>
   );
 }

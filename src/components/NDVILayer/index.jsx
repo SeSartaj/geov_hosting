@@ -27,7 +27,7 @@ const NDVILayer = () => {
 
   return (
     <Source
-      id='ndvi-source'
+      id='raster-source'
       type='raster'
       tiles={[url]}
       tileSize={256}
@@ -35,9 +35,9 @@ const NDVILayer = () => {
       maxzoom={20}
     >
       <Layer
-        id='ndvi-layer'
+        id='raster-layer'
         type='raster'
-        source='ndvi-source'
+        source='raster-source'
         paint={{ 'raster-opacity': opacity / 100 }}
       />
     </Source>
