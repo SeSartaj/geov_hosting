@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@adobe/react-spectrum": "^3.36.3",
     "@google/earthengine": "^0.1.416",
     "@mapbox/mapbox-gl-draw": "^1.4.3",
     "@radix-ui/colors": "^3.0.0",
