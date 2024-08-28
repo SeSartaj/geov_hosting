@@ -13,6 +13,7 @@ const layerOptions = [
 
 export function RasterLayerProvider({ children }) {
   const [layer, setLayer] = useState(layerOptions[0]);
+  const [isVisible, setIsVisible] = useState(true);
   const [opacity, setOpacity] = useState(100);
   const [dateRange, setDateRange] = useState({
     start: parseDate('2024-01-01'),
@@ -33,6 +34,8 @@ export function RasterLayerProvider({ children }) {
         layerOptions,
         dateRange,
         setDateRange,
+        isVisible,
+        setIsVisible,
       }}
     >
       {children}

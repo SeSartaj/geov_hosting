@@ -19,8 +19,10 @@ function getLayerURL({ layer, dateRange }) {
 }
 
 const NDVILayer = () => {
-  const { layer, opacity, dateRange } = useContext(RasterLayerContext);
-  console.log('ll', layer);
+  const { layer, opacity, dateRange, isVisible } =
+    useContext(RasterLayerContext);
+
+  if (!isVisible) return null;
 
   const url = getLayerURL({ layer: layer.value, dateRange: dateRange });
 

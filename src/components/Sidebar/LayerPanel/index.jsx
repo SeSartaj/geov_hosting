@@ -22,6 +22,8 @@ export default function LayerPanel() {
     handleOpacityChange,
     dateRange,
     setDateRange,
+    isVisible,
+    setIsVisible,
   } = useContext(RasterLayerContext);
   const { mapInstance } = useContext(MapContext);
   const [passDates, setPassDates] = useState([]);
@@ -43,6 +45,7 @@ export default function LayerPanel() {
   //  and store all dates in a state
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
+    if (!isVisible) return;
     const bounds = mapInstance.getBounds();
     const bbox = [
       bounds.getWest(),
@@ -54,18 +57,34 @@ export default function LayerPanel() {
       console.log('dates', dates);
       setPassDates(dates);
     });
-  }, [mapInstance, setPassDates]);
+  }, [mapInstance, setPassDates, isVisible]);
 
   useEffect(() => {
-    handlePassDates();
+    mapInstance.on('moveend', handlePassDates);
+    mapInstance.on('zoomend', handlePassDates);
+
+    return () => {
+      mapInstance.off('moveend', handlePassDates);
+      mapInstance.off('zoomend', handlePassDates);
+    };
   }, [mapInstance, handlePassDates]);
+
+  // Re-render the Calendar whenever passDates changes
+  useEffect(() => {
+    // This will trigger a re-render of the Calendar
+  }, [passDates]);
 
   return (
     <div className='panel-container h-full overflow-y-scroll'>
       <div className='panel-header-action'>
         <h3 style={{ margin: 0 }}>Map Raster Layers</h3>
         {/* <AddNewLayerModal setLayers={setLayers} /> */}
-        <ToggleButton onTooltip='hide layer' offTooltip='show layer' />
+        <ToggleButton
+          onTooltip='hide layer'
+          offTooltip='show layer'
+          initialState={isVisible}
+          onToggle={setIsVisible}
+        />
       </div>
       <hr />
       <ul className='layers-list'>
@@ -92,7 +111,14 @@ export default function LayerPanel() {
         <hr />
         <span>Calender:</span>
         {/* <DateRangePicker value={dateRange} onChange={setDateRange} /> */}
-        <Calendar isDateUnavailable={isDateUnavailable} />
+        <Calendar
+          isDateUnavailable={isDateUnavailable}
+          value={dateRange.start}
+          onChange={(date) => {
+            console.log('onFocusChange date', date);
+            setDateRange({ start: date, end: date });
+          }}
+        />
       </ul>
     </div>
   );
