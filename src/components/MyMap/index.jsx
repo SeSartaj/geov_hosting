@@ -44,7 +44,6 @@ export default function MyMap() {
       <Plots />
       <DrawPolygonControl />
       <StatusBar />
-      <AreaDetails />
     </Map>
   );
 }

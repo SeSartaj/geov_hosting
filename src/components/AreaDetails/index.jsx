@@ -1,9 +1,12 @@
 import React, { useContext, useEffect } from 'react';
 import { MapContext } from '@/contexts/MapContext';
 import { useMap } from 'react-map-gl/maplibre';
+import { RasterLayerContext } from '@/contexts/RasterLayerContext';
+import MyModal from '@/ui-components/MyModal';
 
 export default function AreaDetails() {
   const { mapInstance } = useContext(MapContext);
+  const { clickedData, setClickedData } = useContext(RasterLayerContext);
 
   console.log('AreaDetails');
 
@@ -12,23 +15,21 @@ export default function AreaDetails() {
 
     const handleClick = (e) => {
       console.log('Clicked on map:', e);
-      // first check if plots-layer exist
+      let data = {
+        coordinates: e.lngLat,
+      };
+
+      // clicked inside a plot
       if (mapInstance.getLayer('plots-layer')) {
         const features = mapInstance.queryRenderedFeatures(e.point, {
           layers: ['plots-layer'], // Replace with your actual layer ID
         });
         if (features.length > 0) {
-          // Clicked on a plot
-          const plot = features[0];
-          const coordinates = e.lngLat;
-          console.log('Coordinates:', coordinates);
-          console.log('Plot Details:', plot.properties); // Replace with actual plot details
+          data.plot = features[0];
         }
-      } else {
-        // Clicked outside of plots
-        const coordinates = e.lngLat;
-        console.log('Coordinates:', coordinates);
       }
+      console.log('clickedData:', data);
+      setClickedData(data);
     };
     console.log('inside useEffect', mapInstance);
     if (mapInstance) {
@@ -44,5 +45,20 @@ export default function AreaDetails() {
     };
   }, [mapInstance]);
 
-  return null;
+  if (!clickedData) {
+    return null;
+  }
+
+  return (
+    <MyModal
+      title={
+        clickedData?.plot
+          ? `${clickedData.plot.properties.name} `
+          : `${clickedData?.coordinates}`
+      }
+      description='description'
+      open={true}
+      setOpen={() => setClickedData(null)}
+    ></MyModal>
+  );
 }

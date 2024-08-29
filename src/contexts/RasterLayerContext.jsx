@@ -19,6 +19,7 @@ export function RasterLayerProvider({ children }) {
     start: parseDate('2024-01-01'),
     end: parseDate('2024-12-31'),
   });
+  const [clickedData, setClickedData] = useState(null);
 
   const handleOpacityChange = (e) => {
     setOpacity(e.target.value);
@@ -36,6 +37,8 @@ export function RasterLayerProvider({ children }) {
         setDateRange,
         isVisible,
         setIsVisible,
+        clickedData,
+        setClickedData,
       }}
     >
       {children}
