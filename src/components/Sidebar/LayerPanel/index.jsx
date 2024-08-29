@@ -45,7 +45,7 @@ export default function LayerPanel() {
   //  and store all dates in a state
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
-    if (!isVisible) return;
+    if (!isVisible || mapInstance.getZoom() < 9) setPassDates([]);
     const bounds = mapInstance.getBounds();
     const bbox = [
       bounds.getWest(),

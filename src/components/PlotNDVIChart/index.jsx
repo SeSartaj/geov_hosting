@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { fetchMeanNDVI } from '@/api/sentinalHubApi';
+import { fetchMeanNDVI, fetchMeanNDVIForPoint } from '@/api/sentinalHubApi';
 import Spinner from '@/ui-components/Spinner';
 import useAccessToken from '@/hooks/useAccessToken';
 
@@ -17,7 +17,7 @@ function parseNDVIData(data) {
   });
 }
 
-const NdviChart = ({ plot }) => {
+const NdviChart = ({ plot, point }) => {
   const [ndviData, setNdviData] = useState([]);
   const [loading, setLoading] = useState(true);
   const accessToken = useAccessToken();
@@ -120,7 +120,16 @@ const NdviChart = ({ plot }) => {
       try {
         // this is temporary for testing, user marker.id instead
         // const data = await getNdviData(8386);
-        const data = await fetchMeanNDVI(plot, { accessToken });
+        let data;
+        if (plot) {
+          data = await fetchMeanNDVI(plot, { accessToken });
+        }
+        if (point) {
+          console.log('sending request for point', point);
+          data = await fetchMeanNDVIForPoint(point, {
+            accessToken,
+          });
+        }
         if (data) {
           setNdviData(data);
         }

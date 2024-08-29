@@ -29,12 +29,16 @@ export default function MyModal({
       >
         <Dialog.Overlay className='DialogOverlay' />
         <Dialog.Content className='DialogContent dark:bg-gray-900'>
-          <Dialog.Title className='DialogTitle dark:text-gray-100'>
-            {title}
-          </Dialog.Title>
-          <Dialog.Description className='DialogDescription dark:text-gray-200'>
-            {description}
-          </Dialog.Description>
+          {title && (
+            <Dialog.Title className='DialogTitle dark:text-gray-100'>
+              {title}
+            </Dialog.Title>
+          )}
+          {description && (
+            <Dialog.Description className='DialogDescription dark:text-gray-200'>
+              {description}
+            </Dialog.Description>
+          )}
           {children}
           <Dialog.Close asChild>
             <MyButton

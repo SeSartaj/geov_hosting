@@ -1,14 +1,16 @@
 import React, { useContext, useEffect } from 'react';
+import * as Tabs from '@radix-ui/react-tabs';
 import { MapContext } from '@/contexts/MapContext';
-import { useMap } from 'react-map-gl/maplibre';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import MyModal from '@/ui-components/MyModal';
+import NdviChart from '../PlotNDVIChart';
+import { TabContent, TabTrigger } from '@/ui-components/Tabs';
+import { FaRegMap } from 'react-icons/fa6';
+import { HiOutlineMapPin } from 'react-icons/hi2';
 
 export default function AreaDetails() {
   const { mapInstance } = useContext(MapContext);
   const { clickedData, setClickedData } = useContext(RasterLayerContext);
-
-  console.log('AreaDetails');
 
   useEffect(() => {
     console.log('before map check');
@@ -50,15 +52,37 @@ export default function AreaDetails() {
   }
 
   return (
-    <MyModal
-      title={
-        clickedData?.plot
-          ? `${clickedData.plot.properties.name} `
-          : `${clickedData?.coordinates}`
-      }
-      description='description'
-      open={true}
-      setOpen={() => setClickedData(null)}
-    ></MyModal>
+    <MyModal open={true} setOpen={() => setClickedData(null)}>
+      <Tabs.Root
+        className='flex flex-col w-full h-full overflow-y-hidden'
+        defaultValue='point'
+      >
+        <Tabs.List
+          className='flex flex-shrink-0 justify-start '
+          aria-label='Manage your account'
+        >
+          <TabTrigger
+            value='point'
+            tooltipText='Point'
+            portalContainer={mapInstance.getContainer()}
+          >
+            <HiOutlineMapPin className='cursor-pointer' />
+          </TabTrigger>
+          {clickedData?.plot && (
+            <TabTrigger value='plot' tooltipText='Plot'>
+              <FaRegMap className='cursor-pointer' />
+            </TabTrigger>
+          )}
+        </Tabs.List>
+        <TabContent value='point'>
+          <NdviChart point={clickedData.coordinates} />
+        </TabContent>
+        {clickedData?.plot && (
+          <TabContent value='plot'>
+            <NdviChart plot={clickedData.plot} />
+          </TabContent>
+        )}
+      </Tabs.Root>
+    </MyModal>
   );
 }

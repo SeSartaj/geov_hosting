@@ -156,6 +156,81 @@ export async function fetchMeanNDVI(plot, { accessToken }) {
   }
 }
 
+export async function fetchMeanNDVIForPoint(point, { accessToken }) {
+  const longitude = point.lng;
+  const latitude = point.lat;
+  const smallOffset = 0.0001; // Adjust the offset to define the size of the polygon
+
+  const smallPolygon = {
+    type: 'Polygon',
+    coordinates: [
+      [
+        [longitude - smallOffset, latitude - smallOffset],
+        [longitude + smallOffset, latitude - smallOffset],
+        [longitude + smallOffset, latitude + smallOffset],
+        [longitude - smallOffset, latitude + smallOffset],
+        [longitude - smallOffset, latitude - smallOffset], // Closing the polygon
+      ],
+    ],
+  };
+
+  const sentinelHubStatUrl =
+    'https://services.sentinel-hub.com/api/v1/statistics';
+
+  const stats_request = {
+    input: {
+      bounds: {
+        geometry: smallPolygon,
+        properties: {
+          crs: 'http://www.opengis.net/def/crs/EPSG/0/4326',
+        },
+      },
+      data: [
+        {
+          type: 'sentinel-2-l2a',
+          dataFilter: {
+            mosaickingOrder: 'leastCC',
+          },
+        },
+      ],
+    },
+    aggregation: {
+      timeRange: {
+        from: '2024-01-01T00:00:00Z',
+        to: '2024-07-31T00:00:00Z',
+      },
+      aggregationInterval: {
+        of: 'P30D',
+      },
+      evalscript: evalscript,
+      resx: 10,
+      resy: 10,
+    },
+  };
+
+  try {
+    const response = await fetch(sentinelHubStatUrl, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(stats_request),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch NDVI statistics');
+    }
+
+    const data = await response.json();
+    console.log('NDVI data for point:', data);
+    return data?.data;
+  } catch (error) {
+    console.error('Error fetching NDVI statistics for point:', error);
+    return null;
+  }
+}
+
 export async function getSatellitePassDates(aoi, startDate, endDate) {
   // if start and end dates are not provided, use the last 6 months
   if (!startDate || !endDate) {

@@ -28,6 +28,10 @@ const NDVILayer = () => {
 
   console.log('url changed', url);
 
+  if (!isVisible) {
+    return null;
+  }
+
   return (
     <>
       <Source
@@ -35,7 +39,7 @@ const NDVILayer = () => {
         type='raster'
         tiles={[url]}
         tileSize={256}
-        minzoom={8}
+        minzoom={10}
         maxzoom={20}
       >
         <Layer
@@ -43,6 +47,7 @@ const NDVILayer = () => {
           type='raster'
           source='raster-source'
           paint={{ 'raster-opacity': opacity / 100 }}
+          beforeId='plots-layer'
         />
       </Source>
       <AreaDetails />
