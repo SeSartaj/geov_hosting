@@ -2,6 +2,16 @@
 
 [Moved to https://github.com/AgAnalyticsSpa/agvmap.git]
 
+## Setup
+
+in order to run this project, you'll need the following:
+
+- maptiler api key
+- sentinal hub client id and secret
+  to setup the above rename example.env to .env and paste the above into it
+
+to run the development server, run 'yarn dev'
+
 ## Goal
 
 Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard.
