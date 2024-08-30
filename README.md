@@ -1,83 +1,64 @@
-# Geospatial Data Visualisation Tool
+# Geospatial Data Visualization Tool
 
-[Moved to https://github.com/AgAnalyticsSpa/agvmap.git]
+A tool designed to visualize geospatial data on a map, integrating custom layers fetched from a REST API, and displaying relevant time-series data. This project is built using React, with `react-map-gl` for map integration.
 
-## Setup
+## Project Setup
 
-in order to run this project, you'll need the following:
+To run this project locally, you'll need the following:
 
-- maptiler api key
-- sentinal hub client id and secret
-  to setup the above rename example.env to .env and paste the above into it
+1. **MapTiler API Key** for basemap style
+2. **Sentinel Hub Client ID and Secret** for fetching data and imagery from sentinel hubs
 
-to run the development server, run 'yarn dev'
+### Steps to Setup:
 
-## Goal
+1. **Rename `.env.example` to `.env`.**
+2. **Paste the API keys and credentials into the `.env` file.**
+3. in the project directory, run `yarn install` in order to install required packages
+4. run `yarn dev` to start the development server
+5. goto `localhost:3000` and you shall see the app running.
 
-Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard.
+## Project Goal
 
-## Requirements
+Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard for visualization and analysis.
 
-- Use https://visgl.github.io/react-map-gl/
-- Implement the tool as a pluggable react component for use in a web or react native app
+## Feature Checklist
 
-**Features to implement:**
+### Version 1.0 Checklist
 
-- Same or similar UI to pick a base map (see Kepler demo: https://kepler.gl/demo)
-- Render GeoJSON layer on the map from file upload or from a REST API (will be provided) similar UI as kepler.gl also see https://visgl.github.io/react-map-gl/examples/geojson
-- Add/remove layers like Kepler.gl
-- Render a time series chart on click or selection of an area on the map (see 4:15 in this video https://youtu.be/PX2fwIWVPCw?t=255)
-- Draw polygon on map like (see example https://visgl.github.io/react-map-gl/examples/draw-polygon)
-- Render markers and show popup based on data from REST API (see example https://visgl.github.io/react-map-gl/examples/controls)
-- Save and load features (polygons, shapes etc.) through the REST API
-
-## CheckList
-
-- [x] use react-map-gl
-- [x] Add and load markers
-- [x] show popup with time-series data chart on marker
-- [ ] draw polygon and add fields
-- [ ] render ndvi layer
-- [ ] show popup with time series data on each feature of ndvi
-
-## Checklist for version 1
-
-- [x] load markers
-- [x] show paw, battery level, name, serial, and crop on popup
-- [x] filter markers based on farm and state
-- [x] switch between map and satellite map
-- [x] full screen mode
-- [x] add a pie chart on map that shows percentage of each paw status.
-- [x] display plots on the map
-- [x] draw a polygon on the map and show add plot to it.
-- [x] map settings should be stored with user account or on the localhost.
-- [] add new marker
-- [x] when a plot is clicked show popup displaying time series data of that plot
-- [x] use highcharts and get configs from mr. zakir
-- [] ESA Sen-ET (explore it) manual
-- [] Preline U
-- [] translation translation file (i18n library)
-- [] for design use kendo-react-ui with tailwindcss
-- [] when ndvi images are loading, show loader so user knows system status
+- [x] Load markers on the map.
+- [x] Show PAW status, battery level, name, serial number, and crop information in the marker popup.
+- [x] Filter markers based on farm and state.
+- [x] Toggle between map and satellite view.
+- [x] Enable full-screen mode.
+- [x] Add a pie chart on the map showing the percentage of each PAW status.
+- [x] Display plots on the map.
+- [x] Draw a polygon on the map and allow adding plots to it.
+- [x] Persist map settings with the user account or in the local storage.
+- [x] Add a new marker on the map.
+- [x] Show a popup with time-series data when a plot is clicked.
+- [x] Use Highcharts for chart visualization, following the configuration provided by Mr. Zakir.
+- [ ] Explore and integrate ESA Sen-ET (explore documentation).
+- [ ] Implement the Preline U module.
+- [ ] Add translation files using the `i18n` library for multi-language support.
+- [ ] Design the UI using `KendoReact` components with `TailwindCSS`.
+- [ ] Show a loader when NDVI images are loading to indicate system status to the user.
 
 ## Observations
 
-- there are different types of markers
-- a marker may belong to a farm, and a farm can have many markers
+- A marker may belong to a farm, and a farm can have multiple markers.
+- a farm can have many plots
 
 ## FAQs
 
-- why backend throws CORS error?
-- only port 3000 is allowed on the backend.
-- what is the difference between forecast marker and station marker?
-- If a marker is associated with a device, it represents a station marker. Otherwise, it is a forecast marker, and data for forecast marker is fetched from a third-party service.
--
+- **Why does the backend throw a CORS error?**
+  - Only port 3000 is allowed on the backend.
+- **What is the difference between forecast markers and station markers?**
+  - If a marker is associated with a device, it represents a station marker. Forecast markers, on the other hand, are not associated with devices, and their data is fetched from a third-party service.
 
-## Issues
+## Known Issues
 
-- ~[] when draw is started a popup shows up, however if clicked anywhere else, the popup disapears and doesn't show up again~
-- ~[] when a plot is added, the modal doesn't close up and the popup also doesn't close up.~
-- ~[] when a marker is drawn on the map, error is thrown~
-- [] when map style is changed, ndvi images are lost
-- [] when plot geometry is edited, new ndvi image is not downloaded
-- []
+- ~~When drawing starts, a popup shows up, but if clicked anywhere else, the popup disappears and doesn’t show up again.~~
+- ~~When a plot is added, the modal and the popup do not close automatically.~~
+- ~~When a marker is drawn on the map, an error is thrown.~~
+- [ ] NDVI images are lost when the map style is changed.
+- [ ] New NDVI images are not downloaded when plot geometry is edited.
