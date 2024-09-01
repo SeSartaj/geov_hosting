@@ -12,6 +12,8 @@ import Input from '@/ui-components/Input';
 import { Calendar, DateRangePicker } from '@adobe/react-spectrum';
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
 import convertBoundsToBboxString from '@/utils/convertBoundsToBboxString';
+import { FaCrosshairs } from 'react-icons/fa6';
+import { PiCrosshair } from 'react-icons/pi';
 
 export default function LayerPanel() {
   const {
@@ -24,6 +26,9 @@ export default function LayerPanel() {
     setDateRange,
     isVisible,
     setIsVisible,
+    isDetailActive,
+    setIsDetailActive,
+    handleStateChange,
   } = useContext(RasterLayerContext);
   const { mapInstance } = useContext(MapContext);
   const [passDates, setPassDates] = useState([]);
@@ -79,14 +84,23 @@ export default function LayerPanel() {
       <div className='panel-header-action'>
         <h3 style={{ margin: 0 }}>Map Raster Layers</h3>
         {/* <AddNewLayerModal setLayers={setLayers} /> */}
-        <ToggleButton
-          onTooltip='hide layer'
-          offTooltip='show layer'
-          initialState={isVisible}
-          onToggle={setIsVisible}
-        />
+        <span className='flex items-center'>
+          <PiCrosshair
+            size={24}
+            style={isDetailActive ? { color: 'blue' } : { color: 'gray' }}
+            onClick={() => handleStateChange(!isDetailActive)}
+          />
+          <ToggleButton
+            onTooltip='hide layer'
+            offTooltip='show layer'
+            initialState={isVisible}
+            onToggle={setIsVisible}
+          />
+        </span>
       </div>
       <hr />
+
+      <div></div>
       <ul className='layers-list'>
         <FormGroup label='layer:'>
           <MyReactSelect
@@ -117,6 +131,13 @@ export default function LayerPanel() {
           onChange={(date) => {
             console.log('onFocusChange date', date);
             setDateRange({ start: date, end: date });
+          }}
+          dayStyle={(date) => {
+            const isUnavailable = isDateUnavailable(date);
+            return {
+              backgroundColor: isUnavailable ? 'red' : 'transparent',
+              color: isUnavailable ? 'white' : 'inherit',
+            };
           }}
         />
       </ul>

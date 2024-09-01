@@ -41,6 +41,37 @@ export function RasterLayerProvider({ children }) {
     setIsDetailActive(isActive);
   };
 
+  useEffect(() => {
+    const handleClick = (e) => {
+      let data = {
+        coordinates: e.lngLat,
+      };
+
+      // clicked inside a plot
+      if (mapInstance.getLayer('plots-layer')) {
+        const features = mapInstance.queryRenderedFeatures(e.point, {
+          layers: ['plots-layer'],
+        });
+        if (features.length > 0) {
+          data.plot = features[0];
+        }
+      }
+      console.log('clickedData:', data);
+      setClickedData(data);
+    };
+    if (mapInstance && isDetailActive) {
+      console.log('adding event to map');
+      mapInstance.on('click', handleClick);
+    }
+
+    // Clean up the event listener on component unmount
+    return () => {
+      if (mapInstance) {
+        mapInstance.off('click', handleClick);
+      }
+    };
+  }, [mapInstance, isDetailActive, setClickedData]);
+
   return (
     <RasterLayerContext.Provider
       value={{

@@ -56,21 +56,6 @@ const NDVILayer = () => {
         />
       </Source>
       <AreaDetails />
-      <CustomControlButton
-        label='Toggle Detail View'
-        Icon={<BiCrosshair size={24} className='maplibregl-ctrl-icon' />}
-        onClick={({ buttonRef }) => {
-          handleStateChange(!isDetailActive);
-          if (buttonRef?.current) {
-            console.log(buttonRef.current.classList);
-            if (isDetailActive) {
-              buttonRef.current.classList.add('active');
-            } else {
-              buttonRef.current.classList.remove('active');
-            }
-          }
-        }}
-      />
     </>
   );
 };
