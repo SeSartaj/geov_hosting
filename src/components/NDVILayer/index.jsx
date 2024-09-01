@@ -5,6 +5,8 @@ import { get } from 'immutable';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import AreaDetails from '../AreaDetails';
+import CustomControlButton from '../CustomControl';
+import { BiCrosshair } from 'react-icons/bi';
 
 export const BASE_URL =
   'https://services.sentinel-hub.com/ogc/wmts/89900a2e-d05a-4e89-9fb5-76d00c8b9919?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}';
@@ -20,13 +22,16 @@ function getLayerURL({ layer, dateRange }) {
 }
 
 const NDVILayer = () => {
-  const { layer, opacity, dateRange, isVisible, clickedData, setClickedData } =
-    useContext(RasterLayerContext);
-  console.log('ll', layer);
+  const {
+    layer,
+    opacity,
+    dateRange,
+    isVisible,
+    isDetailActive,
+    handleStateChange,
+  } = useContext(RasterLayerContext);
 
   const url = getLayerURL({ layer: layer.value, dateRange: dateRange });
-
-  console.log('url changed', url);
 
   if (!isVisible) {
     return null;
@@ -47,10 +52,25 @@ const NDVILayer = () => {
           type='raster'
           source='raster-source'
           paint={{ 'raster-opacity': opacity / 100 }}
-          beforeId='plots-layer'
+          // beforeId='plots-layer'
         />
       </Source>
       <AreaDetails />
+      <CustomControlButton
+        label='Toggle Detail View'
+        Icon={<BiCrosshair size={24} className='maplibregl-ctrl-icon' />}
+        onClick={({ buttonRef }) => {
+          handleStateChange(!isDetailActive);
+          if (buttonRef?.current) {
+            console.log(buttonRef.current.classList);
+            if (isDetailActive) {
+              buttonRef.current.classList.add('active');
+            } else {
+              buttonRef.current.classList.remove('active');
+            }
+          }
+        }}
+      />
     </>
   );
 };

@@ -21,6 +21,7 @@ const MapProvider = ({ children }) => {
   const [mapStyle, setMapStyle] = useState(
     BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url
   );
+  const [isDetailActive, setIsDetailActive] = useState(false);
 
   useEffect(() => {
     setMapStyle(BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url);
@@ -48,6 +49,8 @@ const MapProvider = ({ children }) => {
         setStatus,
         showDrawActionPopup,
         setShowDrawActionPopup,
+        isDetailActive,
+        setIsDetailActive,
       }}
     >
       {children}

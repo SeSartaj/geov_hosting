@@ -10,13 +10,12 @@ import { HiOutlineMapPin } from 'react-icons/hi2';
 
 export default function AreaDetails() {
   const { mapInstance } = useContext(MapContext);
-  const { clickedData, setClickedData } = useContext(RasterLayerContext);
+  const { clickedData, setClickedData, isDetailActive } =
+    useContext(RasterLayerContext);
 
   useEffect(() => {
-    console.log('before map check');
-
     const handleClick = (e) => {
-      console.log('Clicked on map:', e);
+      console.log('Clicked on map:', isDetailActive);
       let data = {
         coordinates: e.lngLat,
       };
@@ -24,7 +23,7 @@ export default function AreaDetails() {
       // clicked inside a plot
       if (mapInstance.getLayer('plots-layer')) {
         const features = mapInstance.queryRenderedFeatures(e.point, {
-          layers: ['plots-layer'], // Replace with your actual layer ID
+          layers: ['plots-layer'],
         });
         if (features.length > 0) {
           data.plot = features[0];
@@ -33,8 +32,7 @@ export default function AreaDetails() {
       console.log('clickedData:', data);
       setClickedData(data);
     };
-    console.log('inside useEffect', mapInstance);
-    if (mapInstance) {
+    if (mapInstance && isDetailActive) {
       console.log('adding event to map');
       mapInstance.on('click', handleClick);
     }
@@ -45,9 +43,9 @@ export default function AreaDetails() {
         mapInstance.off('click', handleClick);
       }
     };
-  }, [mapInstance]);
+  }, [mapInstance, isDetailActive, setClickedData]);
 
-  if (!clickedData) {
+  if (!clickedData || !isDetailActive) {
     return null;
   }
 

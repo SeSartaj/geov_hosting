@@ -1,5 +1,6 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { parseDate } from '@internationalized/date';
+import { MapContext } from './MapContext';
 
 export const RasterLayerContext = createContext(null);
 
@@ -12,9 +13,12 @@ const layerOptions = [
 ];
 
 export function RasterLayerProvider({ children }) {
+  const { mapInstance } = useContext(MapContext);
   const [layer, setLayer] = useState(layerOptions[0]);
   const [isVisible, setIsVisible] = useState(true);
   const [opacity, setOpacity] = useState(100);
+  const [isDetailActive, setIsDetailActive] = useState(false);
+
   const [dateRange, setDateRange] = useState({
     start: parseDate('2024-01-01'),
     end: parseDate('2024-12-31'),
@@ -23,6 +27,18 @@ export function RasterLayerProvider({ children }) {
 
   const handleOpacityChange = (e) => {
     setOpacity(e.target.value);
+  };
+
+  const handleStateChange = (isActive) => {
+    console.log('isDetailActive', isActive);
+    if (mapInstance) {
+      if (isActive) {
+        mapInstance.getCanvas().style.cursor = 'crosshair';
+      } else {
+        mapInstance.getCanvas().style.cursor = '';
+      }
+    }
+    setIsDetailActive(isActive);
   };
 
   return (
@@ -39,6 +55,8 @@ export function RasterLayerProvider({ children }) {
         setIsVisible,
         clickedData,
         setClickedData,
+        isDetailActive,
+        handleStateChange,
       }}
     >
       {children}
