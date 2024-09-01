@@ -48,9 +48,6 @@ export default function DrawActionsPopup({ feature }) {
     return null;
   }
 
-  // if editing plot, don't show it
-  if (mode !== 'simple_select') return null;
-
   if (feature.geometry.type == 'Point') {
     return (
       <Popup

@@ -11,7 +11,6 @@ export function DrawPolygonControl() {
   const [features, setFeatures] = useState({});
   const { mode, setMode } = useContext(MapContext);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
-  const [hoveredFeature, setHoveredFeature] = useState(null);
   const { drawRef, mapRef, showDrawActionPopup, setShowDrawActionPopup } =
     useContext(MapContext);
   // Set the custom classes for MapLibre
@@ -20,6 +19,7 @@ export function DrawPolygonControl() {
   constants.classes.CONTROL_GROUP = 'maplibregl-ctrl-group';
 
   const onCreate = useCallback((e) => {
+    console.log('onCreate');
     setFeatures((currFeatures) => {
       const newFeatures = { ...currFeatures };
       for (const f of e.features) {

@@ -138,7 +138,7 @@ export default function Plots() {
     },
   };
 
-  const areFeaturesDrawn = (drawRef) => {
+  const areFeaturesDrawn = () => {
     const draw = drawRef?.current?.getAll();
     const features = draw?.features || [];
     return features.length > 0;
@@ -146,7 +146,7 @@ export default function Plots() {
 
   const handleMapClick = (event) => {
     // If there are any draw features, don't show the popup
-    if (areFeaturesDrawn(drawRef)) {
+    if (areFeaturesDrawn()) {
       console.log('no popup info');
       setClickedPlot(null);
       return;
@@ -167,13 +167,13 @@ export default function Plots() {
     }
   };
 
-  const handleMouseEnter = () => {
-    map.getCanvas().style.cursor = 'pointer';
-  };
+  // const handleMouseEnter = () => {
+  //   map.getCanvas().style.cursor = 'pointer';
+  // };
 
-  const handleMouseLeave = () => {
-    map.getCanvas().style.cursor = '';
-  };
+  // const handleMouseLeave = () => {
+  //   map.getCanvas().style.cursor = '';
+  // };
 
   const isBoundingBoxIntersecting = useCallback((plotBounds, mapBounds) => {
     const [minX, minY, maxX, maxY] = plotBounds;
@@ -191,13 +191,13 @@ export default function Plots() {
   const handleViewportChange = useCallback(
     ({ timeTravel = false }) => {
       if (!map) return;
-      // if layer is not turned no, don't fetch the images
+      // if layer is not turned on, don't fetch the images
       if (!showNdviLayer) return;
       // Get the current zoom level
       const zoom = map.getZoom();
 
       // Check if the zoom level is within the desired range
-      const zoomLevelThreshold = 10; // Define the zoom level threshold
+      const zoomLevelThreshold = 10;
       if (zoom >= zoomLevelThreshold) {
         const bounds = map.getBounds();
 
@@ -243,8 +243,8 @@ export default function Plots() {
   useEffect(() => {
     if (map) {
       map.on('click', 'plots-layer', handleMapClick);
-      map.on('mouseenter', 'plots-layer', handleMouseEnter);
-      map.on('mouseleave', 'plots-layer', handleMouseLeave);
+      // map.on('mouseenter', 'plots-layer', handleMouseEnter);
+      // map.on('mouseleave', 'plots-layer', handleMouseLeave);
       map.on('moveend', handleViewportChange);
       map.on('zoomend', handleViewportChange);
     }
@@ -252,8 +252,8 @@ export default function Plots() {
     return () => {
       if (map) {
         map.off('click', 'plots-layer', handleMapClick);
-        map.off('mouseenter', 'plots-layer', handleMouseEnter);
-        map.off('mouseleave', 'plots-layer', handleMouseLeave);
+        // map.off('mouseenter', 'plots-layer', handleMouseEnter);
+        // map.off('mouseleave', 'plots-layer', handleMouseLeave);
         map.off('moveend', handleViewportChange);
         map.off('zoomend', handleViewportChange);
       }

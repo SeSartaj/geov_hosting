@@ -150,6 +150,16 @@ export const updatePlot = async (data) => {
   }
 };
 
+export const deletePlot = async (plotId) => {
+  const response = await fetchWrapper(`${API_URL}plot/${plotId}/`, {
+    method: 'DELETE',
+  });
+
+  if (response.ok) {
+    return response.json();
+  }
+};
+
 export const getPawData = async (markerId) => {
   const response = await fetchWrapper(`${API_URL}marker/paw/${markerId}/`);
   return response.json();

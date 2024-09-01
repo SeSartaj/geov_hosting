@@ -1,12 +1,8 @@
-import { MapContext } from '@/contexts/MapContext';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
-import { bbox } from '@turf/turf';
-import { get } from 'immutable';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import AreaDetails from '../AreaDetails';
-import CustomControlButton from '../CustomControl';
-import { BiCrosshair } from 'react-icons/bi';
+import { MapContext } from '@/contexts/MapContext';
 
 export const BASE_URL =
   'https://services.sentinel-hub.com/ogc/wmts/89900a2e-d05a-4e89-9fb5-76d00c8b9919?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}';
@@ -22,16 +18,27 @@ function getLayerURL({ layer, dateRange }) {
 }
 
 const NDVILayer = () => {
-  const {
-    layer,
-    opacity,
-    dateRange,
-    isVisible,
-    isDetailActive,
-    handleStateChange,
-  } = useContext(RasterLayerContext);
+  const { layer, opacity, dateRange, isVisible } =
+    useContext(RasterLayerContext);
+  const { mapInstance } = useContext(MapContext);
+  const [beforeId, setBeforeId] = useState();
 
   const url = getLayerURL({ layer: layer.value, dateRange: dateRange });
+  // a function that checks if plots-layer exists on the map,
+  // and then sets the beforeId to plots-layer, otherwise leave it empty
+  const setBeforeIdIfPlotsLayerExists = useCallback(() => {
+    if (!mapInstance) return;
+    if (mapInstance.getLayer('plots-line-layer')) {
+      console.log('plots-line-layer exists');
+      setBeforeId('plots-line-layer');
+    } else {
+      setBeforeId();
+    }
+  }, [mapInstance, setBeforeId]);
+
+  useEffect(() => {
+    setBeforeIdIfPlotsLayerExists();
+  }, [mapInstance, setBeforeIdIfPlotsLayerExists]);
 
   if (!isVisible) {
     return null;
@@ -52,7 +59,7 @@ const NDVILayer = () => {
           type='raster'
           source='raster-source'
           paint={{ 'raster-opacity': opacity / 100 }}
-          // beforeId='plots-layer'
+          beforeId={beforeId}
         />
       </Source>
       <AreaDetails />

@@ -1,4 +1,4 @@
-import { createPlot, getPlots, updatePlot } from '@/api/plotApi';
+import { createPlot, deletePlot, getPlots, updatePlot } from '@/api/plotApi';
 import { getNDVILayerUrl } from '@/utils/getNDVILayerUrl';
 import isEmptyObject from '@/utils/isEmptyObject';
 import { bbox } from '@turf/turf';
@@ -139,12 +139,27 @@ export const usePlots = () => {
   };
 
   const addNewPlot = (newPlot) => {
+    console.log('inside addNewPlot');
     // newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
     createPlot(newPlot).then((createdPlot) => {
       if (!createdPlot) return;
-      console.log('created Plot');
-      setPlots((prev) => [...prev, createdPlot.options]);
+
+      setPlots((prev) => [...prev, createdPlot]);
     });
+  };
+
+  const handleDeletePlot = (plot) => {
+    setLoading(true);
+    deletePlot(plot.id)
+      .then(() => {
+        // remove the plot from plots
+        const newPlotsList = [...plots];
+        setPlots(newPlotsList.filter((p) => p.id !== plot.id));
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
   };
 
   const getPlotsList = useCallback(() => {
@@ -188,6 +203,7 @@ export const usePlots = () => {
     });
   };
 
+  //
   useEffect(() => {
     console.log('plots are ', plots);
     setPlots(filterPlots(unfilteredPlots));
@@ -207,5 +223,6 @@ export const usePlots = () => {
     handlePlotUpdate,
     setPlotFilters,
     resetFilters,
+    handleDeletePlot,
   };
 };

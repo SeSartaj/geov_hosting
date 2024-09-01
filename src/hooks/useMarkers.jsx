@@ -9,7 +9,7 @@ const EMPTY_FILTERS = {
 };
 export const useMarkers = () => {
   const [markers, setMarkers] = useState([]);
-  const [showMarkers, setShowMarkers] = useState(false);
+  const [showMarkers, setShowMarkers] = useState(true);
 
   const [unfilteredMarkers, setUnfilteredMarkers] = useState([]);
   const [loading, setLoading] = useState(false);

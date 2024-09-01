@@ -2,9 +2,8 @@ import { useContext, useDebugValue, useEffect, useState } from 'react';
 import { PlotContext } from '../../contexts/PlotContext';
 import { calculatePolygonArea } from '../../utils/calculatePolygonArea';
 import { squareMetersToAcres } from '../../utils/squareMetersToAcres';
-import { BiPencil } from 'react-icons/bi';
+import { BiPencil, BiTrash } from 'react-icons/bi';
 import ToggleButton from '@/ui-components/toggleButton';
-import MyButton from '@/ui-components/MyButton';
 import NdviLayerPanel from '../NdviLayerPanel';
 import LabelValueList from '@/ui-components/LabelValueList';
 import isEmptyObject from '@/utils/isEmptyObject';
@@ -12,12 +11,14 @@ import { MapContext } from '@/contexts/MapContext';
 
 export default function PlotPanel() {
   const {
+    loading,
     plots,
     showPlots,
     setShowPlots,
     handleFlyToPlot,
     handleEditPlot,
     showNdviLayer,
+    handleDeletePlot,
     toggleNDVILayersVisibility,
   } = useContext(PlotContext);
 
@@ -70,11 +71,16 @@ export default function PlotPanel() {
                         ).toFixed(1)}
                       acres) */}
                     </span>
-                    {!isEmptyObject(plot?.options) && (
-                      <span onClick={() => handleEditPlot(plot)}>
-                        <BiPencil className='action-icon' />
+                    <span className='flex items-center gap-1'>
+                      <span onClick={() => handleDeletePlot(plot)}>
+                        <BiTrash className='action-icon' />
                       </span>
-                    )}
+                      {plot?.options && !isEmptyObject(plot?.options) && (
+                        <span onClick={() => handleEditPlot(plot)}>
+                          <BiPencil className='action-icon' />
+                        </span>
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>

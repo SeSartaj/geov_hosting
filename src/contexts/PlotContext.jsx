@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { usePlots } from '../hooks/usePlots';
 import { MapContext } from './MapContext';
 import { LngLatBounds } from 'maplibre-gl';
+import { deletePlot } from '@/api/plotApi';
 
 // Create a new context for the map
 const PlotContext = createContext();
@@ -17,7 +18,8 @@ const PlotProvider = ({ children }) => {
   const { mapRef, drawRef, mode, setMode } = useContext(MapContext);
   const [editingPlot, setEditingPlot] = useState(null);
   const [clickedPlot, setClickedPlot] = useState(null);
-  const { plots, addNewPlot, handlePlotUpdate } = usePlots();
+  const { plots, addNewPlot, handlePlotUpdate, handleDeletePlot, loading } =
+    usePlots();
   const [showPlots, setShowPlots] = useState(true);
   const [weeksBefore, setWeeksBefore] = useState(0);
   const [ndviLoading, setNdviLoading] = useState([]);
@@ -143,6 +145,7 @@ const PlotProvider = ({ children }) => {
   return (
     <PlotContext.Provider
       value={{
+        loading,
         plots,
         addNewPlot,
         clickedPlot,
@@ -160,6 +163,7 @@ const PlotProvider = ({ children }) => {
         setNDVILayersVisibility,
         toggleNDVILayersVisibility,
         changeNdviLayerOpacity,
+        handleDeletePlot,
       }}
     >
       {children}

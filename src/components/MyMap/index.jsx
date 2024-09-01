@@ -36,13 +36,13 @@ export default function MyMap() {
     >
       <FullscreenControl position='top-right' />
       <Sidebar />
-      {/* <PAWStatusPieChart /> */}
-      {/* <Markers /> */}
-      <NDVILayer />
+      <PAWStatusPieChart />
+      <Markers />
       <MarkerPopup />
-      {/* <Plots /> */}
-      {/* <DrawPolygonControl /> */}
+      <Plots />
+      <DrawPolygonControl />
       <StatusBar />
+      <NDVILayer />
     </Map>
   );
 }
