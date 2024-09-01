@@ -1,18 +1,12 @@
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { MapContext } from '../../../contexts/MapContext';
-import { BiTrash } from 'react-icons/bi';
-import AddNewLayerModal from '../../AddNewLayer';
-import AddNewSourceModal from '../../AddNewSourceModal';
-import Layer from '../../Layer';
 import MyReactSelect from '@/ui-components/MyReactSelect';
 import FormGroup from '@/ui-components/FormGroup';
 import ToggleButton from '@/ui-components/toggleButton';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import Input from '@/ui-components/Input';
-import { Calendar, DateRangePicker } from '@adobe/react-spectrum';
+import { Calendar } from '@adobe/react-spectrum';
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
-import convertBoundsToBboxString from '@/utils/convertBoundsToBboxString';
-import { FaCrosshairs } from 'react-icons/fa6';
 import { PiCrosshair } from 'react-icons/pi';
 
 export default function LayerPanel() {
@@ -27,7 +21,6 @@ export default function LayerPanel() {
     isVisible,
     setIsVisible,
     isDetailActive,
-    setIsDetailActive,
     handleStateChange,
   } = useContext(RasterLayerContext);
   const { mapInstance } = useContext(MapContext);
@@ -61,8 +54,10 @@ export default function LayerPanel() {
     getSatellitePassDates(bbox).then((dates) => {
       console.log('dates', dates);
       setPassDates(dates);
+      // set daterange start and end to the first most recent date in the dates
+      setDateRange({ start: dates[0], end: dates[0] });
     });
-  }, [mapInstance, setPassDates, isVisible]);
+  }, [mapInstance, setPassDates, isVisible, setDateRange]);
 
   useEffect(() => {
     mapInstance.on('moveend', handlePassDates);
@@ -123,23 +118,25 @@ export default function LayerPanel() {
           className='w-full'
         />
         <hr />
-        <span>Calender:</span>
+        {/* <span>Calender:</span> */}
         {/* <DateRangePicker value={dateRange} onChange={setDateRange} /> */}
-        <Calendar
-          isDateUnavailable={isDateUnavailable}
-          value={dateRange.start}
-          onChange={(date) => {
-            console.log('onFocusChange date', date);
-            setDateRange({ start: date, end: date });
-          }}
-          dayStyle={(date) => {
-            const isUnavailable = isDateUnavailable(date);
-            return {
-              backgroundColor: isUnavailable ? 'red' : 'transparent',
-              color: isUnavailable ? 'white' : 'inherit',
-            };
-          }}
-        />
+        <div className='p-4'>
+          <Calendar
+            isDateUnavailable={isDateUnavailable}
+            value={dateRange.start}
+            onChange={(date) => {
+              console.log('onFocusChange date', date);
+              setDateRange({ start: date, end: date });
+            }}
+            dayStyle={(date) => {
+              const isUnavailable = isDateUnavailable(date);
+              return {
+                backgroundColor: isUnavailable ? 'red' : 'transparent',
+                color: isUnavailable ? 'white' : 'inherit',
+              };
+            }}
+          />
+        </div>
       </ul>
     </div>
   );

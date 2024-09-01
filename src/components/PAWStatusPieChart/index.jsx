@@ -26,8 +26,8 @@ export default function PAWStatusPieChart() {
   if (!showMarkers || !data.length > 0) return null;
 
   return (
-    <div className='paw-pie-chart'>
-      <PieChart width={200} height={200}>
+    <div>
+      <PieChart width={200} height={200} className='paw-pie-chart'>
         <Pie
           data={data}
           dataKey='value'

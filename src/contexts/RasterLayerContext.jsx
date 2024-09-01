@@ -9,7 +9,6 @@ const layerOptions = [
   { value: 'NDVI-WMTS', label: 'GNDVI' },
   { value: 'EVI2', label: 'EVI2' },
   { value: 'LAI-SAVI', label: 'LAI-SAVI' },
-  { value: 'NDVI', label: 'NDVI' },
 ];
 
 export function RasterLayerProvider({ children }) {

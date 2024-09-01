@@ -1,3 +1,11 @@
-export default function Label({ children }) {
-  return <label className='text-gray-800 dark:text-gray-300'>{children}</label>;
+export default function Label({ children, className }) {
+  return (
+    <label
+      className={`text-gray-800 dark:text-gray-300 ${
+        className ? className : ''
+      }`}
+    >
+      {children}
+    </label>
+  );
 }

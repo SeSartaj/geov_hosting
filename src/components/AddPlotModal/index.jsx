@@ -3,6 +3,8 @@ import MyButton from '../../ui-components/MyButton';
 import { useContext, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import { PlotContext } from '../../contexts/PlotContext';
+import Input from '@/ui-components/Input';
+import FormGroup from '@/ui-components/FormGroup';
 
 const AddPlotModal = ({ polygon, deleteFeature }) => {
   const [open, setOpen] = useState(false);
@@ -42,7 +44,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
   return (
     <MyModal
       trigger={<MyButton>Add New Plot</MyButton>}
-      title='Add New Plot'
+      title='Add New Plot '
       description='add new plot  map'
       open={open}
       setOpen={setOpen}
@@ -53,8 +55,12 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
       }
     >
       <form onSubmit={handlePlotCreation}>
-        name: <input type='text' name='name' /> <br />
-        description: <input type='text' name='description' /> <br />
+        <FormGroup label='Name:'>
+          <Input type='text' name='name' className='w-full' />
+        </FormGroup>
+        <FormGroup label='description'>
+          <Input type='text' name='description' className='w-full' />
+        </FormGroup>
         <br />
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
           <MyButton type='cancel' variant='text' onClick={handleClose}>

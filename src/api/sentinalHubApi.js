@@ -276,9 +276,10 @@ export async function getSatellitePassDates(aoi, startDate, endDate) {
     }
 
     const data = await response.json();
-
-    // Extract dates from the response
-    const dates = data.features.map((feature) => feature.properties.datetime);
+    // Extract dates from the response and sort in descending order
+    const dates = data.features
+      .map((feature) => feature.properties.datetime)
+      .sort((a, b) => new Date(b) - new Date(a));
 
     return dates;
   } catch (error) {
