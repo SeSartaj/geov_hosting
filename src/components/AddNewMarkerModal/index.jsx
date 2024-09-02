@@ -63,53 +63,53 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
     deleteFeature();
     handleClose();
   };
-
   useEffect(() => {
-    setLoadings({
+    setLoadings((prevLoadings) => ({
+      ...prevLoadings,
       farm: true,
       station: true,
       pawGraphs: true,
       graphs: true,
-    });
+    }));
     getFarmOptions()
       .then((options) => {
         setFarmOptions(options);
       })
       .finally(() => {
-        setLoadings({
-          ...loadings,
+        setLoadings((prevLoadings) => ({
+          ...prevLoadings,
           farm: false,
-        });
+        }));
       });
     getStationOptions()
       .then((options) => {
         setStationOptions(options);
       })
       .finally(() => {
-        setLoadings({
-          ...loadings,
+        setLoadings((prevLoadings) => ({
+          ...prevLoadings,
           station: false,
-        });
+        }));
       });
     getPawGraphOptions()
       .then((options) => {
         setPawGraphOptions(options);
       })
       .finally(() => {
-        setLoadings({
-          ...loadings,
+        setLoadings((prevLoadings) => ({
+          ...prevLoadings,
           pawGraphs: false,
-        });
+        }));
       });
     getAllGraphOptions()
       .then((options) => {
         setAllGraphOptions(options);
       })
       .finally(() => {
-        setLoadings({
-          ...loadings,
+        setLoadings((prevLoadings) => ({
+          ...prevLoadings,
           graphs: false,
-        });
+        }));
       });
   }, []);
 
