@@ -1,15 +1,20 @@
 import MyModal from '../../ui-components/MyModal';
 import MyButton from '../../ui-components/MyButton';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import { PlotContext } from '../../contexts/PlotContext';
 import Input from '@/ui-components/Input';
 import FormGroup from '@/ui-components/FormGroup';
+import MyReactSelect from '@/ui-components/MyReactSelect';
+import { getFarmOptions } from '@/api/farmApi';
 
 const AddPlotModal = ({ polygon, deleteFeature }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
   const { addNewPlot } = useContext(PlotContext);
+  const [farm, setFarm] = useState(null);
+  const [farmOptions, setFarmOptions] = useState([]);
+  const [farmsLoading, setFarmsLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -41,6 +46,17 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
     handleClose();
   };
 
+  useEffect(() => {
+    setFarmsLoading(true);
+    getFarmOptions()
+      .then((options) => {
+        setFarmOptions(options);
+      })
+      .finally(() => {
+        setFarmsLoading(false);
+      });
+  }, []);
+
   return (
     <MyModal
       trigger={<MyButton>Add New Plot</MyButton>}
@@ -57,6 +73,15 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
       <form onSubmit={handlePlotCreation}>
         <FormGroup label='Name:'>
           <Input type='text' name='name' className='w-full' />
+        </FormGroup>
+        <FormGroup label='Farm'>
+          <MyReactSelect
+            className='w-full'
+            value={farm}
+            options={farmOptions}
+            onChange={(f) => setFarm(f)}
+            isLoading={farmsLoading}
+          />
         </FormGroup>
         <FormGroup label='description'>
           <Input type='text' name='description' className='w-full' />

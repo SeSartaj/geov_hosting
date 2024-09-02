@@ -32,6 +32,13 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
     latitude: feature?.geometry?.coordinates[1],
   });
 
+  const [loadings, setLoadings] = useState({
+    farm: false,
+    station: false,
+    pawGraphs: false,
+    graphs: false,
+  });
+
   const handleClose = () => {
     deleteFeature();
     setOpen(false);
@@ -58,18 +65,52 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
   };
 
   useEffect(() => {
-    getFarmOptions().then((options) => {
-      setFarmOptions(options);
+    setLoadings({
+      farm: true,
+      station: true,
+      pawGraphs: true,
+      graphs: true,
     });
-    getStationOptions().then((options) => {
-      setStationOptions(options);
-    });
-    getPawGraphOptions().then((options) => {
-      setPawGraphOptions(options);
-    });
-    getAllGraphOptions().then((options) => {
-      setAllGraphOptions(options);
-    });
+    getFarmOptions()
+      .then((options) => {
+        setFarmOptions(options);
+      })
+      .finally(() => {
+        setLoadings({
+          ...loadings,
+          farm: false,
+        });
+      });
+    getStationOptions()
+      .then((options) => {
+        setStationOptions(options);
+      })
+      .finally(() => {
+        setLoadings({
+          ...loadings,
+          station: false,
+        });
+      });
+    getPawGraphOptions()
+      .then((options) => {
+        setPawGraphOptions(options);
+      })
+      .finally(() => {
+        setLoadings({
+          ...loadings,
+          pawGraphs: false,
+        });
+      });
+    getAllGraphOptions()
+      .then((options) => {
+        setAllGraphOptions(options);
+      })
+      .finally(() => {
+        setLoadings({
+          ...loadings,
+          graphs: false,
+        });
+      });
   }, []);
 
   return (
@@ -108,6 +149,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
               options={stationOptions}
               onChange={(s) => setFormData({ ...formData, station: s })}
               isClearable={true}
+              isLoading={loadings.station}
             />
           </FormGroup>
           <FormGroup label='Farm:'>
@@ -116,6 +158,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
               value={formData.farm}
               options={farmOptions}
               onChange={(f) => setFormData({ ...formData, farm: f })}
+              isLoading={loadings.farm}
             />
           </FormGroup>
           <FormGroup label='Paw Graphs:'>
@@ -126,6 +169,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
               options={pawGraphOptions}
               isMulti={true}
               isClearable={true}
+              isLoading={loadings.pawGraphs}
             />
           </FormGroup>
           <FormGroup label='More Graphs:'>
@@ -136,6 +180,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
               options={allGraphOptions}
               isMulti={true}
               isClearable={true}
+              isLoading={loadings.graphs}
             />
           </FormGroup>
           <FormGroup label='latitude:'>
