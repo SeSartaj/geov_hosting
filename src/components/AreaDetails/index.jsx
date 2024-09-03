@@ -1,26 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { MapContext } from '@/contexts/MapContext';
-import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import MyModal from '@/ui-components/MyModal';
 import NdviChart from '../PlotNDVIChart';
 import { TabContent, TabTrigger } from '@/ui-components/Tabs';
 import { FaRegMap } from 'react-icons/fa6';
 import { HiOutlineMapPin } from 'react-icons/hi2';
-import CustomControlButton from '../CustomControl';
-import { BiCrosshair } from 'react-icons/bi';
+import useMapStore from '@/stores/mapStore';
 
 export default function AreaDetails() {
   const { mapInstance } = useContext(MapContext);
-  const { clickedData, setClickedData } = useContext(RasterLayerContext);
+  const pickerData = useMapStore((state) => state.pickerData);
+  const setPickerData = useMapStore((state) => state.setPickerData);
 
-  if (!clickedData) {
+  if (!pickerData) {
     return null;
   }
 
+  console.log('picker data', pickerData);
+
   return (
     <>
-      <MyModal open={true} setOpen={() => setClickedData(null)}>
+      <MyModal open={true} setOpen={() => setPickerData(null)}>
         <Tabs.Root
           className='flex flex-col w-full h-full overflow-y-hidden'
           defaultValue='point'
@@ -36,37 +37,22 @@ export default function AreaDetails() {
             >
               <HiOutlineMapPin className='cursor-pointer' />
             </TabTrigger>
-            {clickedData?.plot && (
+            {pickerData?.plot && (
               <TabTrigger value='plot' tooltipText='Plot'>
                 <FaRegMap className='cursor-pointer' />
               </TabTrigger>
             )}
           </Tabs.List>
           <TabContent value='point'>
-            <NdviChart point={clickedData.coordinates} />
+            <NdviChart point={pickerData.coordinates} />
           </TabContent>
-          {clickedData?.plot && (
+          {pickerData?.plot && (
             <TabContent value='plot'>
-              <NdviChart plot={clickedData.plot} />
+              <NdviChart plot={pickerData.plot} />
             </TabContent>
           )}
         </Tabs.Root>
       </MyModal>
-      <CustomControlButton
-        label='Toggle Detail View'
-        Icon={<BiCrosshair size={24} className='maplibregl-ctrl-icon' />}
-        onClick={({ buttonRef }) => {
-          setIsDetailActive(!isDetailActive);
-          if (buttonRef?.current) {
-            console.log(buttonRef.current.classList);
-            if (isDetailActive) {
-              buttonRef.current.classList.add('active');
-            } else {
-              buttonRef.current.classList.remove('active');
-            }
-          }
-        }}
-      />
     </>
   );
 }

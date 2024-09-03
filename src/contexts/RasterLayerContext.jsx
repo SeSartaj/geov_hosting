@@ -20,7 +20,7 @@ export function RasterLayerProvider({ children }) {
   const [datesLoading, setDatesLoading] = useState(false);
   const [dateRange, setDateRange] = useState({
     start: parseDate(
-      new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+      new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
         .toISOString()
         .split('T')[0]
     ),
@@ -33,7 +33,6 @@ export function RasterLayerProvider({ children }) {
   };
 
   const handleStateChange = (isActive) => {
-    console.log('isDetailActive', isActive);
     if (mapInstance) {
       if (isActive) {
         mapInstance.getCanvas().style.cursor = 'crosshair';
@@ -59,7 +58,6 @@ export function RasterLayerProvider({ children }) {
           data.plot = features[0];
         }
       }
-      console.log('clickedData:', data);
       setClickedData(data);
     };
     if (mapInstance && isDetailActive) {

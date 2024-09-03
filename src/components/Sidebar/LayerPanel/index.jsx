@@ -26,11 +26,6 @@ export default function LayerPanel() {
     setIsVisible,
   } = useContext(RasterLayerContext);
 
-  const viewMode = useMapStore((state) => state.viewMode);
-  const toggleNormalPickerMode = useMapStore(
-    (state) => state.toggleNormalPickerMode
-  );
-
   const { mapInstance } = useContext(MapContext);
   const [passDates, setPassDates] = useState([]);
 
@@ -99,13 +94,6 @@ export default function LayerPanel() {
         <h3 style={{ margin: 0 }}>Map Raster Layers</h3>
         {/* <AddNewLayerModal setLayers={setLayers} /> */}
         <span className='flex items-center'>
-          <PiCrosshair
-            size={24}
-            style={
-              viewMode === 'PICKER' ? { color: 'blue' } : { color: 'gray' }
-            }
-            onClick={toggleNormalPickerMode}
-          />
           <ToggleButton
             onTooltip='hide layer'
             offTooltip='show layer'

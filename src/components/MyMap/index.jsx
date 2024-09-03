@@ -16,6 +16,7 @@ import { DrawPolygonControl } from '../DrawPolygonControl';
 import Spinner from '@/ui-components/Spinner';
 import StatusBar from '../StatusBar';
 import NDVILayer from '../NDVILayer';
+import PickerControl from '../PickerControl';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -35,12 +36,13 @@ export default function MyMap() {
       reuseMaps
     >
       <FullscreenControl position='top-right' />
+      <DrawPolygonControl />
+      <PickerControl />
       <Sidebar />
       <PAWStatusPieChart />
       <Markers />
       <MarkerPopup />
       <Plots />
-      <DrawPolygonControl />
       <StatusBar />
       <NDVILayer />
     </Map>

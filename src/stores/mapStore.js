@@ -7,8 +7,25 @@ const VIEW_MODES = {
   DRAW: 'DRAW',
 };
 
+const MAP_CURSORS = {
+  // all posible cursors on react-map-gl (maplibre)
+  DEFAULT: 'default',
+  POINTER: 'pointer',
+  CROSSHAIR: 'crosshair',
+  MOVE: 'move',
+  GRAB: 'grab',
+  GRABBING: 'grabbing',
+  TEXT: 'text',
+  WAIT: 'wait',
+  HELP: 'help',
+};
+
 const useMapStore = create((set) => ({
+  cursor: MAP_CURSORS.DEFAULT,
+  setCursor: (cursor) => set({ cursor }),
   viewMode: VIEW_MODES.NORMAL,
+  pickerData: null,
+  setPickerData: (data) => set({ pickerData: data }),
   loadingNDVIImages: [],
   addLoadingNDVIImage: (id) =>
     set((state) => ({

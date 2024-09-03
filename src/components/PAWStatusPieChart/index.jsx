@@ -3,9 +3,15 @@ import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { MarkersContext } from '../../contexts/markersContext';
 import { getStationMarkerColor } from '../../utils/getStationMarkerColor';
 import './styles.css';
+import useMapStore from '@/stores/mapStore';
 
 export default function PAWStatusPieChart() {
   const { markersData, showMarkers } = useContext(MarkersContext);
+  const viewMode = useMapStore((state) => state.viewMode);
+
+  if (viewMode === 'PICKER') {
+    return null;
+  }
 
   // Group markers by their paw_status
   const statusCounts = markersData.reduce((acc, marker) => {

@@ -3,9 +3,15 @@ import { BiCollapseHorizontal, BiExpandHorizontal } from 'react-icons/bi';
 import SidebarBody from './SidebarBody';
 import './styles.css';
 import MyButton from '@/ui-components/MyButton';
+import useMapStore from '@/stores/mapStore';
 
 export default function Navigation() {
+  const viewMode = useMapStore((state) => state.viewMode);
   const [expand, setExpand] = useState(true);
+
+  if (viewMode === 'PICKER') {
+    return null;
+  }
 
   if (!expand)
     return (
