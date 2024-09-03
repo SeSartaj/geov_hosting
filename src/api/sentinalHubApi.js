@@ -235,14 +235,12 @@ export async function getSatellitePassDates(aoi, startDate, endDate) {
   // if start and end dates are not provided, use the last 6 months
   if (!startDate || !endDate) {
     const today = new Date();
-    startDate = new Date(today.setMonth(today.getMonth() - 6))
-      .toISOString()
-      .split('T')[0]; // YYYY-MM-DD
-    endDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    startDate = new Date(today.setMonth(today.getMonth() - 6)).toISOString();
+    endDate = new Date().toISOString();
   }
 
-  const formattedStartDate = `${startDate}T00:00:00Z`;
-  const formattedEndDate = `${endDate}T23:59:59Z`;
+  const formattedStartDate = `${startDate}`;
+  const formattedEndDate = `${endDate}`;
 
   const accessToken = await getAccessToken();
   const url = 'https://services.sentinel-hub.com/api/v1/catalog/search';
@@ -278,7 +276,7 @@ export async function getSatellitePassDates(aoi, startDate, endDate) {
     const data = await response.json();
     // Extract dates from the response and sort in descending order
     const dates = data.features
-      .map((feature) => feature.properties.datetime)
+      .map((feature) => new Date(feature.properties.datetime).toISOString())
       .sort((a, b) => new Date(b) - new Date(a));
 
     return dates;

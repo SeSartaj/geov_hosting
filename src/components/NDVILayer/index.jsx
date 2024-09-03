@@ -18,12 +18,14 @@ function getLayerURL({ layer, dateRange }) {
 }
 
 const NDVILayer = () => {
-  const { layer, opacity, dateRange, isVisible } =
+  const { layer, opacity, dateRange, isVisible, datesLoading } =
     useContext(RasterLayerContext);
+  const [url, setUrl] = useState(
+    getLayerURL({ layer: layer.value, dateRange: dateRange })
+  );
   const { mapInstance } = useContext(MapContext);
   const [beforeId, setBeforeId] = useState();
 
-  const url = getLayerURL({ layer: layer.value, dateRange: dateRange });
   // a function that checks if plots-layer exists on the map,
   // and then sets the beforeId to plots-layer, otherwise leave it empty
   const setBeforeIdIfPlotsLayerExists = useCallback(() => {
@@ -40,8 +42,19 @@ const NDVILayer = () => {
     setBeforeIdIfPlotsLayerExists();
   }, [mapInstance, setBeforeIdIfPlotsLayerExists]);
 
-  if (!isVisible) {
+  useEffect(() => {
+    const u = getLayerURL({ layer: layer.value, dateRange: dateRange });
+    console.log('reseting url', layer, dateRange, u);
+    setUrl(u);
+  }, [layer, dateRange]);
+
+  if (!isVisible || !url) {
+    console.log('not rendering raster layer', isVisible, url);
     return null;
+  }
+
+  if (datesLoading) {
+    console.log('dates are loading', url);
   }
 
   return (
@@ -52,7 +65,7 @@ const NDVILayer = () => {
         tiles={[url]}
         tileSize={256}
         minzoom={10}
-        maxzoom={20}
+        maxzoom={21}
       >
         <Layer
           id='raster-layer'

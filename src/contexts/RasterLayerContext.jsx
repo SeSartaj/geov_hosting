@@ -17,10 +17,14 @@ export function RasterLayerProvider({ children }) {
   const [isVisible, setIsVisible] = useState(true);
   const [opacity, setOpacity] = useState(100);
   const [isDetailActive, setIsDetailActive] = useState(false);
-
+  const [datesLoading, setDatesLoading] = useState(false);
   const [dateRange, setDateRange] = useState({
-    start: parseDate('2024-01-01'),
-    end: parseDate('2024-12-31'),
+    start: parseDate(
+      new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0]
+    ),
+    end: parseDate(new Date().toISOString().split('T')[0]),
   });
   const [clickedData, setClickedData] = useState(null);
 
@@ -87,6 +91,8 @@ export function RasterLayerProvider({ children }) {
         setClickedData,
         isDetailActive,
         handleStateChange,
+        datesLoading,
+        setDatesLoading,
       }}
     >
       {children}

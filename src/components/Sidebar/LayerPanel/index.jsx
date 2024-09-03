@@ -8,6 +8,7 @@ import Input from '@/ui-components/Input';
 import { Calendar } from '@adobe/react-spectrum';
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
 import { PiCrosshair } from 'react-icons/pi';
+import { parseDate } from '@internationalized/date';
 
 export default function LayerPanel() {
   const {
@@ -22,11 +23,11 @@ export default function LayerPanel() {
     setIsVisible,
     isDetailActive,
     handleStateChange,
+    datesLoading,
+    setDatesLoading,
   } = useContext(RasterLayerContext);
   const { mapInstance } = useContext(MapContext);
   const [passDates, setPassDates] = useState([]);
-
-  console.log('dateRange is', dateRange);
 
   function isDateUnavailable(date) {
     // Convert the input date to a string in the format YYYY-MM-DD
@@ -43,7 +44,10 @@ export default function LayerPanel() {
   //  and store all dates in a state
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
-    if (!isVisible || mapInstance.getZoom() < 9) setPassDates([]);
+    setDatesLoading(true);
+    if (!isVisible || mapInstance.getZoom() < 9) {
+      setPassDates([]);
+    }
     const bounds = mapInstance.getBounds();
     const bbox = [
       bounds.getWest(),
@@ -51,13 +55,23 @@ export default function LayerPanel() {
       bounds.getEast(),
       bounds.getNorth(),
     ];
-    getSatellitePassDates(bbox).then((dates) => {
-      console.log('dates', dates);
-      setPassDates(dates);
-      // set daterange start and end to the first most recent date in the dates
-      setDateRange({ start: dates[0], end: dates[0] });
-    });
-  }, [mapInstance, setPassDates, isVisible, setDateRange]);
+    getSatellitePassDates(bbox)
+      .then((dates) => {
+        console.log('getting passDates', dates);
+        setPassDates(dates);
+        if (dates.length > 0) {
+          console.log('setting date range', dates[0]);
+          // set daterange start and end to the first most recent date in the dates
+          setDateRange({
+            start: parseDate(dates[0].split('T')[0]),
+            end: parseDate(dates[0].split('T')[0]),
+          });
+        }
+      })
+      .finally(() => {
+        setDatesLoading(false);
+      });
+  }, [mapInstance, setPassDates, isVisible, setDateRange, setDatesLoading]);
 
   useEffect(() => {
     mapInstance.on('moveend', handlePassDates);
@@ -125,15 +139,7 @@ export default function LayerPanel() {
             isDateUnavailable={isDateUnavailable}
             value={dateRange.start}
             onChange={(date) => {
-              console.log('onFocusChange date', date);
               setDateRange({ start: date, end: date });
-            }}
-            dayStyle={(date) => {
-              const isUnavailable = isDateUnavailable(date);
-              return {
-                backgroundColor: isUnavailable ? 'red' : 'transparent',
-                color: isUnavailable ? 'white' : 'inherit',
-              };
             }}
           />
         </div>
