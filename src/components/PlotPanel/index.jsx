@@ -11,7 +11,6 @@ import { MapContext } from '@/contexts/MapContext';
 
 export default function PlotPanel() {
   const {
-    loading,
     plots,
     showPlots,
     setShowPlots,
@@ -21,19 +20,6 @@ export default function PlotPanel() {
     handleDeletePlot,
     toggleNDVILayersVisibility,
   } = useContext(PlotContext);
-
-  const { mode } = useContext(MapContext);
-
-  useEffect(() => {
-    console.log('mode has changed', mode);
-    if (mode === 'editing-plot') {
-      console.log(showNdviLayer);
-      toggleNDVILayersVisibility('none');
-    } else {
-      console.log(showNdviLayer);
-      toggleNDVILayersVisibility('visible');
-    }
-  }, [mode]);
 
   return (
     <div className='panel-container'>

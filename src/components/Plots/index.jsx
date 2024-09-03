@@ -9,6 +9,7 @@ import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
 import { bbox } from '@turf/turf';
 import debounce from '@/utils/debounce';
 import isEmptyObject from '@/utils/isEmptyObject';
+import useMapStore from '@/stores/mapStore';
 
 export default function Plots() {
   const {
@@ -21,14 +22,18 @@ export default function Plots() {
     setNdviLoading,
     showNdviLayer,
   } = useContext(PlotContext);
+
   const { drawRef, mapRef } = useContext(MapContext);
   const accessToken = useAccessToken();
   const map = mapRef?.current?.getMap();
+  const viewMode = useMapStore((state) => state.viewMode);
+  console.log('runnign rerendering plots');
 
   const addNDVIImageToMap = useCallback(
     (imageUrl, plot, { map }) => {
       if (!map) throw new Error('map is not defined');
-
+      // if layer is toggled off, don't add image to map
+      if (!showNdviLayer) return null;
       console.log('plotss', plot);
       if (!plot || !plot.geometry || plot.geometry.type !== 'Polygon')
         return null;
@@ -73,7 +78,7 @@ export default function Plots() {
         },
       });
     },
-    [weeksBefore]
+    [showNdviLayer]
   );
 
   const handleNDVIImageDownload = useCallback(
@@ -115,7 +120,7 @@ export default function Plots() {
       }
       // Add the image to the map
     },
-    [weeksBefore, addNDVIImageToMap]
+    [weeksBefore, addNDVIImageToMap, ndviLoading, setNdviLoading]
   );
 
   const plotLineStyle = {
@@ -138,34 +143,37 @@ export default function Plots() {
     },
   };
 
-  const areFeaturesDrawn = () => {
+  const areFeaturesDrawn = useCallback(() => {
     const draw = drawRef?.current?.getAll();
     const features = draw?.features || [];
     return features.length > 0;
-  };
+  }, [drawRef]);
 
-  const handleMapClick = (event) => {
-    // If there are any draw features, don't show the popup
-    if (areFeaturesDrawn()) {
-      console.log('no popup info');
-      setClickedPlot(null);
-      return;
-    }
+  const handleMapClick = useCallback(
+    (event) => {
+      // If there are any draw features, don't show the popup
+      if (areFeaturesDrawn()) {
+        console.log('no popup info');
+        setClickedPlot(null);
+        return;
+      }
 
-    const features = map.queryRenderedFeatures(event.point, {
-      layers: ['plots-layer'],
-    });
-
-    if (features.length > 0) {
-      const clickedPlot = features[0];
-      setClickedPlot({
-        lngLat: event.lngLat,
-        plot: clickedPlot, // Assuming the plot name is in the 'name' property
+      const features = map.queryRenderedFeatures(event.point, {
+        layers: ['plots-layer'],
       });
-    } else {
-      setClickedPlot(null); // Hide popup if no plot is clicked
-    }
-  };
+
+      if (features.length > 0) {
+        const clickedPlot = features[0];
+        setClickedPlot({
+          lngLat: event.lngLat,
+          plot: clickedPlot, // Assuming the plot name is in the 'name' property
+        });
+      } else {
+        setClickedPlot(null); // Hide popup if no plot is clicked
+      }
+    },
+    [areFeaturesDrawn, map, setClickedPlot]
+  );
 
   // const handleMouseEnter = () => {
   //   map.getCanvas().style.cursor = 'pointer';
@@ -193,6 +201,8 @@ export default function Plots() {
       if (!map) return;
       // if layer is not turned on, don't fetch the images
       if (!showNdviLayer) return;
+      // if not normal mode, don't downlaod image
+      if (viewMode !== 'NORMAL') return;
       // Get the current zoom level
       const zoom = map.getZoom();
 
@@ -225,6 +235,8 @@ export default function Plots() {
       accessToken,
       handleNDVIImageDownload,
       isBoundingBoxIntersecting,
+      showNdviLayer,
+      viewMode,
     ]
   );
 
@@ -240,9 +252,23 @@ export default function Plots() {
     };
   }, [weeksBefore, handleTimeTravel]);
 
+  // when clicked on plot, show popup
   useEffect(() => {
-    if (map) {
+    if (map && showPlots) {
       map.on('click', 'plots-layer', handleMapClick);
+    }
+    return () => {
+      if (map) {
+        map.off('click', 'plots-layer', handleMapClick);
+      }
+    };
+  }, []);
+
+  // if plot within view, download the ndvi image from processing API
+  useEffect(() => {
+    console.log('runnign useEffect inside plots');
+    if (map && viewMode === 'NORMAL' && showNdviLayer && showPlots) {
+      console.log('adding viewPortchange event to map');
       // map.on('mouseenter', 'plots-layer', handleMouseEnter);
       // map.on('mouseleave', 'plots-layer', handleMouseLeave);
       map.on('moveend', handleViewportChange);
@@ -250,15 +276,22 @@ export default function Plots() {
     }
 
     return () => {
+      console.log('adding removing viewPortchange event from map');
       if (map) {
-        map.off('click', 'plots-layer', handleMapClick);
         // map.off('mouseenter', 'plots-layer', handleMouseEnter);
         // map.off('mouseleave', 'plots-layer', handleMouseLeave);
         map.off('moveend', handleViewportChange);
         map.off('zoomend', handleViewportChange);
       }
     };
-  }, [map, showPlots]);
+  }, [
+    map,
+    showPlots,
+    viewMode,
+    handleMapClick,
+    handleViewportChange,
+    showNdviLayer,
+  ]);
 
   if (!showPlots) return null;
 

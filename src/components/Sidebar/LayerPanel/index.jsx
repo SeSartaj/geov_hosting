@@ -9,6 +9,8 @@ import { Calendar } from '@adobe/react-spectrum';
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
 import { PiCrosshair } from 'react-icons/pi';
 import { parseDate } from '@internationalized/date';
+import useMapStore from '@/stores/mapStore';
+import { useMap } from 'react-map-gl';
 
 export default function LayerPanel() {
   const {
@@ -19,13 +21,16 @@ export default function LayerPanel() {
     handleOpacityChange,
     dateRange,
     setDateRange,
+    setDatesLoading,
     isVisible,
     setIsVisible,
-    isDetailActive,
-    handleStateChange,
-    datesLoading,
-    setDatesLoading,
   } = useContext(RasterLayerContext);
+
+  const viewMode = useMapStore((state) => state.viewMode);
+  const toggleNormalPickerMode = useMapStore(
+    (state) => state.toggleNormalPickerMode
+  );
+
   const { mapInstance } = useContext(MapContext);
   const [passDates, setPassDates] = useState([]);
 
@@ -96,8 +101,10 @@ export default function LayerPanel() {
         <span className='flex items-center'>
           <PiCrosshair
             size={24}
-            style={isDetailActive ? { color: 'blue' } : { color: 'gray' }}
-            onClick={() => handleStateChange(!isDetailActive)}
+            style={
+              viewMode === 'PICKER' ? { color: 'blue' } : { color: 'gray' }
+            }
+            onClick={toggleNormalPickerMode}
           />
           <ToggleButton
             onTooltip='hide layer'

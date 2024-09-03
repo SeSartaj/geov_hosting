@@ -34,6 +34,7 @@ const PlotProvider = ({ children }) => {
   };
 
   const toggleNDVILayersVisibility = (visibility) => {
+    console.log('runnign toggleNDVILayersVisibility', visibility);
     if (typeof visibility === 'string') {
       setNDVILayersVisibility(visibility);
       setShowNdviLayer(visibility === 'visible');
