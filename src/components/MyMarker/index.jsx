@@ -1,13 +1,17 @@
+import React, { useMemo } from 'react';
 import ForecastMarker from './ForecastMarker';
 import StationMarker from './StationMarker';
 
-export default function MyMarker({ marker, ...rest }) {
-  console.log('forecast marker', marker.type);
+function MyMarker(props) {
+  console.log('forecast marker', props.marker.type);
 
-  switch (marker.type) {
+  switch (props.marker.type) {
     case 'station':
-      return <StationMarker marker={marker} {...rest} />;
+      return <StationMarker {...props} />;
     case 'forecast':
-      return <ForecastMarker marker={marker} {...rest} />;
+      return <ForecastMarker {...props} />;
   }
 }
+
+const MemoizedMarker = React.memo(MyMarker);
+export default MemoizedMarker;

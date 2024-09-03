@@ -1,13 +1,15 @@
+import React from 'react'; // Add this line to import the 'React' module
+import PropTypes from 'prop-types';
 import Tooltip from '@/components/Tooltip';
 import { useState } from 'react';
 
-const ToggleButton = ({
+const ToggleButton = React.memo(function Togglebutton({
   initialState = false,
   onToggle,
   onTooltip,
   offTooltip,
   size = 'sm', // Default size is 'md'
-}) => {
+}) {
   const [isOn, setIsOn] = useState(initialState);
 
   const handleToggle = () => {
@@ -52,6 +54,14 @@ const ToggleButton = ({
       </button>
     </Tooltip>
   );
+});
+
+ToggleButton.propTypes = {
+  initialState: PropTypes.bool,
+  onToggle: PropTypes.func,
+  onTooltip: PropTypes.string.isRequired,
+  offTooltip: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
 };
 
 export default ToggleButton;

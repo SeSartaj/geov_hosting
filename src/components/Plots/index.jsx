@@ -18,8 +18,6 @@ export default function Plots() {
     clickedPlot,
     setClickedPlot,
     weeksBefore,
-    ndviLoading,
-    setNdviLoading,
     showNdviLayer,
   } = useContext(PlotContext);
 
@@ -27,6 +25,13 @@ export default function Plots() {
   const accessToken = useAccessToken();
   const map = mapRef?.current?.getMap();
   const viewMode = useMapStore((state) => state.viewMode);
+  const loadingNDVIImages = useMapStore((state) => state.loadingNDVIImages);
+  const addLoadingNDVIImage = useMapStore((state) => state.addLoadingNDVIImage);
+  const removeLoadingNDVIImage = useMapStore(
+    (state) => state.removeLoadingNDVIImage
+  );
+  const isNDVIImageLoading = useMapStore((state) => state.isNDVIImageLoading);
+
   console.log('runnign rerendering plots');
 
   const addNDVIImageToMap = useCallback(
@@ -74,7 +79,7 @@ export default function Plots() {
         type: 'raster',
         source: sourceId,
         paint: {
-          'raster-opacity': 0.85,
+          'raster-opacity': 1,
         },
       });
     },
@@ -100,8 +105,8 @@ export default function Plots() {
       }
       try {
         // if the plot is already loading, return
-        if (ndviLoading.includes(plot.properties.id)) return;
-        setNdviLoading([...ndviLoading, plot.properties.id]);
+        if (isNDVIImageLoading(plot.properties.id)) return;
+        addLoadingNDVIImage(plot.properties.id);
         const ndviDataUrl = await fetchNDVIImage(plot, {
           weeksBefore: weeksBefore,
           accessToken: accessToken,
@@ -116,11 +121,17 @@ export default function Plots() {
       } catch (error) {
         console.log('error in loading ndvi layer');
       } finally {
-        setNdviLoading(ndviLoading.filter((id) => id !== plot.properties.id));
+        removeLoadingNDVIImage(plot.properties.id);
       }
       // Add the image to the map
     },
-    [weeksBefore, addNDVIImageToMap, ndviLoading, setNdviLoading]
+    [
+      weeksBefore,
+      addNDVIImageToMap,
+      isNDVIImageLoading,
+      addLoadingNDVIImage,
+      removeLoadingNDVIImage,
+    ]
   );
 
   const plotLineStyle = {

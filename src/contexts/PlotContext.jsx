@@ -22,7 +22,6 @@ const PlotProvider = ({ children }) => {
     usePlots();
   const [showPlots, setShowPlots] = useState(true);
   const [weeksBefore, setWeeksBefore] = useState(0);
-  const [ndviLoading, setNdviLoading] = useState([]);
   const [showNdviLayer, setShowNdviLayer] = useState(true);
 
   const map = mapRef?.current?.getMap();
@@ -158,8 +157,6 @@ const PlotProvider = ({ children }) => {
         handleDrawChange,
         weeksBefore,
         setWeeksBefore,
-        ndviLoading,
-        setNdviLoading,
         showNdviLayer,
         setNDVILayersVisibility,
         toggleNDVILayersVisibility,

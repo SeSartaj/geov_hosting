@@ -1,3 +1,4 @@
+import { is } from 'immutable';
 import { create } from 'zustand';
 
 const VIEW_MODES = {
@@ -8,6 +9,18 @@ const VIEW_MODES = {
 
 const useMapStore = create((set) => ({
   viewMode: VIEW_MODES.NORMAL,
+  loadingNDVIImages: [],
+  addLoadingNDVIImage: (id) =>
+    set((state) => ({
+      loadingNDVIImages: [...state.loadingNDVIImages, id],
+    })),
+  removeLoadingNDVIImage: (id) =>
+    set((state) => ({
+      loadingNDVIImages: state.loadingNDVIImages.filter((i) => i !== id),
+    })),
+  isNDVIImageLoading: (id) => {
+    return useMapStore.getState().loadingNDVIImages.includes(id);
+  },
   setViewMode: (mode) => set({ viewMode: mode }),
   toPickerMode: () => set({ viewMode: VIEW_MODES.PICKER }),
   toNormalMode: () => set({ viewMode: VIEW_MODES.NORMAL }),
