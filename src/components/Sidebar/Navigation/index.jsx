@@ -39,9 +39,6 @@ const Navigation = () => {
           <BiLayer className='cursor-pointer' />
         </TabTrigger>
 
-        <TabTrigger value='tab4' tooltipText='Sources'>
-          <BiLibrary className='cursor-pointer' />
-        </TabTrigger>
         <TabTrigger value='settings' tooltipText='Map Settings'>
           <PiGear className='cursor-pointer' />
         </TabTrigger>
@@ -53,10 +50,6 @@ const Navigation = () => {
 
       <TabContent value='settings'>
         <BaseMapPanel />
-      </TabContent>
-
-      <TabContent value='tab4'>
-        <SourcesPanel />
       </TabContent>
 
       <TabContent value='plotPanel'>

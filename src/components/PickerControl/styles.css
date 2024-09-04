@@ -6,6 +6,7 @@
 
 .maplibregl-ctrl-detailview .maplibregl-ctrl-icon {
   font-size: 36px;
+  color: black;
 }
 
 .maplibregl-ctrl-detailview.active,

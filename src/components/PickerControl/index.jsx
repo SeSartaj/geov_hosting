@@ -11,6 +11,7 @@ function PickerControl() {
   const toggleNormalPickerMode = useMapStore(
     (state) => state.toggleNormalPickerMode
   );
+  const toNormalMode = useMapStore((state) => state.toNormalMode);
   const setPickerData = useMapStore((state) => state.setPickerData);
 
   const control = useControl(
@@ -36,6 +37,8 @@ function PickerControl() {
       button.addEventListener('click', () => {
         toggleNormalPickerMode();
       });
+      // if viewMode is "PICKER" and esc button is clicked on keyboard
+      // i want to toggle to normal mode
 
       return {
         onAdd: () => container,
@@ -89,6 +92,20 @@ function PickerControl() {
     };
   }, [viewMode, mapInstance, setPickerData]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        toNormalMode(); // Call your function to switch to normal mode
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [toNormalMode]);
   return null;
 }
 

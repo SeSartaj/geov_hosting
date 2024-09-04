@@ -25,14 +25,11 @@ export default function Plots() {
   const accessToken = useAccessToken();
   const map = mapRef?.current?.getMap();
   const viewMode = useMapStore((state) => state.viewMode);
-  const loadingNDVIImages = useMapStore((state) => state.loadingNDVIImages);
   const addLoadingNDVIImage = useMapStore((state) => state.addLoadingNDVIImage);
   const removeLoadingNDVIImage = useMapStore(
     (state) => state.removeLoadingNDVIImage
   );
   const isNDVIImageLoading = useMapStore((state) => state.isNDVIImageLoading);
-
-  console.log('runnign rerendering plots');
 
   const addNDVIImageToMap = useCallback(
     (imageUrl, plot, { map }) => {
@@ -138,10 +135,8 @@ export default function Plots() {
     id: 'plots-line-layer',
     type: 'line',
     paint: {
-      // 'fill-color': '#e31717', // Plot fill color
-      // 'fill-opacity': 0.2,
-      'line-color': '#e31717', // Plot outline color
-      'line-width': 2, // Outline width set to 2px
+      'line-color': '#e31717',
+      'line-width': 2,
     },
   };
 
@@ -149,7 +144,7 @@ export default function Plots() {
     id: 'plots-layer',
     type: 'fill',
     paint: {
-      'fill-color': '#e31717', // Plot fill color
+      'fill-color': '#e31717',
       'fill-opacity': 0,
     },
   };
@@ -186,13 +181,13 @@ export default function Plots() {
     [areFeaturesDrawn, map, setClickedPlot]
   );
 
-  // const handleMouseEnter = () => {
-  //   map.getCanvas().style.cursor = 'pointer';
-  // };
+  const handleMouseEnter = useCallback(() => {
+    map.getCanvas().style.cursor = 'pointer';
+  }, [map]);
 
-  // const handleMouseLeave = () => {
-  //   map.getCanvas().style.cursor = '';
-  // };
+  const handleMouseLeave = useCallback(() => {
+    map.getCanvas().style.cursor = '';
+  }, [map]);
 
   const isBoundingBoxIntersecting = useCallback((plotBounds, mapBounds) => {
     const [minX, minY, maxX, maxY] = plotBounds;
@@ -265,7 +260,7 @@ export default function Plots() {
 
   // when clicked on plot, show popup
   useEffect(() => {
-    if (map && showPlots) {
+    if (map && showPlots && viewMode !== 'PICKER') {
       map.on('click', 'plots-layer', handleMapClick);
     }
     return () => {
@@ -273,15 +268,15 @@ export default function Plots() {
         map.off('click', 'plots-layer', handleMapClick);
       }
     };
-  }, []);
+  }, [handleMapClick, viewMode, showPlots, map]);
 
   // if plot within view, download the ndvi image from processing API
   useEffect(() => {
     console.log('runnign useEffect inside plots');
     if (map && viewMode === 'NORMAL' && showNdviLayer && showPlots) {
       console.log('adding viewPortchange event to map');
-      // map.on('mouseenter', 'plots-layer', handleMouseEnter);
-      // map.on('mouseleave', 'plots-layer', handleMouseLeave);
+      map.on('mouseenter', 'plots-layer', handleMouseEnter);
+      map.on('mouseleave', 'plots-layer', handleMouseLeave);
       map.on('moveend', handleViewportChange);
       map.on('zoomend', handleViewportChange);
     }
@@ -289,8 +284,8 @@ export default function Plots() {
     return () => {
       console.log('adding removing viewPortchange event from map');
       if (map) {
-        // map.off('mouseenter', 'plots-layer', handleMouseEnter);
-        // map.off('mouseleave', 'plots-layer', handleMouseLeave);
+        map.off('mouseenter', 'plots-layer', handleMouseEnter);
+        map.off('mouseleave', 'plots-layer', handleMouseLeave);
         map.off('moveend', handleViewportChange);
         map.off('zoomend', handleViewportChange);
       }
@@ -302,6 +297,8 @@ export default function Plots() {
     handleMapClick,
     handleViewportChange,
     showNdviLayer,
+    handleMouseEnter,
+    handleMouseLeave,
   ]);
 
   if (!showPlots) return null;
