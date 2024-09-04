@@ -6,6 +6,7 @@ import './styles.css';
 import DrawActionsPopup from '../DrawActionsPopup';
 import { useControl } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
+import useMapStore from '@/stores/mapStore';
 
 export function DrawPolygonControl() {
   const [features, setFeatures] = useState({});
@@ -13,6 +14,7 @@ export function DrawPolygonControl() {
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const { drawRef, mapRef, showDrawActionPopup, setShowDrawActionPopup } =
     useContext(MapContext);
+
   // Set the custom classes for MapLibre
   constants.classes.CONTROL_BASE = 'maplibregl-ctrl';
   constants.classes.CONTROL_PREFIX = 'maplibregl-ctrl-';

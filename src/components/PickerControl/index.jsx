@@ -13,6 +13,7 @@ function PickerControl() {
   );
   const toNormalMode = useMapStore((state) => state.toNormalMode);
   const setPickerData = useMapStore((state) => state.setPickerData);
+  const setCursorCords = useMapStore((state) => state.setCursorCords);
 
   const control = useControl(
     useCallback(() => {
@@ -92,6 +93,7 @@ function PickerControl() {
     };
   }, [viewMode, mapInstance, setPickerData]);
 
+  // when ESC is clicked, get out of picker mode
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -106,6 +108,24 @@ function PickerControl() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [toNormalMode]);
+
+  // track cursor coords
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      const { lng, lat } = event.lngLat;
+      setCursorCords([lng, lat]);
+    };
+    if (mapInstance && viewMode === 'PICKER') {
+      mapInstance.on('mousemove', handleMouseMove);
+    }
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      if (mapInstance) {
+        mapInstance.off('mousemove', handleMouseMove);
+      }
+    };
+  }, [mapInstance, setCursorCords, viewMode]);
+
   return null;
 }
 

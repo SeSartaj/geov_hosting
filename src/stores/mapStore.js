@@ -49,6 +49,9 @@ const useMapStore = create((set) => ({
           ? VIEW_MODES.PICKER
           : VIEW_MODES.NORMAL,
     })),
+
+  cursorCords: [0, 0],
+  setCursorCords: (cords) => set({ cursorCords: cords }),
 }));
 
 export default useMapStore;

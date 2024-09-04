@@ -121,6 +121,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
         </MyButton>
       }
       title='Add New Marker'
+      headerClassName='m-4'
       description='add new marker to the map'
       open={open}
       setOpen={setOpen}
@@ -130,7 +131,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
           : document.body
       }
     >
-      <form onSubmit={handleNewMarkerCreation}>
+      <form onSubmit={handleNewMarkerCreation} className='p-4'>
         <div className='flex flex-col gap-1 '>
           <FormGroup label='Name:'>
             <Input

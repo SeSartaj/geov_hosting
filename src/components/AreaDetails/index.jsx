@@ -43,6 +43,7 @@ export default function AreaDetails() {
               </TabTrigger>
             )}
           </Tabs.List>
+          <br />
           <TabContent value='point'>
             <NdviChart point={pickerData.coordinates} />
           </TabContent>

@@ -61,6 +61,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
     <MyModal
       trigger={<MyButton>Add New Plot</MyButton>}
       title='Add New Plot '
+      headerClassName='m-4'
       description='add new plot  map'
       open={open}
       setOpen={setOpen}
@@ -70,7 +71,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
           : document.body
       }
     >
-      <form onSubmit={handlePlotCreation}>
+      <form onSubmit={handlePlotCreation} className='p-4'>
         <FormGroup label='Name:'>
           <Input type='text' name='name' className='w-full' />
         </FormGroup>

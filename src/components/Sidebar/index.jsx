@@ -15,7 +15,7 @@ export default function Navigation() {
 
   if (!expand)
     return (
-      <div className='sidebar rounded-sm bg-gray-100 dark:bg-gray-900'>
+      <div className='sidebar bg-gray-100 dark:bg-gray-900 rounded'>
         <MyButton onClick={() => setExpand(true)} variant='icon'>
           <BiExpandHorizontal
             className='sidebar-button'

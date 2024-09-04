@@ -14,6 +14,7 @@ export default function MyModal({
   children,
   open,
   setOpen,
+  headerClassName,
 }) {
   const { mapRef } = useContext(MapContext);
 
@@ -28,17 +29,19 @@ export default function MyModal({
         }
       >
         <Dialog.Overlay className='DialogOverlay' />
-        <Dialog.Content className='DialogContent dark:bg-gray-900'>
-          {title && (
-            <Dialog.Title className='DialogTitle dark:text-gray-100'>
-              {title}
-            </Dialog.Title>
-          )}
-          {description && (
-            <Dialog.Description className='DialogDescription dark:text-gray-200'>
-              {description}
-            </Dialog.Description>
-          )}
+        <Dialog.Content className='DialogContent dark:bg-gray-900 m-0 p-0'>
+          <div className={headerClassName}>
+            {title && (
+              <Dialog.Title className={`DialogTitle dark:text-gray-100 `}>
+                {title}
+              </Dialog.Title>
+            )}
+            {description && (
+              <Dialog.Description className='DialogDescription dark:text-gray-200'>
+                {description}
+              </Dialog.Description>
+            )}
+          </div>
           {children}
           <Dialog.Close asChild>
             <MyButton
@@ -63,5 +66,6 @@ MyModal.propTypes = {
   children: PropTypes.node.isRequired,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
+  headerClassName: PropTypes.string,
   // portalContainer: PropTypes.element,
 };
