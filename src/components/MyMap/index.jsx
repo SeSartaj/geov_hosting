@@ -18,6 +18,7 @@ import StatusBar from '../StatusBar';
 import NDVILayer from '../NDVILayer';
 import PickerControl from '../PickerControl';
 import useMapStore from '@/stores/mapStore';
+import ColorLegend from '../ColorLegend';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -48,6 +49,7 @@ export default function MyMap() {
       <Plots />
       <StatusBar />
       <NDVILayer />
+      {viewMode === 'PICKER' && <ColorLegend />}
     </Map>
   );
 }

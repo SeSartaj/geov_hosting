@@ -2,13 +2,11 @@ import { Popup } from 'react-map-gl/maplibre';
 import './styles.css';
 import MyButton from '../../ui-components/MyButton';
 import LabelValueList from '../../ui-components/LabelValueList';
-import { calculatePolygonArea } from '../../utils/calculatePolygonArea';
 import { area, bbox } from '@turf/turf';
 import NdviChart from '../PlotNDVIChart';
 import { useContext, useEffect, useState } from 'react';
 import { PlotContext } from '@/contexts/PlotContext';
 import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
-import { getSatellitePassDates } from '@/api/sentinalHubApi';
 import useAccessToken from '@/hooks/useAccessToken';
 import { MapContext } from '@/contexts/MapContext';
 

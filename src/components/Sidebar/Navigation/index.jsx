@@ -12,9 +12,15 @@ import { MapContext } from 'react-map-gl/dist/esm/components/map';
 import { TabContent, TabTrigger } from '@/ui-components/Tabs';
 import { FaGear } from 'react-icons/fa6';
 import { PiGear } from 'react-icons/pi';
+import useMapStore from '@/stores/mapStore';
 
 const Navigation = () => {
   const { mapRef } = useContext(MapContext);
+  const viewMode = useMapStore((state) => state.viewMode);
+
+  if (viewMode === 'PICKER') {
+    return <LayerPanel />;
+  }
 
   return (
     <Tabs.Root

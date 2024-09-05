@@ -4,6 +4,7 @@ import { useControl } from 'react-map-gl';
 import useMapStore from '@/stores/mapStore';
 import { MapContext } from '@/contexts/MapContext';
 import debounce from '@/utils/debounce';
+import rgbToHex from '@/utils/rgbaToHex';
 
 function PickerControl() {
   const controlRef = useRef(null);
@@ -16,7 +17,6 @@ function PickerControl() {
   const setPickerData = useMapStore((state) => state.setPickerData);
   const setCursorCords = useMapStore((state) => state.setCursorCords);
   const setPixelColor = useMapStore((state) => state.setPixelColor);
-  const pixelColor = useMapStore((state) => state.pixelColor);
   const [mapLoaded, setMapLoaded] = useState(false);
 
   const control = useControl(
@@ -168,7 +168,7 @@ function PickerControl() {
       })`;
 
       // Store the color value in state
-      setPixelColor(rgbaColor);
+      setPixelColor(rgbToHex(pixel));
     };
 
     const debouncedGetPixelColor = debounce(getPixelColor, 100);

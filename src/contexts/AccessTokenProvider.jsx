@@ -12,9 +12,14 @@ export function AccessTokenProvider({ children }) {
 
   useEffect(() => {
     async function getToken() {
-      const data = await fetchAccessToken(clientId, clientSecret);
-      setAccessToken(data.access_token);
-      setExpiresIn(Date.now() + data.expires_in * 1000);
+      try {
+        const data = await fetchAccessToken();
+
+        setAccessToken(data.access_token);
+        setExpiresIn(Date.now() + data.expires_in * 1000);
+      } catch (error) {
+        console.error('Failed to fetch access token', error);
+      }
     }
 
     // Fetch the token only if it's not already available

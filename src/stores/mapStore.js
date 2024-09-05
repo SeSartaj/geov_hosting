@@ -1,3 +1,4 @@
+import { layerOptions } from '@/constants';
 import { is } from 'immutable';
 import { create } from 'zustand';
 
@@ -54,6 +55,8 @@ const useMapStore = create((set) => ({
 
   cursorCords: [0, 0],
   setCursorCords: (cords) => set({ cursorCords: cords }),
+  rasterLayer: layerOptions[0],
+  setRasterLayer: (layer) => set({ rasterLayer: layer }),
 }));
 
 export default useMapStore;

@@ -28,3 +28,10 @@ export const BASEMAP_OPTIONS = [
 
 export const API_URL = 'https://agviewer.com/api/dashboard/';
 export const API_URL2 = 'https://agviewer.com/api';
+
+export const layerOptions = [
+  { value: 'NDVI', label: 'NDVI' },
+  { value: 'AGRICULTURE', label: 'AGRICULTURE' },
+  { value: 'FALSE-COLOR', label: 'False color (vegetation) ' },
+  { value: 'MOISTURE-INDEX', label: 'Moisture Index' },
+];

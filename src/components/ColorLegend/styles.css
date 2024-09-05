@@ -1,0 +1,23 @@
+/* Legend.css */
+.legend {
+  position: absolute;
+  bottom: 30px;
+  right: 10px;
+  background: white;
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.legend-item {
+  font-size: smaller;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5px;
+}
+
+.legend-color {
+  width: 15px;
+  height: 15px;
+  margin-right: 8px;
+}

@@ -3,6 +3,8 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import AreaDetails from '../AreaDetails';
 import { MapContext } from '@/contexts/MapContext';
+import useAccessToken from '@/hooks/useAccessToken';
+import useMapStore from '@/stores/mapStore';
 
 const WMTS_ID = import.meta.env.VITE_SENTINAL_HUB_WMTS_ID;
 export const BASE_URL = `https://services.sentinel-hub.com/ogc/wmts/${WMTS_ID}?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}`;
@@ -18,10 +20,12 @@ function getLayerURL({ layer, dateRange }) {
 }
 
 const NDVILayer = () => {
-  const { layer, opacity, dateRange, isVisible, datesLoading } =
+  const { opacity, dateRange, isVisible, datesLoading } =
     useContext(RasterLayerContext);
+
+  const rasterLayer = useMapStore((state) => state.rasterLayer);
   const [url, setUrl] = useState(
-    getLayerURL({ layer: layer.value, dateRange: dateRange })
+    getLayerURL({ layer: rasterLayer.value, dateRange: dateRange })
   );
   const { mapInstance } = useContext(MapContext);
   const [beforeId, setBeforeId] = useState();
@@ -43,10 +47,9 @@ const NDVILayer = () => {
   }, [mapInstance, setBeforeIdIfPlotsLayerExists]);
 
   useEffect(() => {
-    const u = getLayerURL({ layer: layer.value, dateRange: dateRange });
-    console.log('reseting url', layer, dateRange, u);
+    const u = getLayerURL({ layer: rasterLayer.value, dateRange: dateRange });
     setUrl(u);
-  }, [layer, dateRange]);
+  }, [rasterLayer, dateRange]);
 
   if (!isVisible || !url) {
     console.log('not rendering raster layer', isVisible, url);

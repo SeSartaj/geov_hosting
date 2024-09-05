@@ -9,10 +9,6 @@ export default function Navigation() {
   const viewMode = useMapStore((state) => state.viewMode);
   const [expand, setExpand] = useState(true);
 
-  if (viewMode === 'PICKER') {
-    return null;
-  }
-
   if (!expand)
     return (
       <div className='sidebar bg-gray-100 dark:bg-gray-900 rounded'>

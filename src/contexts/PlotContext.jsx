@@ -22,7 +22,7 @@ const PlotProvider = ({ children }) => {
     usePlots();
   const [showPlots, setShowPlots] = useState(true);
   const [weeksBefore, setWeeksBefore] = useState(0);
-  const [showNdviLayer, setShowNdviLayer] = useState(true);
+  const [showNdviLayer, setShowNdviLayer] = useState(false);
 
   const map = mapRef?.current?.getMap();
   const draw = drawRef?.current;

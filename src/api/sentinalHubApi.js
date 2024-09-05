@@ -67,27 +67,38 @@ export async function getAccessToken() {
   return data.access_token;
 }
 
-export async function fetchAccessToken(clientId, clientSecret) {
-  const url = 'https://services.sentinel-hub.com/oauth/token';
-  const body = new URLSearchParams({
-    grant_type: 'client_credentials',
-    client_id: clientId,
-    client_secret: clientSecret,
-  });
+// export async function fetchAccessToken(clientId, clientSecret) {
+//   const url = 'https://services.sentinel-hub.com/oauth/token';
+//   const body = new URLSearchParams({
+//     grant_type: 'client_credentials',
+//     client_id: clientId,
+//     client_secret: clientSecret,
+//   });
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: body.toString(),
-  });
+//   const response = await fetch(url, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//     body: body.toString(),
+//   });
 
+//   if (!response.ok) {
+//     throw new Error('Failed to fetch access token');
+//   }
+
+//   const data = await response.json();
+//   console.log('getAccessToken', data);
+//   return data;
+// }
+
+export async function fetchAccessToken() {
+  const response = await fetch('http://localhost:5000/api/token');
   if (!response.ok) {
     throw new Error('Failed to fetch access token');
   }
-
   const data = await response.json();
+  console.log('access token is', data);
   return data;
 }
 
@@ -228,7 +239,16 @@ export async function fetchMeanNDVIForPoint(point, { accessToken }) {
   }
 }
 
-export async function getSatellitePassDates(aoi, startDate, endDate) {
+export async function getSatellitePassDates({
+  aoi,
+  startDate,
+  endDate,
+  accessToken,
+}) {
+  console.log('accessToken', accessToken);
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
   // if start and end dates are not provided, use the last 6 months
   if (!startDate || !endDate) {
     const today = new Date();
@@ -239,7 +259,6 @@ export async function getSatellitePassDates(aoi, startDate, endDate) {
   const formattedStartDate = `${startDate}`;
   const formattedEndDate = `${endDate}`;
 
-  const accessToken = await getAccessToken();
   const url = 'https://services.sentinel-hub.com/api/v1/catalog/search';
   const headers = {
     Authorization: `Bearer ${accessToken}`,

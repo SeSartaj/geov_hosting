@@ -6,9 +6,7 @@ export default function Tooltip({ children, text, portalContainer, ...props }) {
   return (
     <TooltipPrimitive.Provider delayDuration={200}>
       <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger asChild>
-          <span>{children}</span>
-        </TooltipPrimitive.Trigger>
+        <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal
           container={portalContainer ? portalContainer : document.body}
         >

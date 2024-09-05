@@ -1,15 +1,9 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { parseDate } from '@internationalized/date';
 import { MapContext } from './MapContext';
+import { layerOptions } from '@/constants';
 
 export const RasterLayerContext = createContext(null);
-
-const layerOptions = [
-  { value: 'NDVI', label: 'NDVI' },
-  { value: 'NDVI-WMTS', label: 'GNDVI' },
-  { value: 'EVI2', label: 'EVI2' },
-  { value: 'LAI-SAVI', label: 'LAI-SAVI' },
-];
 
 export function RasterLayerProvider({ children }) {
   const { mapInstance } = useContext(MapContext);

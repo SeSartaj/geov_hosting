@@ -7,16 +7,13 @@ import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import Input from '@/ui-components/Input';
 import { Calendar } from '@adobe/react-spectrum';
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
-import { PiCrosshair } from 'react-icons/pi';
 import { parseDate } from '@internationalized/date';
+import useAccessToken from '@/hooks/useAccessToken';
+import { layerOptions } from '@/constants';
 import useMapStore from '@/stores/mapStore';
-import { useMap } from 'react-map-gl';
 
 export default function LayerPanel() {
   const {
-    layer,
-    layerOptions,
-    setLayer,
     opacity,
     handleOpacityChange,
     dateRange,
@@ -26,8 +23,12 @@ export default function LayerPanel() {
     setIsVisible,
   } = useContext(RasterLayerContext);
 
+  const rasterLayer = useMapStore((state) => state.rasterLayer);
+  const setRasterLayer = useMapStore((state) => state.setRasterLayer);
+
   const { mapInstance } = useContext(MapContext);
   const [passDates, setPassDates] = useState([]);
+  const accessToken = useAccessToken();
 
   function isDateUnavailable(date) {
     // Convert the input date to a string in the format YYYY-MM-DD
@@ -55,7 +56,8 @@ export default function LayerPanel() {
       bounds.getEast(),
       bounds.getNorth(),
     ];
-    getSatellitePassDates(bbox)
+
+    getSatellitePassDates({ aoi: bbox, accessToken })
       .then((dates) => {
         console.log('getting passDates', dates);
         setPassDates(dates);
@@ -71,7 +73,14 @@ export default function LayerPanel() {
       .finally(() => {
         setDatesLoading(false);
       });
-  }, [mapInstance, setPassDates, isVisible, setDateRange, setDatesLoading]);
+  }, [
+    mapInstance,
+    setPassDates,
+    isVisible,
+    setDateRange,
+    setDatesLoading,
+    accessToken,
+  ]);
 
   useEffect(() => {
     mapInstance.on('moveend', handlePassDates);
@@ -110,9 +119,9 @@ export default function LayerPanel() {
           <MyReactSelect
             size='sm'
             className='w-full'
-            value={layer}
+            value={rasterLayer}
             options={layerOptions}
-            onChange={(l) => setLayer(l)}
+            onChange={(l) => setRasterLayer(l)}
             isClearable={false}
           />
         </FormGroup>
