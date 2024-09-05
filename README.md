@@ -11,7 +11,7 @@ To run this project locally, you'll need the following:
 
 ### Steps to Setup:
 
-1. **Rename `example.env` to `.env`.**
+1. **Rename `env.example` to `.env`.**
 2. **Paste the API keys and credentials into the `.env` file.**
 3. in the project directory, run `yarn install` in order to install required packages
 4. run `yarn dev` to start the development server
