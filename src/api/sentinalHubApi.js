@@ -1,6 +1,3 @@
-export const NDVI_LAYER_URL =
-  'https://services.sentinel-hub.com/ogc/wmts/89900a2e-d05a-4e89-9fb5-76d00c8b9919?layer=NDVI-WMTS&TILEMATRIXSET=PopularWebMercator512&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=10&TileMatrix={z}&TileCol={x}&TileRow={y}&TIME=2018-03-29/2018-05-29';
-
 const evalscript = `
   //VERSION=3
   function setup() {

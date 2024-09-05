@@ -1,8 +1,9 @@
 import './styles.css';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useControl } from 'react-map-gl';
 import useMapStore from '@/stores/mapStore';
 import { MapContext } from '@/contexts/MapContext';
+import debounce from '@/utils/debounce';
 
 function PickerControl() {
   const controlRef = useRef(null);
@@ -14,6 +15,9 @@ function PickerControl() {
   const toNormalMode = useMapStore((state) => state.toNormalMode);
   const setPickerData = useMapStore((state) => state.setPickerData);
   const setCursorCords = useMapStore((state) => state.setCursorCords);
+  const setPixelColor = useMapStore((state) => state.setPixelColor);
+  const pixelColor = useMapStore((state) => state.pixelColor);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   const control = useControl(
     useCallback(() => {
@@ -125,6 +129,82 @@ function PickerControl() {
       }
     };
   }, [mapInstance, setCursorCords, viewMode]);
+
+  // Get pixel color under the cursor when in picker mode
+  useEffect(() => {
+    // Function to extract RGBA values under the cursor
+    const getPixelColor = (event) => {
+      const canvas = mapInstance.getCanvas();
+      const gl = mapInstance.painter.context.gl;
+
+      if (!gl) {
+        console.error('WebGL context is not available.');
+        return;
+      }
+
+      const pixel = new Uint8Array(4); // To store RGBA values
+
+      // Adjust for device pixel ratio (DPR)
+      const dpr = window.devicePixelRatio || 1;
+      // Convert screen position to pixel position, considering DPR and flipping Y-axis
+      const x = Math.floor(event.point.x * dpr);
+      const y = Math.floor(canvas.height - event.point.y * dpr);
+
+      // Ensure coordinates are within bounds
+      if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) {
+        console.warn('Mouse is outside the canvas bounds');
+        return;
+      }
+
+      console.log('x is', x, ' y is ', y);
+      // Read the pixel data from the WebGL context
+      gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+
+      console.log('pixel is', pixel);
+
+      // Convert the RGBA values to CSS format
+      const rgbaColor = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${
+        pixel[3] / 255
+      })`;
+
+      // Store the color value in state
+      setPixelColor(rgbaColor);
+    };
+
+    const debouncedGetPixelColor = debounce(getPixelColor, 100);
+
+    // Add event listener if mapInstance exists, the viewMode is PICKER, and the map has loaded
+    if (mapInstance && viewMode === 'PICKER' && mapLoaded) {
+      console.log('Adding pixel event listener');
+      mapInstance.on('mousemove', debouncedGetPixelColor);
+    }
+
+    // Clean up the event listener on unmount or if dependencies change
+    return () => {
+      if (mapInstance) {
+        console.log('Removing pixel event listener');
+        mapInstance.off('mousemove', getPixelColor);
+      }
+    };
+  }, [mapInstance, viewMode, mapLoaded, setPixelColor]);
+
+  // set map loaded to true when map is loaded
+  useEffect(() => {
+    // add event to check
+    const handleMapLoad = () => {
+      console.log('map loaded');
+      setMapLoaded(true);
+    };
+
+    if (mapInstance) {
+      mapInstance.on('load', handleMapLoad);
+    }
+    return () => {
+      if (mapInstance) {
+        mapInstance.off('load', handleMapLoad);
+      }
+    };
+  }, [mapInstance, mapLoaded]);
 
   return null;
 }

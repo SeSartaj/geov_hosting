@@ -36,6 +36,7 @@ export default function MyMap() {
       mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}
       attributionControl={false}
       reuseMaps
+      preserveDrawingBuffer={true}
     >
       <FullscreenControl position='top-right' />
       <PickerControl />
