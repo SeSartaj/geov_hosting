@@ -58,7 +58,7 @@ const ColorLegend = () => {
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const pixelColor = useMapStore((state) => state.pixelColor);
 
-  console.log('rasterLayer', rasterLayer);
+  console.log('colorLegend rasterLayer', rasterLayer);
   let items;
   switch (rasterLayer?.value) {
     case 'NDVI':
@@ -75,7 +75,7 @@ const ColorLegend = () => {
       break;
   }
 
-  if (!items || !pixelColor) return null;
+  if (!items) return null;
 
   const item = items.find((i) => i.color == pixelColor);
   console.log('item', item);
