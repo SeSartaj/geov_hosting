@@ -1,6 +1,6 @@
 import './styles.css';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { useControl } from 'react-map-gl';
+import { useControl } from 'react-map-gl/maplibre';
 import useMapStore from '@/stores/mapStore';
 import { MapContext } from '@/contexts/MapContext';
 import debounce from '@/utils/debounce';
@@ -171,7 +171,46 @@ function PickerControl() {
       setPixelColor(rgbToHex(pixel));
     };
 
-    const debouncedGetPixelColor = debounce(getPixelColor, 100);
+    const getNdviValue = (event) => {
+      const canvas = mapInstance.getCanvas();
+      const gl = mapInstance.painter.context.gl;
+
+      if (!gl) {
+        console.error('WebGL context is not available.');
+        return;
+      }
+
+      const pixel = new Uint8Array(4); // To store RGBA values
+
+      // Adjust for device pixel ratio (DPR)
+      const dpr = window.devicePixelRatio || 1;
+      // Convert screen position to pixel position, considering DPR and flipping Y-axis
+      const x = Math.floor(event.point.x * dpr);
+      const y = Math.floor(canvas.height - event.point.y * dpr);
+
+      // Ensure coordinates are within bounds
+      if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) {
+        console.warn('Mouse is outside the canvas bounds');
+        return;
+      }
+
+      console.log('x is', x, ' y is ', y);
+      // Read the pixel data from the WebGL context
+      gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+
+      console.log('pixel is', pixel);
+
+      // Extract the red channel value (which encodes NDVI)
+      const redValue = pixel[1]; // NDVI is encoded in the red channel
+      const ndvi = redValue / 127.5 - 1; // Scale back to the NDVI range [-1, 1]
+
+      console.log('NDVI value is', ndvi);
+
+      // Return or use the NDVI value
+      setPixelColor(ndvi);
+    };
+
+    const debouncedGetPixelColor = debounce(getNdviValue, 100);
 
     // Add event listener if mapInstance exists, the viewMode is PICKER, and the map has loaded
     if (mapInstance && viewMode === 'PICKER' && mapLoaded) {
@@ -205,6 +244,23 @@ function PickerControl() {
       }
     };
   }, [mapInstance, mapLoaded]);
+
+  // turn of move and zoom
+  useEffect(() => {
+    if (mapInstance) {
+      if (viewMode === 'PICKER') {
+        mapInstance.scrollZoom.disable();
+        mapInstance.boxZoom.disable();
+        mapInstance.dragPan.disable();
+        mapInstance.dragRotate.disable();
+      } else {
+        mapInstance.scrollZoom.enable();
+        mapInstance.boxZoom.enable();
+        mapInstance.dragPan.enable();
+        mapInstance.dragRotate.enable();
+      }
+    }
+  }, [viewMode, mapInstance]);
 
   return null;
 }

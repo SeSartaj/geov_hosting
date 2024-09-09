@@ -3,7 +3,6 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import AreaDetails from '../AreaDetails';
 import { MapContext } from '@/contexts/MapContext';
-import useAccessToken from '@/hooks/useAccessToken';
 import useMapStore from '@/stores/mapStore';
 
 const WMTS_ID = import.meta.env.VITE_SENTINAL_HUB_WMTS_ID;
