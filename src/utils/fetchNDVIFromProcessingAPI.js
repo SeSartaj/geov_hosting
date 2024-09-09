@@ -53,8 +53,7 @@ function evaluatePixel(samples) {
     // Return color values with full opacity
     return imgVals.concat([1]); // RGBA: fully opaque
   }
-}
-`;
+}`;
 
 const ndviCache = {};
 
@@ -97,7 +96,7 @@ async function fetchNDVIFromProcessingAPI(
       bounds: {
         geometry: {
           type: 'Polygon',
-          coordinates: plot.geometry.coordinates, // Ensure this is correctly structured
+          coordinates: plot.geometry.coordinates,
         },
         properties: {
           // crs: 'http://www.opengis.net/def/crs/EPSG/0/32633',

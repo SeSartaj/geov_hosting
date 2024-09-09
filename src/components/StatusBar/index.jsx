@@ -10,7 +10,7 @@ const StatusBar = () => {
       {viewMode === 'PICKER' && (
         <span>
           <span>
-            {pixelColor}
+            {pixelColor && pixelColor.toFixed(1)}
             <div
               style={{
                 width: 10,

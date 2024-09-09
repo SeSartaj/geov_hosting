@@ -1,5 +1,4 @@
 import { layerOptions } from '@/constants';
-import { is } from 'immutable';
 import { create } from 'zustand';
 
 const VIEW_MODES = {
