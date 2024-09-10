@@ -17,7 +17,6 @@ function PickerControl() {
   const setPickerData = useMapStore((state) => state.setPickerData);
   const setCursorCords = useMapStore((state) => state.setCursorCords);
   const setPixelColor = useMapStore((state) => state.setPixelColor);
-  const [mapLoaded, setMapLoaded] = useState(false);
 
   const control = useControl(
     useCallback(() => {
@@ -172,6 +171,7 @@ function PickerControl() {
     };
 
     const getNdviValue = (event) => {
+      console.log('getting ndvi value');
       const canvas = mapInstance.getCanvas();
       const gl = mapInstance.painter.context.gl;
 
@@ -213,7 +213,7 @@ function PickerControl() {
     const debouncedGetPixelColor = debounce(getNdviValue, 100);
 
     // Add event listener if mapInstance exists, the viewMode is PICKER, and the map has loaded
-    if (mapInstance && viewMode === 'PICKER' && mapLoaded) {
+    if (mapInstance && viewMode === 'PICKER' && mapInstance?.loaded) {
       console.log('Adding pixel event listener');
       mapInstance.on('mousemove', debouncedGetPixelColor);
     }
@@ -225,25 +225,7 @@ function PickerControl() {
         mapInstance.off('mousemove', getPixelColor);
       }
     };
-  }, [mapInstance, viewMode, mapLoaded, setPixelColor]);
-
-  // set map loaded to true when map is loaded
-  useEffect(() => {
-    // add event to check
-    const handleMapLoad = () => {
-      console.log('map loaded');
-      setMapLoaded(true);
-    };
-
-    if (mapInstance) {
-      mapInstance.on('load', handleMapLoad);
-    }
-    return () => {
-      if (mapInstance) {
-        mapInstance.off('load', handleMapLoad);
-      }
-    };
-  }, [mapInstance, mapLoaded]);
+  }, [mapInstance, viewMode, setPixelColor]);
 
   // turn of move and zoom
   useEffect(() => {
