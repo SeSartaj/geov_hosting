@@ -303,6 +303,8 @@ export default function Plots() {
 
   if (!showPlots) return null;
 
+  console.log('adding Plots to map');
+
   return (
     <>
       <Source
@@ -313,8 +315,8 @@ export default function Plots() {
           features: plots.map((p) => p?.options),
         }}
       >
-        <Layer {...plotLineStyle} />
-        <Layer {...plotFillStyle} />
+        <Layer key='12kkd' {...plotLineStyle} />
+        <Layer key='12kmsn' {...plotFillStyle} />
       </Source>
 
       {clickedPlot && (

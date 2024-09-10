@@ -15,6 +15,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
   const [farm, setFarm] = useState(null);
   const [farmOptions, setFarmOptions] = useState([]);
   const [farmsLoading, setFarmsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -23,27 +24,33 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
 
   const handlePlotCreation = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // Create a new FormData object
-    const formData = new FormData(e.target);
+    try {
+      // Create a new FormData object
+      const formData = new FormData(e.target);
 
-    // Get all form valuess
-    const name = formData.get('name');
-    const description = formData.get('description');
+      // Get all form valuess
+      const name = formData.get('name');
+      const description = formData.get('description');
 
-    polygon.properties = {
-      name,
-      description,
-    };
+      polygon.properties = {
+        name,
+        description,
+      };
 
-    const newPlot = {
-      name: name,
-      options: polygon,
-    };
+      const newPlot = {
+        name: name,
+        options: polygon,
+      };
 
-    addNewPlot(newPlot);
+      addNewPlot(newPlot);
+    } finally {
+      setLoading(false);
+    }
+
     deleteFeature();
-    handleClose();
+    // handleClose();
   };
 
   useEffect(() => {
@@ -89,10 +96,17 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
         </FormGroup>
         <br />
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <MyButton type='cancel' variant='text' onClick={handleClose}>
+          <MyButton
+            type='cancel'
+            variant='text'
+            onClick={!loading && handleClose}
+            disabled={loading}
+          >
             cancel
           </MyButton>
-          <MyButton type='submit'>Add Plot</MyButton>
+          <MyButton type='submit' disabled={loading}>
+            Add Plot
+          </MyButton>
         </div>
       </form>
     </MyModal>

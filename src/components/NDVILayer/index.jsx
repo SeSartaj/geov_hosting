@@ -4,9 +4,11 @@ import { Source, Layer } from 'react-map-gl/maplibre';
 import AreaDetails from '../AreaDetails';
 import { MapContext } from '@/contexts/MapContext';
 import useMapStore from '@/stores/mapStore';
+import getBottomMostLayer from '@/utils/getBottomMostLayer';
+import { useMap } from 'react-map-gl/maplibre';
 
 const WMTS_ID = import.meta.env.VITE_SENTINAL_HUB_WMTS_ID;
-export const BASE_URL = `https://services.sentinel-hub.com/ogc/wmts/${WMTS_ID}?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}`;
+export const BASE_URL = `https://services.sentinel-hub.com/ogc/wmts/${WMTS_ID}?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}&FORMAT=image/png`;
 
 function getLayerURL({ layer, dateRange }) {
   if (!layer || !dateRange) {
@@ -19,44 +21,36 @@ function getLayerURL({ layer, dateRange }) {
 }
 
 const NDVILayer = () => {
-  const { opacity, dateRange, isVisible, datesLoading } =
-    useContext(RasterLayerContext);
-
+  const { opacity, dateRange, isVisible } = useContext(RasterLayerContext);
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const [url, setUrl] = useState(
     getLayerURL({ layer: rasterLayer.value, dateRange: dateRange })
   );
-  const { mapInstance } = useContext(MapContext);
-  const [beforeId, setBeforeId] = useState();
-
-  // a function that checks if plots-layer exists on the map,
-  // and then sets the beforeId to plots-layer, otherwise leave it empty
-  const setBeforeIdIfPlotsLayerExists = useCallback(() => {
-    if (!mapInstance) return;
-    if (mapInstance.getLayer('plots-line-layer')) {
-      console.log('plots-line-layer exists');
-      setBeforeId('plots-line-layer');
-    } else {
-      setBeforeId();
-    }
-  }, [mapInstance, setBeforeId]);
-
-  useEffect(() => {
-    setBeforeIdIfPlotsLayerExists();
-  }, [mapInstance, setBeforeIdIfPlotsLayerExists]);
-
+  const [beforeId, setBeforeId] = useState(null);
+  const { current: mapInstance } = useMap();
+  // Update URL when layer or dateRange changes
   useEffect(() => {
     const u = getLayerURL({ layer: rasterLayer.value, dateRange: dateRange });
     setUrl(u);
   }, [rasterLayer, dateRange]);
 
-  if (!isVisible || !url) {
-    console.log('not rendering raster layer', isVisible, url);
-    return null;
-  }
+  // Set beforeId based on the presence of plots-layer
+  useEffect(() => {
+    console.log('map is', mapInstance);
+    console.log('map is', mapInstance?.loaded());
+    if (
+      mapInstance &&
+      mapInstance?.loaded() &&
+      mapInstance.getLayer('plots-line-layer')
+    ) {
+      setBeforeId('plots-line-layer');
+    } else {
+      setBeforeId(null); // No 'beforeId' if plots-layer doesn't exist
+    }
+  }, [mapInstance]);
 
-  if (datesLoading) {
-    console.log('dates are loading', url);
+  if (!isVisible || !url) {
+    return null;
   }
 
   return (
@@ -74,7 +68,7 @@ const NDVILayer = () => {
           type='raster'
           source='raster-source'
           paint={{ 'raster-opacity': opacity / 100 }}
-          beforeId={beforeId}
+          beforeId={beforeId || undefined} // Only apply if beforeId exists
         />
       </Source>
       <AreaDetails />

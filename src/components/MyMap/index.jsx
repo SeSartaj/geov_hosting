@@ -29,6 +29,10 @@ export default function MyMap() {
     return <Spinner />;
   }
 
+  // when raster layer is rendered first, the plots layer by default render above it
+  // when plots are rendered first, tell the rasterLayer to render beneath it
+  // when the raster layer is toggled off and on, it should render beneath the plots layer
+
   return (
     <Map
       ref={mapRef}
@@ -41,6 +45,7 @@ export default function MyMap() {
     >
       <FullscreenControl position='top-right' />
       <PickerControl />
+      <NDVILayer />
       <Sidebar />
       {viewMode !== 'PICKER' && <DrawPolygonControl />}
       <PAWStatusPieChart />
@@ -48,7 +53,6 @@ export default function MyMap() {
       <MarkerPopup />
       <Plots />
       <StatusBar />
-      <NDVILayer />
       {viewMode === 'PICKER' && <ColorLegend />}
     </Map>
   );
