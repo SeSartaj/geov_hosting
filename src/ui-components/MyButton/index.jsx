@@ -1,6 +1,7 @@
 import './styles.css';
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
+import Spinner from '../Spinner';
 
 const MyButton = forwardRef(function MyButton(
   {
@@ -9,6 +10,7 @@ const MyButton = forwardRef(function MyButton(
     variant = 'fill',
     children,
     className,
+    loading,
     ...rest
   },
   ref
@@ -19,8 +21,10 @@ const MyButton = forwardRef(function MyButton(
       className={`my-button ${color} ${size} ${variant} ${
         className ? className : ''
       } dark:text-gray-100`}
+      disabled={loading}
       {...rest}
     >
+      {loading ? <Spinner /> : null}
       {children}
     </button>
   );
@@ -39,6 +43,7 @@ MyButton.propTypes = {
   variant: PropTypes.oneOf(['fill', 'text', 'icon']),
   className: PropTypes.string,
   children: PropTypes.node,
+  loading: PropTypes.bool,
 };
 
 export default MyButton;

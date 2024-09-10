@@ -141,7 +141,7 @@ export const usePlots = () => {
   const addNewPlot = (newPlot) => {
     console.log('inside addNewPlot');
     // newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
-    createPlot(newPlot).then((createdPlot) => {
+    return createPlot(newPlot).then((createdPlot) => {
       if (!createdPlot) return;
 
       setPlots((prev) => [...prev, createdPlot]);

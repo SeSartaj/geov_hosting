@@ -44,13 +44,12 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
         options: polygon,
       };
 
-      addNewPlot(newPlot);
+      await addNewPlot(newPlot);
     } finally {
       setLoading(false);
+      deleteFeature();
+      handleClose();
     }
-
-    deleteFeature();
-    // handleClose();
   };
 
   useEffect(() => {
@@ -104,7 +103,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
           >
             cancel
           </MyButton>
-          <MyButton type='submit' disabled={loading}>
+          <MyButton type='submit' loading={loading}>
             Add Plot
           </MyButton>
         </div>

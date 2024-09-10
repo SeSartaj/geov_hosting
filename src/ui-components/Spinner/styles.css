@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Adjust based on where you are using the spinner */
+  height: 70%; /* Adjust based on where you are using the spinner */
 }
 
 .spinner {
