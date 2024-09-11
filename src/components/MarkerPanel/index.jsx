@@ -50,11 +50,11 @@ export default function MarkerPanel() {
         <span className='text-base'>filter markers</span>
       </div> */}
       <form>
-        <div className='flex flex-col gap-1'>
+        <div className='flex flex-col gap-1 '>
           <InlineInputField label='type:'>
             <select
               value={markerFilters.type}
-              className='p-1 border border-gray-300 dark:bg-gray-700'
+              className='p-1 border border-gray-300 dark:bg-gray-700 w-2/4'
               onChange={(e) =>
                 setMarkerFilters({ ...markerFilters, type: e.target.value })
               }
@@ -66,7 +66,7 @@ export default function MarkerPanel() {
           </InlineInputField>
           <InlineInputField label='PAW Status: '>
             <select
-              className='p-1 border border-gray-300 dark:bg-gray-700'
+              className='p-1 border border-gray-300 dark:bg-gray-700 w-2/4'
               value={markerFilters.paw_status}
               onChange={(e) =>
                 setMarkerFilters({
@@ -84,7 +84,7 @@ export default function MarkerPanel() {
           </InlineInputField>
           <InlineInputField label='Farm:'>
             <select
-              className='p-1 border border-gray-300 dark:bg-gray-700'
+              className='p-1 border border-gray-300 dark:bg-gray-700 w-2/4'
               value={markerFilters.farm_id}
               onChange={(e) =>
                 setMarkerFilters({ ...markerFilters, farm_id: e.target.value })
