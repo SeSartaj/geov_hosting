@@ -21,8 +21,8 @@ const MAP_CURSORS = {
 };
 
 const useMapStore = create((set) => ({
-  pixelColor: null,
-  setPixelColor: (color) => set({ pixelColor: color }),
+  hoveredValue: null,
+  setHoveredValue: (color) => set({ hoveredValue: color }),
   cursor: MAP_CURSORS.DEFAULT,
   setCursor: (cursor) => set({ cursor }),
   viewMode: VIEW_MODES.NORMAL,

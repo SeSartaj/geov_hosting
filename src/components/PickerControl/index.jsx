@@ -4,7 +4,7 @@ import { useControl } from 'react-map-gl/maplibre';
 import useMapStore from '@/stores/mapStore';
 import { MapContext } from '@/contexts/MapContext';
 import debounce from '@/utils/debounce';
-import rgbToHex from '@/utils/rgbaToHex';
+import getPixelValue from '@/utils/getPixelValue';
 
 function PickerControl() {
   const controlRef = useRef(null);
@@ -16,7 +16,8 @@ function PickerControl() {
   const toNormalMode = useMapStore((state) => state.toNormalMode);
   const setPickerData = useMapStore((state) => state.setPickerData);
   const setCursorCords = useMapStore((state) => state.setCursorCords);
-  const setPixelColor = useMapStore((state) => state.setPixelColor);
+  const setHoveredValue = useMapStore((state) => state.setHoveredValue);
+  const rasterLayer = useMapStore((state) => state.rasterLayer);
 
   const control = useControl(
     useCallback(() => {
@@ -131,8 +132,7 @@ function PickerControl() {
 
   // Get pixel color under the cursor when in picker mode
   useEffect(() => {
-    // Function to extract RGBA values under the cursor
-    const getPixelColor = (event) => {
+    const handlePixelValue = (event) => {
       const canvas = mapInstance.getCanvas();
       const gl = mapInstance.painter.context.gl;
 
@@ -140,8 +140,8 @@ function PickerControl() {
         console.error('WebGL context is not available.');
         return;
       }
-
-      const pixel = new Uint8Array(4); // To store RGBA values
+      // store RGBA values
+      const pixel = new Uint8Array(4);
 
       // Adjust for device pixel ratio (DPR)
       const dpr = window.devicePixelRatio || 1;
@@ -155,77 +155,30 @@ function PickerControl() {
         return;
       }
 
-      console.log('x is', x, ' y is ', y);
       // Read the pixel data from the WebGL context
       gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 
-      console.log('pixel is', pixel);
-
-      // Convert the RGBA values to CSS format
-      const rgbaColor = `rgba(${pixel[0]}, ${pixel[1]}, ${pixel[2]}, ${
-        pixel[3] / 255
-      })`;
-
-      // Store the color value in state
-      setPixelColor(rgbToHex(pixel));
-    };
-
-    const getNdviValue = (event) => {
-      console.log('getting ndvi value');
-      const canvas = mapInstance.getCanvas();
-      const gl = mapInstance.painter.context.gl;
-
-      if (!gl) {
-        console.error('WebGL context is not available.');
-        return;
-      }
-
-      const pixel = new Uint8Array(4); // To store RGBA values
-
-      // Adjust for device pixel ratio (DPR)
-      const dpr = window.devicePixelRatio || 1;
-      // Convert screen position to pixel position, considering DPR and flipping Y-axis
-      const x = Math.floor(event.point.x * dpr);
-      const y = Math.floor(canvas.height - event.point.y * dpr);
-
-      // Ensure coordinates are within bounds
-      if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) {
-        console.warn('Mouse is outside the canvas bounds');
-        return;
-      }
-
-      console.log('x is', x, ' y is ', y);
-      // Read the pixel data from the WebGL context
-      gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-
-      console.log('pixel is', pixel);
-
-      // Extract the red channel value (which encodes NDVI)
-      const redValue = pixel[1]; // NDVI is encoded in the red channel
-      const ndvi = redValue / 127.5 - 1; // Scale back to the NDVI range [-1, 1]
-
-      console.log('NDVI value is', ndvi);
+      const value = getPixelValue(rasterLayer?.value, pixel);
 
       // Return or use the NDVI value
-      setPixelColor(ndvi);
+      setHoveredValue(value);
     };
 
-    const debouncedGetPixelColor = debounce(getNdviValue, 100);
+    const debouncedGetPixelValue = debounce(handlePixelValue, 100);
 
     // Add event listener if mapInstance exists, the viewMode is PICKER, and the map has loaded
     if (mapInstance && viewMode === 'PICKER' && mapInstance?.loaded) {
       console.log('Adding pixel event listener');
-      mapInstance.on('mousemove', debouncedGetPixelColor);
+      mapInstance.on('mousemove', debouncedGetPixelValue);
     }
 
     // Clean up the event listener on unmount or if dependencies change
     return () => {
       if (mapInstance) {
-        console.log('Removing pixel event listener');
-        mapInstance.off('mousemove', getPixelColor);
+        mapInstance.off('mousemove', debouncedGetPixelValue);
       }
     };
-  }, [mapInstance, viewMode, setPixelColor]);
+  }, [mapInstance, viewMode, setHoveredValue, rasterLayer]);
 
   // turn of move and zoom
   useEffect(() => {

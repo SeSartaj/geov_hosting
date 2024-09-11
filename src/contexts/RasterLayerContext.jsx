@@ -73,6 +73,7 @@ export function RasterLayerProvider({ children }) {
         layer,
         setLayer,
         opacity,
+        setOpacity,
         handleOpacityChange,
         layerOptions,
         dateRange,

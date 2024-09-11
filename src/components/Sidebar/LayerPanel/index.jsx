@@ -83,12 +83,16 @@ export default function LayerPanel() {
   ]);
 
   useEffect(() => {
-    mapInstance.on('moveend', handlePassDates);
-    mapInstance.on('zoomend', handlePassDates);
+    if (mapInstance) {
+      mapInstance.on('moveend', handlePassDates);
+      mapInstance.on('zoomend', handlePassDates);
+    }
 
     return () => {
-      mapInstance.off('moveend', handlePassDates);
-      mapInstance.off('zoomend', handlePassDates);
+      if (mapInstance) {
+        mapInstance.off('moveend', handlePassDates);
+        mapInstance.off('zoomend', handlePassDates);
+      }
     };
   }, [mapInstance, handlePassDates]);
 
