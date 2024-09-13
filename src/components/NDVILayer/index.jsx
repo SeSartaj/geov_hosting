@@ -21,12 +21,13 @@ function getLayerURL({ layer, dateRange }) {
 }
 
 const NDVILayer = () => {
-  const { opacity, dateRange, isVisible } = useContext(RasterLayerContext);
+  const { dateRange, isVisible } = useContext(RasterLayerContext);
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const [url, setUrl] = useState(
     getLayerURL({ layer: rasterLayer.value, dateRange: dateRange })
   );
   const [beforeId, setBeforeId] = useState(null);
+  const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const { current: mapInstance } = useMap();
   // Update URL when layer or dateRange changes
   useEffect(() => {
@@ -67,7 +68,7 @@ const NDVILayer = () => {
           id='raster-layer'
           type='raster'
           source='raster-source'
-          paint={{ 'raster-opacity': opacity / 100 }}
+          paint={{ 'raster-opacity': rasterOpacity / 100 }}
           beforeId={beforeId || undefined} // Only apply if beforeId exists
         />
       </Source>

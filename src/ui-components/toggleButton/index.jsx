@@ -1,7 +1,7 @@
 import React from 'react'; // Add this line to import the 'React' module
 import PropTypes from 'prop-types';
-import Tooltip from '@/components/Tooltip';
 import { useState } from 'react';
+import Tooltip from '@/ui-components/Tooltip';
 
 const ToggleButton = React.memo(function Togglebutton({
   initialState = false,

@@ -35,6 +35,7 @@ export default function MyMap() {
 
   return (
     <Map
+      id='myMap'
       ref={mapRef}
       initialViewState={initialViewState}
       style={{ width: '100%', height: '80vh' }}

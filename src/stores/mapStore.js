@@ -56,6 +56,8 @@ const useMapStore = create((set) => ({
   setCursorCords: (cords) => set({ cursorCords: cords }),
   rasterLayer: layerOptions[0],
   setRasterLayer: (layer) => set({ rasterLayer: layer }),
+  rasterOpacity: 100,
+  setRasterOpacity: (opacity) => set({ rasterOpacity: opacity }),
 }));
 
 export default useMapStore;

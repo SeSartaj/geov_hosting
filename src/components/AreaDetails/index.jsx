@@ -9,7 +9,7 @@ import { HiOutlineMapPin } from 'react-icons/hi2';
 import useMapStore from '@/stores/mapStore';
 
 export default function AreaDetails() {
-  const { mapInstance } = useContext(MapContext);
+  const { mapRef } = useContext(MapContext);
   const pickerData = useMapStore((state) => state.pickerData);
   const setPickerData = useMapStore((state) => state.setPickerData);
 

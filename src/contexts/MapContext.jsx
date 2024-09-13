@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { BASEMAP_OPTIONS } from '../constants';
 import PropTypes from 'prop-types';
 import { SettingsContext } from './SettingsContext';
@@ -31,30 +38,28 @@ const MapProvider = ({ children }) => {
   const mapRef = useRef(null);
   const drawRef = useRef(null);
 
-  const mapInstance = mapRef.current?.getMap();
+  const contextValue = useMemo(
+    () => ({
+      mapStyle,
+      setMapStyle,
+      mapRef,
+      drawRef,
+      sources,
+      setSources,
+      mode,
+      setMode,
+      status,
+      setStatus,
+      showDrawActionPopup,
+      setShowDrawActionPopup,
+      isDetailActive,
+      setIsDetailActive,
+    }),
+    [mapStyle, sources, mode, status, showDrawActionPopup, isDetailActive]
+  );
 
   return (
-    <MapContext.Provider
-      value={{
-        mapStyle,
-        setMapStyle,
-        mapRef,
-        mapInstance,
-        drawRef,
-        sources,
-        setSources,
-        mode,
-        setMode,
-        status,
-        setStatus,
-        showDrawActionPopup,
-        setShowDrawActionPopup,
-        isDetailActive,
-        setIsDetailActive,
-      }}
-    >
-      {children}
-    </MapContext.Provider>
+    <MapContext.Provider value={contextValue}>{children}</MapContext.Provider>
   );
 };
 

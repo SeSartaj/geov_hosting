@@ -5,10 +5,15 @@ import useMapStore from '@/stores/mapStore';
 import { MapContext } from '@/contexts/MapContext';
 import debounce from '@/utils/debounce';
 import getPixelValue from '@/utils/getPixelValue';
+import { RasterLayerContext } from '@/contexts/RasterLayerContext';
+import { useMap } from 'react-map-gl/maplibre';
+import { set } from 'immutable';
 
 function PickerControl() {
+  const { current: mapRef } = useMap();
+  console.log('mapInstance is', mapRef);
+  const mapInstance = mapRef.getMap();
   const controlRef = useRef(null);
-  const { mapInstance } = useContext(MapContext);
   const viewMode = useMapStore((state) => state.viewMode);
   const toggleNormalPickerMode = useMapStore(
     (state) => state.toggleNormalPickerMode
@@ -18,6 +23,14 @@ function PickerControl() {
   const setCursorCords = useMapStore((state) => state.setCursorCords);
   const setHoveredValue = useMapStore((state) => state.setHoveredValue);
   const rasterLayer = useMapStore((state) => state.rasterLayer);
+
+  // Store the current opacity
+  const rasterOpacity = useMapStore((state) => state.rasterOpacity);
+  const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
+  const backToPreviousOpacity = useCallback(() => {
+    console.log('back to currentOpacity', rasterOpacity);
+    setRasterOpacity(100);
+  }, [rasterOpacity, setRasterOpacity]);
 
   const control = useControl(
     useCallback(() => {
@@ -40,16 +53,22 @@ function PickerControl() {
 
       // Handle button click
       button.addEventListener('click', () => {
+        if (mapInstance) {
+          // set layer opacity to one
+          if (viewMode === 'PICKER') {
+            mapInstance.setPaintProperty('raster-layer', 'raster-opacity', 1);
+          } else {
+            backToPreviousOpacity();
+          }
+        }
         toggleNormalPickerMode();
       });
-      // if viewMode is "PICKER" and esc button is clicked on keyboard
-      // i want to toggle to normal mode
 
       return {
         onAdd: () => container,
         onRemove: () => container.remove(),
       };
-    }, [toggleNormalPickerMode]),
+    }, [toggleNormalPickerMode, mapInstance, backToPreviousOpacity, viewMode]),
     { position: 'top-right' }
   );
 
@@ -79,6 +98,8 @@ function PickerControl() {
       button.classList.add('active');
       if (mapInstance) {
         mapInstance.getCanvas().style.cursor = 'crosshair';
+        // set opacity to 1
+        mapInstance.setPaintProperty('raster-layer', 'raster-opacity', 1);
         mapInstance.on('click', handleClick);
       }
     } else {
@@ -101,6 +122,7 @@ function PickerControl() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
+        backToPreviousOpacity();
         toNormalMode(); // Call your function to switch to normal mode
       }
     };
@@ -111,7 +133,7 @@ function PickerControl() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toNormalMode]);
+  }, [toNormalMode, rasterOpacity, mapInstance, backToPreviousOpacity]);
 
   // track cursor coords
   useEffect(() => {

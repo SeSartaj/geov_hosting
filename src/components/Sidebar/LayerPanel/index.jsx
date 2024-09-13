@@ -13,15 +13,14 @@ import { layerOptions } from '@/constants';
 import useMapStore from '@/stores/mapStore';
 
 export default function LayerPanel() {
-  const {
-    opacity,
-    handleOpacityChange,
-    dateRange,
-    setDateRange,
-    setDatesLoading,
-    isVisible,
-    setIsVisible,
-  } = useContext(RasterLayerContext);
+  const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
+    useContext(RasterLayerContext);
+  const rasterOpacity = useMapStore((state) => state.rasterOpacity);
+  const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
+  const viewMode = useMapStore((state) => state.viewMode);
+  const handleOpacityChange = (e) => {
+    setRasterOpacity(e.target.value);
+  };
 
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const setRasterLayer = useMapStore((state) => state.setRasterLayer);
@@ -82,19 +81,20 @@ export default function LayerPanel() {
     accessToken,
   ]);
 
-  useEffect(() => {
-    if (mapInstance) {
-      mapInstance.on('moveend', handlePassDates);
-      mapInstance.on('zoomend', handlePassDates);
-    }
+  // fetch pass dates for visible area from catalog api, sentinel hub
+  // useEffect(() => {
+  //   if (mapInstance) {
+  //     mapInstance.on('moveend', handlePassDates);
+  //     mapInstance.on('zoomend', handlePassDates);
+  //   }
 
-    return () => {
-      if (mapInstance) {
-        mapInstance.off('moveend', handlePassDates);
-        mapInstance.off('zoomend', handlePassDates);
-      }
-    };
-  }, [mapInstance, handlePassDates]);
+  //   return () => {
+  //     if (mapInstance) {
+  //       mapInstance.off('moveend', handlePassDates);
+  //       mapInstance.off('zoomend', handlePassDates);
+  //     }
+  //   };
+  // }, [mapInstance, handlePassDates]);
 
   // Re-render the Calendar whenever passDates changes
   useEffect(() => {
@@ -129,20 +129,25 @@ export default function LayerPanel() {
             isClearable={false}
           />
         </FormGroup>
-        <hr />
-        <span>Opacity</span>
-        <Input
-          type='range'
-          min='0'
-          max='100'
-          value={opacity}
-          onChange={handleOpacityChange}
-          className='w-full'
-        />
+        {viewMode !== 'PICKER' && (
+          <>
+            <hr />
+            <span>Opacity</span>
+            <Input
+              type='range'
+              min='0'
+              max='100'
+              value={rasterOpacity}
+              onChange={handleOpacityChange}
+              className='w-full'
+            />
+          </>
+        )}
         <hr />
         {/* <span>Calender:</span> */}
         {/* <DateRangePicker value={dateRange} onChange={setDateRange} /> */}
-        <div className='p-4'>
+
+        {/* <div className='p-4'>
           <Calendar
             isDateUnavailable={isDateUnavailable}
             value={dateRange.start}
@@ -151,6 +156,7 @@ export default function LayerPanel() {
             }}
           />
         </div>
+        */}
       </ul>
     </div>
   );

@@ -1,12 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
-import AddNewMarkerModal from '../AddNewMarkerModal';
 import { MarkersContext } from '../../contexts/markersContext';
 import './styles.css';
-import { useMarkers } from '../../hooks/useMarkers';
 import MyButton from '../../ui-components/MyButton';
 import { MapContext } from '../../contexts/MapContext';
 import InlineInputField from '@/ui-components/InlineInputField';
-import Tooltip from '../Tooltip';
+import Tooltip from '@/ui-components/Tooltip';
 import { BiReset } from 'react-icons/bi';
 import ToggleButton from '@/ui-components/toggleButton';
 import Spinner from '@/ui-components/Spinner';
@@ -98,14 +96,14 @@ export default function MarkerPanel() {
         </div>
       </form>
       <span className='inline-flex w-full justify-end'>
-        <MyButton onClick={resetFilters} className='self-end' variant='icon'>
-          <Tooltip text='reset form'>
+        <Tooltip text='reset form'>
+          <MyButton onClick={resetFilters} className='self-end' variant='icon'>
             <BiReset />
-          </Tooltip>
-        </MyButton>
+          </MyButton>
+        </Tooltip>
       </span>
 
-      <div className='panel-content'>
+      <div className='panel-content '>
         {loading ? (
           <Spinner />
         ) : (

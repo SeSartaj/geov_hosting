@@ -1,5 +1,6 @@
 import { MapContext } from '@/contexts/MapContext';
 import { PlotContext } from '@/contexts/PlotContext';
+import useMapStore from '@/stores/mapStore';
 import Input from '@/ui-components/Input';
 import { useContext, useEffect, useState } from 'react';
 
@@ -7,12 +8,13 @@ export default function NdviLayerPanel() {
   const { weeksBefore, setWeeksBefore, changeNdviLayerOpacity } =
     useContext(PlotContext);
   const [opacity, setOpacity] = useState(100);
+  const viewMode = useMapStore((state) => state.viewMode);
 
   const handleOpacityChange = (e) => {
     setOpacity(e.target.value);
     changeNdviLayerOpacity(e.target.value);
   };
-
+  console.log('viewMode is ', viewMode);
   return (
     <div>
       <hr />
@@ -36,15 +38,19 @@ export default function NdviLayerPanel() {
         className='w-full'
       />
       <hr />
-      <span>Opacity</span>
-      <Input
-        type='range'
-        min='0'
-        max='100'
-        value={opacity}
-        onChange={handleOpacityChange}
-        className='w-full'
-      />
+      {viewMode !== 'PICKER' && (
+        <>
+          <span>Opacity</span>
+          <Input
+            type='range'
+            min='0'
+            max='100'
+            value={opacity}
+            onChange={handleOpacityChange}
+            className='w-full'
+          />
+        </>
+      )}
     </div>
   );
 }
