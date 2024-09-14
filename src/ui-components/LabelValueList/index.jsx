@@ -8,9 +8,13 @@ import {
 import { AccordionItem } from '../Accordion';
 import './styles.css';
 
-function LabelValueList({ list = [], itemClasses }) {
+function LabelValueList({ list = [], itemClasses, className }) {
   return (
-    <div className='label-value-list'>
+    <div
+      className={`label-value-list dark:text-gray-100 text-gray-900 font-bold ${
+        className ? className : ''
+      }`}
+    >
       {list.map(({ label, value, variant, labelEnd }) => {
         if (variant == 'collapsable') {
           return (
@@ -33,7 +37,7 @@ function LabelValueList({ list = [], itemClasses }) {
                   </span>
                 )}
               >
-                <span className='lvi-value dark:text-gray-100'>{value}</span>
+                {value}
               </AccordionItem>
             </div>
           );

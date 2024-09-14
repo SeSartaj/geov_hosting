@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import './styles.css';
 
 import * as Tabs from '@radix-ui/react-tabs';
 import Tooltip from '@/ui-components/Tooltip';
@@ -59,7 +60,7 @@ export const MyTabs = ({
     >
       {tabs.map(renderTrigger)}
     </Tabs.List>
-    <div className='content-container'>{tabs.map(renderContent)}</div>
+    {tabs.map(renderContent)}
   </Tabs.Root>
 );
 

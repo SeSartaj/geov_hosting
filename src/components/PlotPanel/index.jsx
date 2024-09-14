@@ -24,6 +24,7 @@ export default function PlotPanel() {
   return (
     <div className='panel-container'>
       <LabelValueList
+        className='h-full overflow-scroll'
         list={[
           {
             variant: 'collapsable',
@@ -37,39 +38,41 @@ export default function PlotPanel() {
               />
             ),
             value: (
-              <ul className='overflow-y-scroll'>
-                {plots.map((plot, index) => (
-                  <li
-                    key={index}
-                    className='inline-flex justify-between items-center p-1 border border-collapse w-full'
-                  >
-                    <span
-                      onClick={() =>
-                        handleFlyToPlot(plot?.options.geometry.coordinates)
-                      }
-                      className='select-none cursor-pointer font-normal'
+              <div className='max-h-[300px] overflow-y-scroll'>
+                <ul>
+                  {plots.map((plot, index) => (
+                    <li
+                      key={index}
+                      className='inline-flex justify-between items-center p-1 border border-collapse w-full'
                     >
-                      {plot.name}
-                      {/* (
+                      <span
+                        onClick={() =>
+                          handleFlyToPlot(plot?.options.geometry.coordinates)
+                        }
+                        className='select-none cursor-pointer font-normal'
+                      >
+                        {plot.name}
+                        {/* (
                       {!isEmptyObject(plot?.options) &&
                         squareMetersToAcres(
                           calculatePolygonArea(plot?.options)
                         ).toFixed(1)}
                       acres) */}
-                    </span>
-                    <span className='flex items-center gap-1'>
-                      <span onClick={() => handleDeletePlot(plot)}>
-                        <BiTrash className='action-icon' />
                       </span>
-                      {plot?.options && !isEmptyObject(plot?.options) && (
-                        <span onClick={() => handleEditPlot(plot)}>
-                          <BiPencil className='action-icon' />
+                      <span className='flex items-center gap-1'>
+                        <span onClick={() => handleDeletePlot(plot)}>
+                          <BiTrash className='action-icon' />
                         </span>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                        {plot?.options && !isEmptyObject(plot?.options) && (
+                          <span onClick={() => handleEditPlot(plot)}>
+                            <BiPencil className='action-icon' />
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ),
           },
           {
