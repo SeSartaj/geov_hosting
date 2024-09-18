@@ -45,8 +45,8 @@ function PickerControl() {
       button.title = 'Activate picker mode';
 
       const icon = document.createElement('span');
-      icon.className = 'maplibregl-ctrl-icon';
-      icon.ariaHidden = 'true';
+      icon.className = 'my-ctrl-icon';
+      icon.innerHTML = '⌖';
 
       button.appendChild(icon);
       container.appendChild(button);

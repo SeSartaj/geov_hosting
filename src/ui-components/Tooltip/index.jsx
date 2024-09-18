@@ -46,11 +46,11 @@ const Tooltip = forwardRef(function Tooltip(
             {...props}
           >
             {text}
-            <TooltipPrimitive.Arrow
+            {/* <TooltipPrimitive.Arrow
               className='TooltipArrow'
               width={11}
               height={5}
-            />
+            /> */}
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>

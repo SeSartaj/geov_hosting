@@ -2,7 +2,9 @@
 @import '@radix-ui/colors/violet.css';
 
 .TooltipContent {
-  border-radius: 1px;
+  margin-bottom: 5px;
+  border-radius: 2px;
+  border: 1px solid gray;
   padding: 2px 3px;
   font-size: smaller;
   /* line-height: 1; */
@@ -18,4 +20,13 @@
 
 .TooltipArrow {
   fill: rgb(23, 23, 23);
+}
+
+@media (prefers-color-scheme: dark) {
+  .TooltipContent {
+    background-color: rgb(58, 58, 58);
+  }
+  .TooltipArrow {
+    fill: rgb(81, 81, 81);
+  }
 }
