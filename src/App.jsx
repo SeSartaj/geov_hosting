@@ -8,6 +8,7 @@ import { AccessTokenProvider } from './contexts/AccessTokenProvider';
 import { RasterLayerProvider } from './contexts/RasterLayerContext';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
@@ -23,7 +24,9 @@ function App() {
                       <h1>Dashboard</h1>
                     </div>
                     <div style={{ padding: 30, marginTop: 20 }}>
-                      <MyMap />
+                      <ErrorBoundary >
+                        <MyMap />
+                      </ErrorBoundary>
                     </div>
                   </MarkersProvider>
                 </PlotProvider>
