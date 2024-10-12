@@ -1,7 +1,7 @@
 export function transformMarker(marker) {
   console.log('mmk', marker);
   // if no device is connected to it, it is a forecast marker
-  if (!marker.device?.length === 0) {
+  if (!marker.device || !marker.device?.length === 0) {
     return transformForecastMarker(marker);
   }
   switch (marker.device.api) {
@@ -13,6 +13,23 @@ export function transformMarker(marker) {
       return null;
   }
 }
+
+function typeOfMarker(marker) {
+  if (!marker.device || !marker.device?.length === 0) {
+    return 'forecast';
+  }
+  switch (marker.device.api) {
+    case 'Zentra':
+      return 'station';
+    case 'Fieldclimate':
+      return 'forecast';
+    default:
+      return null;
+  }
+}
+
+
+
 
 function transformStationMarker(marker) {
   return {
@@ -43,7 +60,7 @@ function transformForecastMarker(marker) {
   return {
     type: 'forecast',
     id: marker.id,
-    title: `${marker.device.name} [${marker.device.serial}]`,
+    title: `Forecast marker `,
     location: marker.use_custom_location
       ? { lng: marker.lng, lat: marker.lat }
       : marker.device.details.location,
@@ -53,10 +70,6 @@ function transformForecastMarker(marker) {
     longitude: marker.use_custom_location
       ? marker.lng
       : marker.device.details.location.lng,
-    battery: {
-      percentage: marker.device.details.battery,
-      is_low: marker.device.is_battery_low,
-    },
   };
 }
 

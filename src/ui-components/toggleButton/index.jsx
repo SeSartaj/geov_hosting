@@ -41,6 +41,7 @@ const ToggleButton = React.memo(function Togglebutton({
   return (
     <Tooltip text={isOn ? onTooltip : offTooltip}>
       <button
+        type='button'
         onClick={handleToggle}
         className={`relative  inline-flex items-center rounded-full transition-colors duration-300 focus:outline-none ${
           isOn ? 'bg-blue-700' : 'bg-gray-300'

@@ -21,3 +21,15 @@
   height: 15px;
   margin-right: 8px;
 }
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .legend {
+    background: #333;
+    color: #ccc;
+  }
+
+  .legend-item {
+    color: #ccc;
+  }
+}

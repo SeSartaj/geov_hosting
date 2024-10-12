@@ -1559,6 +1559,15 @@ export const getMarkers = async () => {
   // return DUMMY_RESPONSE;
 };
 
+
+// get a single marker
+export const getMarkerById = async (id) => {
+  const response = await fetchWrapper(`${API_URL}marker/${id}/`);
+  return response.json();
+};
+
+
+
 export const createMarker = async (data) => {
   const response = await fetchWrapper(`${API_URL}marker/`, {
     method: 'POST',

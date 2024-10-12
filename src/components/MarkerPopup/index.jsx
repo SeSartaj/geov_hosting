@@ -66,7 +66,6 @@ function ForeCastPopupContent({ marker }) {
     <div>
       <div className='popup-header'>
         <h3>{marker.title}</h3>
-        <BatteryIndicator level={marker.battery.percentage} />
       </div>
       <hr />
     </div>

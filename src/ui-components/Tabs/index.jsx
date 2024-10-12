@@ -53,6 +53,7 @@ export const MyTabs = ({
   <Tabs.Root
     className='flex flex-col w-full h-full overflow-y-hidden'
     defaultValue={defaultId}
+    activationMode='manual'
   >
     <Tabs.List
       className='flex flex-shrink-0 justify-start'

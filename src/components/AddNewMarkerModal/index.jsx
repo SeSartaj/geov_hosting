@@ -12,42 +12,29 @@ import { getFarmOptions } from '@/api/farmApi';
 import { getStationOptions } from '@/api/stationApi';
 import { getAllGraphOptions, getPawGraphOptions } from '@/api/graphsApi';
 import { SettingsContext } from '@/contexts/SettingsContext';
+import useAsync from '@/hooks/useAsync';
+import ToggleButton from '@/ui-components/toggleButton';
+import MarkerForm from '@/forms/MarkerForm';
 
 const AddNewMarkerModal = ({ feature, deleteFeature }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
-  const [farmOptions, setFarmOptions] = useState([]);
-  const [stationOptions, setStationOptions] = useState([]);
-  const [pawGraphOptions, setPawGraphOptions] = useState([]);
-  const [allGraphOptions, setAllGraphOptions] = useState([]);
   const { addNewMarker } = useContext(MarkersContext);
   const { settings } = useContext(SettingsContext);
-  const [formData, setFormData] = useState({
-    name: '',
-    station: '',
-    farm: '',
-    paw_graphs: [],
-    graphs: [],
+
+  const initialValues = {
     longitude: feature?.geometry?.coordinates[0],
     latitude: feature?.geometry?.coordinates[1],
-  });
+  }
 
-  const [loadings, setLoadings] = useState({
-    farm: false,
-    station: false,
-    pawGraphs: false,
-    graphs: false,
-  });
 
   const handleClose = () => {
     deleteFeature();
     setOpen(false);
   };
 
-  const handleNewMarkerCreation = (e) => {
-    e.preventDefault();
+  const handleNewMarkerCreation = (formData) => {
 
-    console.log('formData', formData);
     const newMarker = {
       marker_map: settings.mapId,
       device: formData.station.value,
@@ -63,55 +50,9 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
     deleteFeature();
     handleClose();
   };
-  useEffect(() => {
-    setLoadings((prevLoadings) => ({
-      ...prevLoadings,
-      farm: true,
-      station: true,
-      pawGraphs: true,
-      graphs: true,
-    }));
-    getFarmOptions()
-      .then((options) => {
-        setFarmOptions(options);
-      })
-      .finally(() => {
-        setLoadings((prevLoadings) => ({
-          ...prevLoadings,
-          farm: false,
-        }));
-      });
-    getStationOptions()
-      .then((options) => {
-        setStationOptions(options);
-      })
-      .finally(() => {
-        setLoadings((prevLoadings) => ({
-          ...prevLoadings,
-          station: false,
-        }));
-      });
-    getPawGraphOptions()
-      .then((options) => {
-        setPawGraphOptions(options);
-      })
-      .finally(() => {
-        setLoadings((prevLoadings) => ({
-          ...prevLoadings,
-          pawGraphs: false,
-        }));
-      });
-    getAllGraphOptions()
-      .then((options) => {
-        setAllGraphOptions(options);
-      })
-      .finally(() => {
-        setLoadings((prevLoadings) => ({
-          ...prevLoadings,
-          graphs: false,
-        }));
-      });
-  }, []);
+
+
+
 
   return (
     <MyModal
@@ -122,7 +63,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
       }
       title='Add New Marker'
       headerClassName='m-4'
-      description='add new marker to the map'
+      description='add a new marker to the map'
       open={open}
       setOpen={setOpen}
       portalContainer={
@@ -130,95 +71,9 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
           ? mapRef?.current?.getMap().getContainer()
           : document.body
       }
+      onClose={handleClose}
     >
-      <form onSubmit={handleNewMarkerCreation} className='p-4'>
-        <div className='flex flex-col gap-1 '>
-          <FormGroup label='Name:'>
-            <Input
-              name='name'
-              className='w-full'
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
-          </FormGroup>
-          <FormGroup label='Station (device):'>
-            <MyReactSelect
-              className='w-full'
-              value={formData.station}
-              options={stationOptions}
-              onChange={(s) => setFormData({ ...formData, station: s })}
-              isClearable={true}
-              isLoading={loadings.station}
-            />
-          </FormGroup>
-          <FormGroup label='Farm:'>
-            <MyReactSelect
-              className='w-full'
-              value={formData.farm}
-              options={farmOptions}
-              onChange={(f) => setFormData({ ...formData, farm: f })}
-              isLoading={loadings.farm}
-            />
-          </FormGroup>
-          <FormGroup label='Paw Graphs:'>
-            <MyReactSelect
-              className='w-full'
-              value={formData.paw_graphs}
-              onChange={(f) => setFormData({ ...formData, paw_graphs: f })}
-              options={pawGraphOptions}
-              isMulti={true}
-              isClearable={true}
-              isLoading={loadings.pawGraphs}
-            />
-          </FormGroup>
-          <FormGroup label='More Graphs:'>
-            <MyReactSelect
-              className='w-full'
-              value={formData.graphs}
-              onChange={(f) => setFormData({ ...formData, graphs: f })}
-              options={allGraphOptions}
-              isMulti={true}
-              isClearable={true}
-              isLoading={loadings.graphs}
-            />
-          </FormGroup>
-          <FormGroup label='latitude:'>
-            <Input
-              className='w-full'
-              value={formData.latitude}
-              onChange={(e) =>
-                setFormData({ ...formData, latitude: e.target.value })
-              }
-              type='number'
-              name='latitude'
-              step='any'
-              disabled={feature ? true : false}
-            />
-          </FormGroup>
-          <FormGroup label='longitude:'>
-            <Input
-              className='w-full'
-              value={formData.longitude}
-              onChange={(e) =>
-                setFormData({ ...formData, longitude: e.target.value })
-              }
-              type='number'
-              name='longitude'
-              step='any'
-              disabled={feature ? true : false}
-            />
-          </FormGroup>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <MyButton variant='text' onClick={handleClose}>
-            cancel
-          </MyButton>
-          <MyButton type='submit'>Add Marker</MyButton>
-        </div>
-      </form>
+      <MarkerForm initialValues={initialValues} onSubmit={handleNewMarkerCreation} onCancel={handleClose}/>
     </MyModal>
   );
 };

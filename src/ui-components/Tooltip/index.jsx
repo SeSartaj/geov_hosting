@@ -33,28 +33,26 @@ const Tooltip = forwardRef(function Tooltip(
   }, [portalContainer]);
 
   return (
-    <TooltipPrimitive.Provider delayDuration={200}>
-      <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger asChild ref={ref}>
-          <span>{children}</span>
-        </TooltipPrimitive.Trigger>
-        <TooltipPrimitive.Portal container={currentPortalContainer}>
-          <TooltipPrimitive.Content
-            className='TooltipContent'
-            side='top'
-            align='center'
-            {...props}
-          >
-            {text}
-            {/* <TooltipPrimitive.Arrow
+    <TooltipPrimitive.Root>
+      <TooltipPrimitive.Trigger asChild ref={ref}>
+        <span>{children}</span>
+      </TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Portal container={currentPortalContainer}>
+        <TooltipPrimitive.Content
+          className='TooltipContent'
+          side='top'
+          align='center'
+          {...props}
+        >
+          {text}
+          {/* <TooltipPrimitive.Arrow
               className='TooltipArrow'
               width={11}
               height={5}
             /> */}
-          </TooltipPrimitive.Content>
-        </TooltipPrimitive.Portal>
-      </TooltipPrimitive.Root>
-    </TooltipPrimitive.Provider>
+        </TooltipPrimitive.Content>
+      </TooltipPrimitive.Portal>
+    </TooltipPrimitive.Root>
   );
 });
 

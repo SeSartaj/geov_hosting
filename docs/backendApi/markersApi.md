@@ -48,4 +48,47 @@ This endpoint retrieves a list of all markers associated with the authenticated 
 }
 ```
 
----
+
+### 3. Update Marker
+
+- **Endpoint**: `PATCH https://agviewer.com/api/dashboard/marker/<marker_id>/`
+- **Method**: `PATCH`
+- **Authentication**: Basic Auth
+
+Request body:
+
+{
+    "marker_map": <map_id:integer>,
+    "device": <device_id:string>,
+    "paw_graphs": [
+        <paw_graph_id:UUID>
+    ],
+    "graphs": [
+        “<other_graph_id:UUID>”
+    ],
+    "lng": <longitute:Float>,
+    "lat": <Latitude:Float>,
+    "location_name": <marker_name:String>,
+    "farm": <farm_id:Integer>,
+    "use_custom_location": <Boolean>
+}
+
+
+Example:
+{
+    "marker_map": 4864,
+    "device": "a8fbc",
+    "paw_graphs": [
+        "52b9a8e7-f660-4eae-9bab-4278053b4afa"
+    ],
+    "graphs": [
+        "e100a4ed-912b-47e5-bc52-6ab4b203410f"
+    ],
+    "lng": null,
+    "lat": null,
+    "location_name": "",
+    "farm": null,
+    "use_custom_location": true
+}
+
+

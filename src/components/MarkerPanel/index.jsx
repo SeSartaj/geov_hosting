@@ -5,31 +5,46 @@ import MyButton from '../../ui-components/MyButton';
 import { MapContext } from '../../contexts/MapContext';
 import InlineInputField from '@/ui-components/InlineInputField';
 import Tooltip from '@/ui-components/Tooltip';
-import { BiReset } from 'react-icons/bi';
+import { BiPencil, BiReset, BiTrash } from 'react-icons/bi';
 import ToggleButton from '@/ui-components/toggleButton';
 import Spinner from '@/ui-components/Spinner';
+import ErrorBoundary from '../ErrorBoundary';
+import EditMarkerModal from '../EditMarkerModal';
+import { transformMarker } from '@/utils/transformMarker';
 
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
   const {
-    markersData,
+    markers: markersData,
     markerFilters,
     setMarkerFilters,
     resetFilters,
     showMarkers,
     setShowMarkers,
     loading,
+    
   } = useContext(MarkersContext);
+
+  const markers = markersData.map(m => transformMarker(m))
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleMarkerClick = (e) => {
     if (!mapRef?.current) return;
     const markerId = e.currentTarget.getAttribute('data-marker-id');
     console.log(markerId);
-    const marker = markersData.find((m) => m.id == markerId);
+    const marker = markers.find((m) => m.id == markerId);
     if (!marker) return;
     const { lat, lng } = marker.location;
     mapRef.current.flyTo({ center: [lng, lat], zoom: 14 });
   };
+
+  const handleEditMarker = (e) => {
+    console.log('edit marker');
+    // get marker id
+    const markerId = e.currentTarget.getAttribute('data-markerId');
+    console.log('markerId is', markerId)
+  }
 
   return (
     <div className='panel-container'>
@@ -95,31 +110,47 @@ export default function MarkerPanel() {
           </InlineInputField>
         </div>
       </form>
-      <span className='inline-flex w-full justify-end'>
-        <Tooltip text='reset form'>
+      <span className='inline-flex w-full justify-between my-1'>
+        <span>count: {markers?.length || 0}</span>
+        <Tooltip text='reset filters'>
           <MyButton onClick={resetFilters} className='self-end' variant='icon'>
             <BiReset />
           </MyButton>
         </Tooltip>
       </span>
-
       <div className='panel-content '>
+        <ErrorBoundary >
         {loading ? (
           <Spinner />
         ) : (
-          markersData?.map((marker) => (
+          markers?.map((marker) => (
             <div key={marker.id} className='marker-item'>
               <div
                 className='marker-item-info p-2 border border-solid border-collapse dark:border-gray-500'
-                data-marker-id={marker.id}
-                onClick={handleMarkerClick}
-                style={{ cursor: 'pointer' }}
               >
-                <h4>{marker.title}</h4>
+                <h4 className='flex justify-between items-center'>
+                  <span onClick={handleMarkerClick} data-marker-id={marker.id} style={{ cursor: 'pointer' }}>
+                  {marker.title}
+                  </span>
+                  <span className='flex items-center gap-1'>
+                    <span className='text-red-500'>
+                      <BiTrash className='action-icon' />
+                    </span>
+
+                    <Tooltip text="click to edit the marker">
+                      {/* <span data-markerId={marker.id} onClick={handleEditMarker}>
+                        <BiPencil className='action-icon' />
+                      </span> */}
+                      <EditMarkerModal marker={markersData.find(m => m.id === marker.id)} />
+                      </Tooltip>
+                  </span>
+
+                </h4>
               </div>
             </div>
           ))
         )}
+        </ErrorBoundary>
       </div>
     </div>
   );

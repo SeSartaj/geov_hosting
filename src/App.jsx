@@ -11,6 +11,8 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
+
+
   return (
     <TooltipPrimitive.Provider delayDuration={200}>
       <Provider theme={defaultTheme}>

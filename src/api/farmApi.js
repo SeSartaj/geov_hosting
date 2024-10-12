@@ -5,6 +5,5 @@ export const getFarmOptions = async () => {
   console.log('fetching farms');
   const response = await fetchWrapper(`${API_URL}farm`);
   const data = await response.json();
-  console.log('response', data);
   return data.map((f) => ({ value: f.id, label: f.name })) || [];
 };

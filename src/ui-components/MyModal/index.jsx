@@ -4,8 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import MyButton from '../MyButton';
 import PropTypes from 'prop-types';
 import { BiX } from 'react-icons/bi';
-import { useContext } from 'react';
-import { MapContext } from '../../contexts/MapContext';
+import { useContext, useEffect, useState } from 'react';
 
 export default function MyModal({
   trigger,
@@ -15,24 +14,48 @@ export default function MyModal({
   open,
   setOpen,
   headerClassName,
+  onClose,
+  // portalContainer,
 }) {
-  const { mapRef } = useContext(MapContext);
+
+
+  const [portalContainer, setPortalContainer] = useState(document.body);
+
+  // Function to detect if fullscreen is active
+  const checkFullscreen = () => {
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    setPortalContainer(fullscreenElement || document.body);
+  };
+
+  useEffect(() => {
+    checkFullscreen();
+    // Listen for fullscreen change events
+    document.addEventListener('fullscreenchange', checkFullscreen);
+    document.addEventListener('webkitfullscreenchange', checkFullscreen);
+    document.addEventListener('mozfullscreenchange', checkFullscreen);
+    document.addEventListener('MSFullscreenChange', checkFullscreen);
+
+    // Cleanup event listeners
+    return () => {
+      document.removeEventListener('fullscreenchange', checkFullscreen);
+      document.removeEventListener('webkitfullscreenchange', checkFullscreen);
+      document.removeEventListener('mozfullscreenchange', checkFullscreen);
+      document.removeEventListener('MSFullscreenChange', checkFullscreen);
+    };
+  }, []);
+
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal
-        container={
-          mapRef?.current
-            ? mapRef?.current?.getMap().getContainer()
-            : document.body
-        }
+        container={portalContainer}
       >
         <Dialog.Overlay className='DialogOverlay' />
         <Dialog.Content className='DialogContent dark:bg-gray-900 m-0 p-0'>
           <div className={headerClassName}>
             {title && (
-              <Dialog.Title className={`DialogTitle dark:text-gray-100 `}>
+              <Dialog.Title className={`text-lg font-semibold DialogTitle dark:text-gray-100 `}>
                 {title}
               </Dialog.Title>
             )}
@@ -49,6 +72,7 @@ export default function MyModal({
               variant='icon'
               style={{ position: 'absolute', top: 10, right: 10 }}
               aria-label='Close'
+              onClick={onClose}
             >
               <BiX />
             </MyButton>

@@ -15,28 +15,29 @@ export const useMarkers = () => {
   const [loading, setLoading] = useState(false);
   const [markerFilters, setMarkerFilters] = useState(EMPTY_FILTERS);
 
-  const filterMarkers = (markers) => {
+  const filterMarkers = (markers, filters = markerFilters) => {
+
     setLoading(true);
     let filteredMarkers = markers;
-    if (markerFilters.type) {
+    console.log('markers in filterMarkers function', markers);
+    if (filters.type) {
       filteredMarkers = filteredMarkers.filter(
-        (m) => m.type === markerFilters.type
+        (m) => m.type === filters.type
       );
     }
 
-    if (markerFilters.farm_id) {
+    if (filters.farm_id) {
       filteredMarkers = filteredMarkers.filter(
-        (m) => m.farm?.id === Number(markerFilters.farm_id)
+        (m) => m.farm?.id === Number(filters.farm_id)
       );
     }
 
-    if (markerFilters.paw_status) {
+    if (filters.paw_status) {
       filteredMarkers = filteredMarkers.filter(
-        (m) => m.paw_status === markerFilters.paw_status
+        (m) => m.paw_status === filters.paw_status
       );
     }
     setLoading(false);
-
     return filteredMarkers;
   };
 
@@ -45,18 +46,19 @@ export const useMarkers = () => {
     createMarker(newMarker).then((createdMarker) => {
       if (!createdMarker) return;
       console.log('createdMarker', createdMarker);
-      setMarkers([...markers, transformMarker(createdMarker)]);
+      setMarkers([...markers, createdMarker]);
     });
   };
 
-  const resetFilters = () => {
-    setMarkerFilters(EMPTY_FILTERS);
+  const handleFilterChange = (filters) => {
+    setMarkerFilters(filters);
+    setMarkers(filterMarkers(unfilteredMarkers, filters));
   };
 
-  useEffect(() => {
-    console.log('markers', markers);
-    setMarkers(filterMarkers(unfilteredMarkers));
-  }, [markerFilters]);
+  const resetFilters = () => {
+    handleFilterChange(EMPTY_FILTERS);
+  };
+
 
   useEffect(() => {
     if (!showMarkers) return;
@@ -64,14 +66,19 @@ export const useMarkers = () => {
       setLoading(true);
       try {
         const data = await getMarkers();
+
+        console.log('data in getMarkers', data)
         // modify the markers
         const modifiedData = data
-          .map((marker) => transformMarker(marker))
+          .map((marker) => marker)
           .filter((marker) => marker !== null);
+
+        console.log('modifiedData', modifiedData);
         setUnfilteredMarkers(modifiedData);
-        setMarkers(modifiedData);
+        setMarkers(filterMarkers(modifiedData));
       } catch (error) {
-        console.log('error fetching markers');
+        console.log('error fetching markers', error);
+        throw error;
       } finally {
         setLoading(false);
       }
@@ -88,7 +95,7 @@ export const useMarkers = () => {
     addNewMarker,
     loading,
     markerFilters,
-    setMarkerFilters,
+    setMarkerFilters: handleFilterChange,
     resetFilters,
   };
 };

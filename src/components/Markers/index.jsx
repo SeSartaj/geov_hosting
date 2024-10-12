@@ -5,6 +5,7 @@ import './styles.css';
 import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
 import MyMarker from '../MyMarker';
+import { transformMarker } from '@/utils/transformMarker';
 
 export default function Markers() {
   const { mapRef } = useContext(MapContext);
@@ -128,15 +129,19 @@ export default function Markers() {
         })}
 
       {visibleMarkers.length > 0 &&
-        visibleMarkers.map((marker) => (
+        visibleMarkers.map(( marker) => {
+          const transformedMarker = transformMarker(marker)
+          return (
           <MyMarker
-            key={marker.id}
-            longitude={marker.longitude}
-            latitude={marker.latitude}
-            marker={marker}
-            onClick={(e) => handleMarkerClick(e, marker)}
+            key={transformedMarker.id}
+            longitude={transformedMarker.longitude}
+            latitude={transformedMarker.latitude}
+            marker={transformedMarker}
+            onClick={(e) => handleMarkerClick(e, transformedMarker)}
           />
-        ))}
+          )
+        }
+        )}
     </>
   );
 }
