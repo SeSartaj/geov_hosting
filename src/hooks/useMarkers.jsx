@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createMarker, getMarkers } from '../api/markerApi';
+import { createMarker, getMarkers, updateMarker } from '../api/markerApi';
 import { transformMarker } from '../utils/transformMarker';
 const EMPTY_FILTERS = {
   type: '',
@@ -16,7 +16,6 @@ export const useMarkers = () => {
   const [markerFilters, setMarkerFilters] = useState(EMPTY_FILTERS);
 
   const filterMarkers = (markers, filters = markerFilters) => {
-
     setLoading(true);
     let filteredMarkers = markers;
     console.log('markers in filterMarkers function', markers);
@@ -41,11 +40,20 @@ export const useMarkers = () => {
     return filteredMarkers;
   };
 
+  const handleMarkerUpdate = (data) => {
+    return updateMarker(data).then((updatedMarker) => {
+      if (!updatedMarker) return;
+      const updatedMarkers = markers.map((marker) =>
+        marker.id === updatedMarker.id ? updatedMarker : marker
+      );
+      setMarkers(updatedMarkers);
+    });
+  }
+
   const addNewMarker = (newMarker) => {
     console.log('newMarker from addNewMarker', newMarker);
     createMarker(newMarker).then((createdMarker) => {
       if (!createdMarker) return;
-      console.log('createdMarker', createdMarker);
       setMarkers([...markers, createdMarker]);
     });
   };
@@ -97,5 +105,6 @@ export const useMarkers = () => {
     markerFilters,
     setMarkerFilters: handleFilterChange,
     resetFilters,
+    handleMarkerUpdate,
   };
 };

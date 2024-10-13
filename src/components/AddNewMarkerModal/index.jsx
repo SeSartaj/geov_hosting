@@ -20,7 +20,6 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
   const { addNewMarker } = useContext(MarkersContext);
-  const { settings } = useContext(SettingsContext);
 
   const initialValues = {
     longitude: feature?.geometry?.coordinates[0],
@@ -34,19 +33,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
   };
 
   const handleNewMarkerCreation = (formData) => {
-
-    const newMarker = {
-      marker_map: settings.mapId,
-      device: formData.station.value,
-      paw_graphs: formData.paw_graphs.map((g) => g.value),
-      graphs: formData.graphs.map((g) => g.value),
-      lng: formData.longitude,
-      lat: formData.latitude,
-      location_name: formData.name,
-      farm: formData.farm.value,
-      use_custom_location: true,
-    };
-    addNewMarker(newMarker);
+    addNewMarker(formData);
     deleteFeature();
     handleClose();
   };

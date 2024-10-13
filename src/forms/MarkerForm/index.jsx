@@ -1,13 +1,17 @@
 import { getFarmOptions } from "@/api/farmApi";
 import { getAllGraphOptions, getPawGraphOptions } from "@/api/graphsApi";
 import { getStationOptions } from "@/api/stationApi";
+import { SettingsContext } from "@/contexts/SettingsContext";
 import useAsync from "@/hooks/useAsync";
 import FormGroup from "@/ui-components/FormGroup";
 import Input from "@/ui-components/Input";
 import MyButton from "@/ui-components/MyButton";
 import MyReactSelect from "@/ui-components/MyReactSelect";
+import Spinner from "@/ui-components/Spinner";
 import ToggleButton from "@/ui-components/toggleButton";
-import { useState } from "react";
+import getSelectedValues from "@/utils/getSelectedValues";
+import { useContext, useState } from "react";
+
 
 
 
@@ -21,15 +25,56 @@ const emptyValues = {
     latitude: '',
   }
 
-export default function MarkerForm({onSubmit, onCancel, initialValues, submitButtonText='Add Marker'}) {
-    const {data: farmOptions, status: farmStatus, error: farmError, run: fetchFarmOptions} = useAsync(getFarmOptions, {data: []})
+
+
+export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, marker, submitButtonText='Add Marker'}) {
+  
+  
+  const {data: farmOptions, status: farmStatus, error: farmError, run: fetchFarmOptions} = useAsync(getFarmOptions, {data: []})
     const {data: stationOptions, status: stationStatus, error: stationError} = useAsync(getStationOptions, {data: []})
     const {data: pawGraphOptions, status: pawGraphStatus, error: pawGraphError} = useAsync(getPawGraphOptions, {data: []})
     const {data: allGraphOptions, status: allGraphStatus, error: allGraphError} = useAsync(getAllGraphOptions, {data: []})
     
+  const { settings } = useContext(SettingsContext);
+  const [submitting, setSubmitting] = useState(false);
+
     const [customLocation, setCustomLocation] = useState(false);
+
+
+    const serializeData = (formData) => {
+      const data =   {
+        marker_map: settings.mapId,
+        device: formData.station.value,
+        paw_graphs: formData.paw_graphs.map((g) => g.value),
+        graphs: formData.graphs.map((g) => g.value),
+        lng: formData.longitude,
+        lat: formData.latitude,
+        location_name: formData.name,
+        farm: formData.farm.value,
+        use_custom_location: true,
+      };
+
+      if (formData?.id) data.id = formData.id;
+
+      return data
+    }
+
+    const deserializeData = (data) => {
+      return {
+        id: data.id,
+        name: data.location_name, 
+        longitude: data.lng,
+        latitude: data.lat,
+        farm: data.farm,
+        station: data.device,
+        paw_graphs: data.paw_graphs, 
+        graphs: data.graphs,
+      }
+    }
+
+    const deserializedData = marker ? deserializeData(marker) : {};
     // if user doesn't include all values in initialValues, emptyValues will be used
-    const [formData, setFormData] = useState({...emptyValues, ...initialValues});
+    const [formData, setFormData] = useState({...emptyValues, ...deserializedData, ...initialValues});
 
 
 
@@ -44,9 +89,12 @@ export default function MarkerForm({onSubmit, onCancel, initialValues, submitBut
         }
       }
 
+
+
     const handleSubmit = (e) => {
       e.preventDefault();
-      onSubmit(formData);
+      setSubmitting(true);
+      onSubmit(serializeData(formData)).finally(() => setSubmitting(false));
     }
 
 
@@ -66,7 +114,7 @@ export default function MarkerForm({onSubmit, onCancel, initialValues, submitBut
           <FormGroup label='Station (device):' error={stationError}>
             <MyReactSelect
               className='w-full'
-              value={formData.station}
+              value={getSelectedValues(formData.station, stationOptions)}
               options={stationOptions}
               onChange={(s) => setFormData({ ...formData, station: s })}
               isClearable={true}
@@ -76,7 +124,7 @@ export default function MarkerForm({onSubmit, onCancel, initialValues, submitBut
           <FormGroup label='Farm:' error={farmError}>
             <MyReactSelect
               className='w-full'
-              value={formData.farm}
+              value={getSelectedValues(formData.farm, farmOptions)}
               options={farmOptions}
               onChange={(f) => setFormData({ ...formData, farm: f })}
               isLoading={farmStatus === "pending"}
@@ -85,7 +133,7 @@ export default function MarkerForm({onSubmit, onCancel, initialValues, submitBut
           <FormGroup label='Paw Graphs:' error={pawGraphError}>
             <MyReactSelect
               className='w-full'
-              value={formData.paw_graphs}
+              value={getSelectedValues(formData.paw_graphs, pawGraphOptions)}
               onChange={(f) => setFormData({ ...formData, paw_graphs: f })}
               options={pawGraphOptions}
               isMulti={true}
@@ -96,7 +144,7 @@ export default function MarkerForm({onSubmit, onCancel, initialValues, submitBut
           <FormGroup label='More Graphs:' error={allGraphError}>
             <MyReactSelect
               className='w-full'
-              value={formData.graphs}
+              value={getSelectedValues(formData.graphs, allGraphOptions)}
               onChange={(f) => setFormData({ ...formData, graphs: f })}
               options={allGraphOptions}
               isMulti={true}
@@ -141,7 +189,7 @@ export default function MarkerForm({onSubmit, onCancel, initialValues, submitBut
           <MyButton variant='text' onClick={onCancel}>
             cancel
           </MyButton>
-          <MyButton type='submit'>{submitButtonText}</MyButton>
+          <MyButton type='submit' disabled={submitting}>{submitting ? "loading ..." :  submitButtonText}</MyButton>
         </div>
       </form>
     )

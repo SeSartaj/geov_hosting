@@ -14,6 +14,7 @@ export default function Markers() {
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [clusters, setClusters] = useState([]);
   const zoomThreshold = 5;
+  const transformedMarker = markersData.map(m => transformMarker(m));
 
   const handleMarkerClick = (e, marker) => {
     console.log('clicked', marker);
@@ -42,7 +43,7 @@ export default function Markers() {
         });
 
         index.load(
-          markersData.map((marker) => ({
+          transformedMarker.map((marker) => ({
             type: 'Feature',
             properties: { cluster: false, marker },
             geometry: {
@@ -60,7 +61,7 @@ export default function Markers() {
         setVisibleMarkers([]); // Hide individual markers
       } else {
         // Show individual markers
-        const filteredMarkers = markersData.filter((marker) => {
+        const filteredMarkers = transformedMarker.filter((marker) => {
           const { longitude, latitude } = marker;
           return (
             southWest.lng <= longitude &&
@@ -130,14 +131,13 @@ export default function Markers() {
 
       {visibleMarkers.length > 0 &&
         visibleMarkers.map(( marker) => {
-          const transformedMarker = transformMarker(marker)
           return (
           <MyMarker
-            key={transformedMarker.id}
-            longitude={transformedMarker.longitude}
-            latitude={transformedMarker.latitude}
-            marker={transformedMarker}
-            onClick={(e) => handleMarkerClick(e, transformedMarker)}
+            key={marker.id}
+            longitude={marker.longitude}
+            latitude={marker.latitude}
+            marker={marker}
+            onClick={(e) => handleMarkerClick(e, marker)}
           />
           )
         }

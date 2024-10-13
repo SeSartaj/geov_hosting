@@ -6,38 +6,22 @@ import { MarkersContext } from '../../contexts/markersContext';
 import { BiPencil, BiPin } from 'react-icons/bi';
 import { SettingsContext } from '@/contexts/SettingsContext';
 import MarkerForm from '@/forms/MarkerForm';
-import { getMarkerById } from '@/api/markerApi';
+import { getMarkerById, updateMarker } from '@/api/markerApi';
 
 const EditMarkerModal = ({ marker, markerId }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
-  const [initialValues, setInitialValues] = useState({});
-
-
-  useEffect(() => {
-    if(open){
-        console.log("fetching marker for edit is", marker);
-        getMarkerById(marker.id).then(fetchedMarker => {
-            console.log("marker is", fetchedMarker);
-            setInitialValues(fetchedMarker);
-        })
-    }
-  }, [marker, open]);
-
-
+  const { handleMarkerUpdate } = useContext(MarkersContext);
 
 
   const handleClose = () => {
     setOpen(false);
   };
 
-
-  const handlerEditMarker = (e) => {
-    console.log("marker edited", e)
+  const handlerEditMarker = (data) => {
+    console.log("marker edited", data)
+    return handleMarkerUpdate(data);
   }
-
-
-
 
   return (
     <MyModal
@@ -58,7 +42,7 @@ const EditMarkerModal = ({ marker, markerId }) => {
       }
       onClose={handleClose}
     >
-      <MarkerForm initialValues={initialValues} onSubmit={handlerEditMarker} onCancel={handleClose} submitButtonText="Save Changes"/>
+      <MarkerForm marker={marker} onSubmit={handlerEditMarker} onCancel={handleClose} submitButtonText="Save Changes"/>
     </MyModal>
   );
 };

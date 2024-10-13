@@ -3,6 +3,7 @@ import ForecastMarker from './ForecastMarker';
 import StationMarker from './StationMarker';
 
 function MyMarker(props) {
+  console.log(' MyMarker', props.marker); 
   console.log('forecast marker', props.marker.type);
 
   switch (props.marker.type) {
