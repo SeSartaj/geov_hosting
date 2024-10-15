@@ -13,7 +13,7 @@
 
 /* Colors */
 .my-button.primary {
-  background-color: #cbcbcb;
+  background-color: #32aa2e;
   color: white;
 }
 
@@ -33,12 +33,12 @@
 }
 
 .my-button.danger {
-  background-color: #8e2e37;
+  background-color: #e20017;
   color: white;
 }
 
 .my-button.mute {
-  background-color: inherit;
+  background-color: rgba(119, 119, 119, 0.137);
   color: rgb(43, 43, 43);
 }
 
@@ -102,7 +102,7 @@
   }
 
   .my-button.primary {
-    background-color: #4a4a4a;
+    background-color: #1f7a1c;
     color: white;
   }
 

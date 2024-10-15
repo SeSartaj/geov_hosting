@@ -1,21 +1,17 @@
 export function transformMarker(marker) {
   console.log('mmk', marker);
   // if no device is connected to it, it is a forecast marker
-  if (!marker.device || !marker.device?.length === 0) {
+  if (typeOfMarker(marker) === 'forecast') {
     return transformForecastMarker(marker);
+  }else if (typeOfMarker(marker) === "station") {
+    return transformStationMarker(marker);
   }
-  switch (marker.device.api) {
-    case 'Zentra':
-      return transformStationMarker(marker);
-    case 'Fieldclimate':
-      return transformForecastMarker(marker);
-    default:
-      return null;
-  }
+  throw new Error("Could not identify type of the marker", marker);
 }
 
 function typeOfMarker(marker) {
-  if (!marker.device || !marker.device?.length === 0) {
+  if (!marker?.device || !marker.device?.length === 0) {
+    console.log("forecast marker", marker);
     return 'forecast';
   }
   switch (marker.device.api) {
@@ -34,7 +30,6 @@ function typeOfMarker(marker) {
 function transformStationMarker(marker) {
   return {
     type: 'station',
-    id: marker.id,
     title: `${marker.device.name} [${marker.device.serial}] ${marker?.location_name}`,
     location: marker.use_custom_location
       ? { lng: marker.lng, lat: marker.lat }
@@ -50,26 +45,25 @@ function transformStationMarker(marker) {
       is_low: marker.device.is_battery_low,
     },
     crop: marker.device.crop,
-    avg_paw: marker.avg_paw,
-    farm: marker.farm,
     paw_status: getPAWStation(marker.avg_paw),
+    ...marker,
   };
 }
 
 function transformForecastMarker(marker) {
   return {
     type: 'forecast',
-    id: marker.id,
     title: `Forecast marker `,
     location: marker.use_custom_location
       ? { lng: marker.lng, lat: marker.lat }
-      : marker.device.details.location,
+      : marker?.device?.details?.location,
     latitude: marker.use_custom_location
       ? marker.lat
-      : marker.device.details.location.lat,
+      : marker?.device?.details?.location?.lat,
     longitude: marker.use_custom_location
       ? marker.lng
-      : marker.device.details.location.lng,
+      : marker?.device?.details?.location?.lng,
+    ...marker,
   };
 }
 

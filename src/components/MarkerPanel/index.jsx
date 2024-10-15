@@ -5,7 +5,7 @@ import MyButton from '../../ui-components/MyButton';
 import { MapContext } from '../../contexts/MapContext';
 import InlineInputField from '@/ui-components/InlineInputField';
 import Tooltip from '@/ui-components/Tooltip';
-import { BiPencil, BiReset, BiTrash } from 'react-icons/bi';
+import { BiDotsVertical, BiPencil, BiReset, BiTrash } from 'react-icons/bi';
 import ToggleButton from '@/ui-components/toggleButton';
 import Spinner from '@/ui-components/Spinner';
 import ErrorBoundary from '../ErrorBoundary';
@@ -133,16 +133,19 @@ export default function MarkerPanel() {
                   {marker.title}
                   </span>
                   <span className='flex items-center gap-1'>
-                    <span className='text-red-500'>
-                      <BiTrash className='action-icon' />
-                    </span>
+                  <Tooltip text="click to delete the marker">
+                    <MyButton variant="icon" className="rounded-full" >
+                      <BiTrash className='action-icon text-red-500 ' />
+                    </MyButton>
+                  </Tooltip>
+
 
                     <Tooltip text="click to edit the marker">
-                      {/* <span data-markerId={marker.id} onClick={handleEditMarker}>
-                        <BiPencil className='action-icon' />
-                      </span> */}
                       <EditMarkerModal marker={markersData.find(m => m.id === marker.id)} />
-                      </Tooltip>
+                    </Tooltip>
+
+                    {/* <MyButton variant='icon' className="rounded rounded-full"> <BiDotsVertical /> </MyButton> */}
+                  
                   </span>
 
                 </h4>

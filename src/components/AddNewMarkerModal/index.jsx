@@ -44,7 +44,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
   return (
     <MyModal
       trigger={
-        <MyButton>
+        <MyButton color="primary">
           <BiPin /> Add New Marker
         </MyButton>
       }

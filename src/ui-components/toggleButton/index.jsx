@@ -43,7 +43,7 @@ const ToggleButton = React.memo(function Togglebutton({
       <button
         type='button'
         onClick={handleToggle}
-        className={`relative  inline-flex items-center rounded-full transition-colors duration-300 focus:outline-none ${
+        className={`relative  inline-flex items-center rounded-full transition-colors duration-300 focus:outline-none  focus:outline focus:outline-2 focus:outline-offset-1 ${
           isOn ? 'bg-blue-700' : 'bg-gray-300'
         } ${sizeClasses[size].button}`}
       >

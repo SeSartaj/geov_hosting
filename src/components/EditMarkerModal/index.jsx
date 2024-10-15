@@ -10,7 +10,6 @@ import { getMarkerById, updateMarker } from '@/api/markerApi';
 
 const EditMarkerModal = ({ marker, markerId }) => {
   const [open, setOpen] = useState(false);
-  const { mapRef } = useContext(MapContext);
   const { handleMarkerUpdate } = useContext(MarkersContext);
 
 
@@ -27,19 +26,16 @@ const EditMarkerModal = ({ marker, markerId }) => {
     <MyModal
       trigger={
         <span >
+          <MyButton variant="icon" className="rounded-full">
             <BiPencil className='action-icon' />
+          </MyButton>
         </span>
       }
       title='Edit Marker'
       headerClassName='m-4'
-      description='make changes and click "save changes" to apply changes'
+      description='make changes and click "save changes" to apply it'
       open={open}
       setOpen={setOpen}
-      portalContainer={
-        mapRef?.current
-          ? mapRef?.current?.getMap().getContainer()
-          : document.body
-      }
       onClose={handleClose}
     >
       <MarkerForm marker={marker} onSubmit={handlerEditMarker} onCancel={handleClose} submitButtonText="Save Changes"/>

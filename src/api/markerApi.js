@@ -1584,19 +1584,18 @@ export const createMarker = async (data) => {
 };
 
 
-export const updateMarker = async (updatedMarker) => {
-  console.log("udpatedMarker", updatedMarker);
-    const response = await fetchWrapper(`${API_URL}marker/${updatedMarker.id}/`, {
+export const updateMarker =  (updatedMarker) => {
+    return fetchWrapper(`${API_URL}marker/${updatedMarker.id}/`, {
       method: 'PUT',
       body: JSON.stringify(updatedMarker),
       headers: {
         'Content-Type': 'application/json',
       },
-    });
-
-    if (response.ok) {
-      return response.json();
-    }
+    }).then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
 } 
 
 export const getPawData = async (markerId) => {

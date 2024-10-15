@@ -3,7 +3,7 @@ import { getAllGraphOptions, getPawGraphOptions } from "@/api/graphsApi";
 import { getStationOptions } from "@/api/stationApi";
 import { SettingsContext } from "@/contexts/SettingsContext";
 import useAsync from "@/hooks/useAsync";
-import FormGroup from "@/ui-components/FormGroup";
+import FormGroup, { FormErrorMessage } from "@/ui-components/FormGroup";
 import Input from "@/ui-components/Input";
 import MyButton from "@/ui-components/MyButton";
 import MyReactSelect from "@/ui-components/MyReactSelect";
@@ -11,8 +11,6 @@ import Spinner from "@/ui-components/Spinner";
 import ToggleButton from "@/ui-components/toggleButton";
 import getSelectedValues from "@/utils/getSelectedValues";
 import { useContext, useState } from "react";
-
-
 
 
 const emptyValues = {
@@ -37,6 +35,7 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
     
   const { settings } = useContext(SettingsContext);
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState();
 
     const [customLocation, setCustomLocation] = useState(false);
 
@@ -44,9 +43,6 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
     const serializeData = (formData) => {
       const data =   {
         marker_map: settings.mapId,
-        device: formData.station.value,
-        paw_graphs: formData.paw_graphs.map((g) => g.value),
-        graphs: formData.graphs.map((g) => g.value),
         lng: formData.longitude,
         lat: formData.latitude,
         location_name: formData.name,
@@ -55,6 +51,9 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
       };
 
       if (formData?.id) data.id = formData.id;
+      if (formData.station) data.device = formData.station.value;
+      if(formData.graphs?.length > 0) data.graphs = formData.graphs.map((g) => g.value);
+      if(formData.paw_graphs?.length > 0) data.graphs = formData.paw_graphs.map((g) => g.value);
 
       return data
     }
@@ -90,11 +89,13 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
       }
 
 
-
     const handleSubmit = (e) => {
       e.preventDefault();
       setSubmitting(true);
-      onSubmit(serializeData(formData)).finally(() => setSubmitting(false));
+      onSubmit(serializeData(formData)).catch(error => {
+        console.log('error in form is', error)
+        setFormError(error);
+      }).finally(() => setSubmitting(false));
     }
 
 
@@ -114,6 +115,7 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
           <FormGroup label='Station (device):' error={stationError}>
             <MyReactSelect
               className='w-full'
+              name="station"
               value={getSelectedValues(formData.station, stationOptions)}
               options={stationOptions}
               onChange={(s) => setFormData({ ...formData, station: s })}
@@ -124,6 +126,7 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
           <FormGroup label='Farm:' error={farmError}>
             <MyReactSelect
               className='w-full'
+              name="farm"
               value={getSelectedValues(formData.farm, farmOptions)}
               options={farmOptions}
               onChange={(f) => setFormData({ ...formData, farm: f })}
@@ -133,6 +136,7 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
           <FormGroup label='Paw Graphs:' error={pawGraphError}>
             <MyReactSelect
               className='w-full'
+              name="paw_graphs"
               value={getSelectedValues(formData.paw_graphs, pawGraphOptions)}
               onChange={(f) => setFormData({ ...formData, paw_graphs: f })}
               options={pawGraphOptions}
@@ -144,6 +148,7 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
           <FormGroup label='More Graphs:' error={allGraphError}>
             <MyReactSelect
               className='w-full'
+              name="graphs"
               value={getSelectedValues(formData.graphs, allGraphOptions)}
               onChange={(f) => setFormData({ ...formData, graphs: f })}
               options={allGraphOptions}
@@ -185,11 +190,13 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
           </FormGroup>
         </div>
 
+        <FormErrorMessage error={formError} />
+
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
           <MyButton variant='text' onClick={onCancel}>
             cancel
           </MyButton>
-          <MyButton type='submit' disabled={submitting}>{submitting ? "loading ..." :  submitButtonText}</MyButton>
+          <MyButton type='submit' disabled={submitting} color="primary">{submitting ? "loading ..." :  submitButtonText}</MyButton>
         </div>
       </form>
     )

@@ -22,7 +22,7 @@ const MyButton = forwardRef(function MyButton(
         className ? className : ''
       } dark:text-gray-100`}
       disabled={loading}
-      {...rest}
+      {...rest} 
     >
       {loading ? <Spinner /> : null}
       {children}

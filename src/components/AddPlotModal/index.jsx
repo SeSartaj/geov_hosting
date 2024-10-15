@@ -65,7 +65,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
 
   return (
     <MyModal
-      trigger={<MyButton>Add New Plot</MyButton>}
+      trigger={<MyButton color="primary">Add New Plot</MyButton>}
       title='Add New Plot '
       headerClassName='m-4'
       description='add new plot  map'
@@ -103,7 +103,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
           >
             cancel
           </MyButton>
-          <MyButton type='submit' loading={loading}>
+          <MyButton type='submit' loading={loading} color="primary">
             Add Plot
           </MyButton>
         </div>

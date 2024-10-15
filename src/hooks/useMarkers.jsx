@@ -15,10 +15,13 @@ export const useMarkers = () => {
   const [loading, setLoading] = useState(false);
   const [markerFilters, setMarkerFilters] = useState(EMPTY_FILTERS);
 
+
   const filterMarkers = (markers, filters = markerFilters) => {
+    console.log('markers are ', markers)
+    
     setLoading(true);
-    let filteredMarkers = markers;
-    console.log('markers in filterMarkers function', markers);
+    let filteredMarkers = markers
+
     if (filters.type) {
       filteredMarkers = filteredMarkers.filter(
         (m) => m.type === filters.type
@@ -78,7 +81,7 @@ export const useMarkers = () => {
         console.log('data in getMarkers', data)
         // modify the markers
         const modifiedData = data
-          .map((marker) => marker)
+          .map((marker) => transformMarker(marker))
           .filter((marker) => marker !== null);
 
         console.log('modifiedData', modifiedData);
