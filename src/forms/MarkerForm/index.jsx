@@ -60,6 +60,7 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
 
     const deserializeData = (data) => {
       return {
+        ...emptyValues, 
         id: data.id,
         name: data.location_name, 
         longitude: data.lng,
@@ -68,12 +69,13 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
         station: data.device,
         paw_graphs: data.paw_graphs, 
         graphs: data.graphs,
+        ...initialValues,
       }
     }
 
     const deserializedData = marker ? deserializeData(marker) : {};
     // if user doesn't include all values in initialValues, emptyValues will be used
-    const [formData, setFormData] = useState({...emptyValues, ...deserializedData, ...initialValues});
+    const [formData, setFormData] = useState({...deserializedData});
 
 
 
@@ -84,7 +86,7 @@ export default function MarkerForm({onSubmit,  onCancel, initialValues = {}, mar
         } 
         else {
           setCustomLocation(false);
-          setFormData({...formData, latitude: initialValues.latitude, longitude: initialValues.longitude});
+          setFormData({...formData, latitude:  deserializedData.latitude, longitude: deserializedData.longitude});
         }
       }
 

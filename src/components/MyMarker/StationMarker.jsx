@@ -11,6 +11,13 @@ const StationMarker = React.memo(function StationMarker({
   longitude,
   onClick,
 }) {
+  const handleClick = (event) => {
+    event.preventDefault();
+    if (onClick) {
+      onClick(event);
+    }
+  };
+
   return (
     <Marker
       className='map-marker'
@@ -18,7 +25,7 @@ const StationMarker = React.memo(function StationMarker({
       longitude={longitude}
       latitude={latitude}
       color={marker.color}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <PiDropFill size={32} color={getStationMarkerColor(marker.paw_status)} />
     </Marker>

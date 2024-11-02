@@ -138,6 +138,7 @@ export default function Markers() {
             latitude={marker.latitude}
             marker={marker}
             onClick={(e) => handleMarkerClick(e, marker)}
+            onTap
           />
           )
         }

@@ -8,7 +8,13 @@ const ForecastMarker = React.memo(function ForecastMarker({
   longitude,
   onClick,
 }) {
-  console.log('forecast marker', marker);
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    if (onClick) {
+      onClick(event);
+    }
+  };
 
   return (
     <Marker
@@ -16,7 +22,7 @@ const ForecastMarker = React.memo(function ForecastMarker({
       key={marker.id}
       longitude={longitude}
       latitude={latitude}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <BiSolidCloud size={32} color='blue' />
     </Marker>
