@@ -1,4 +1,3 @@
-import { getAccessToken } from '@/api/sentinalHubApi';
 import { convertBboxToEPSG3857 } from './convertBboxToEPSG3857';
 import { bbox } from '@turf/turf';
 

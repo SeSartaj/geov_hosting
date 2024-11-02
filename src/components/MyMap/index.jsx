@@ -9,7 +9,7 @@ import { MapContext } from '../../contexts/MapContext';
 import Sidebar from '../Sidebar';
 import Markers from '../Markers';
 import MarkerPopup from '../MarkerPopup';
-import { SettingsContext } from '../../contexts/SettingsContext';
+import { SettingsContext, useInitialView } from '../../contexts/SettingsContext';
 import PAWStatusPieChart from '../PAWStatusPieChart';
 import Plots from '../Plots';
 import { DrawPolygonControl } from '../DrawPolygonControl';
@@ -22,8 +22,9 @@ import ColorLegend from '../ColorLegend';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
-  const { initialViewState } = useContext(SettingsContext);
+  const initialViewState = useInitialView();
   const viewMode = useMapStore((state) => state.viewMode);
+
 
   if (!initialViewState) {
     return <Spinner />;

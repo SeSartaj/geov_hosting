@@ -17,7 +17,7 @@ export default function Markers() {
   const transformedMarker = markersData.map(m => transformMarker(m));
 
   const handleMarkerClick = (e, marker) => {
-    console.log('clicked', marker);
+    // 
     e.originalEvent.stopPropagation();
     setClickedMarker(marker);
   };
@@ -138,7 +138,6 @@ export default function Markers() {
             latitude={marker.latitude}
             marker={marker}
             onClick={(e) => handleMarkerClick(e, marker)}
-            onTap
           />
           )
         }

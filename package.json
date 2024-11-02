@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@adobe/react-spectrum": "^3.36.3",
+    "@floating-ui/react-dom": "^2.1.2",
     "@google/earthengine": "^0.1.416",
     "@mapbox/mapbox-gl-draw": "^1.4.3",
     "@radix-ui/colors": "^3.0.0",
