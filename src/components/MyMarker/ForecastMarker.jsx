@@ -10,7 +10,6 @@ const ForecastMarker = React.memo(function ForecastMarker({
 }) {
 
   const handleClick = (event) => {
-    event.preventDefault();
     if (onClick) {
       onClick(event);
     }

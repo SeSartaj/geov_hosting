@@ -1,4 +1,4 @@
-import { SettingsContext } from '@/contexts/SettingsContext';
+import { SettingsContext, useDarkMode } from '@/contexts/SettingsContext';
 import { usePrefersDarkMode } from '@/hooks/usePrefersDarkMode';
 import { forwardRef, useContext } from 'react';
 import Select from 'react-select';
@@ -16,7 +16,7 @@ const MyReactSelect = forwardRef(function MyReactSelect(
   { size = 'sm', name, ...props },
   ref
 ) {
-  const { isDarkMode } = useContext(SettingsContext);
+  const isDarkMode  = useDarkMode();
 
   const customStyles = {
     control: (provided, state) => ({
