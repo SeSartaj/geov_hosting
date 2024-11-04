@@ -1,3 +1,4 @@
+// may be used for (load) testing
 import { getRandomItem } from './getRandomItem';
 
 export function generateRandomMarkers(numMarkers) {

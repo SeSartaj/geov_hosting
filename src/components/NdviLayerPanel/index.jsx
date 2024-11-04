@@ -17,10 +17,10 @@ export default function NdviLayerPanel() {
   console.log('viewMode is ', viewMode);
   return (
     <div>
-      <hr />
-      <span className='font-light'>
+      <hr className="dark:border-gray-500 mt-1" />
+      <span className="font-light">
         Time Range:
-        <span className='text-light'>
+        <span className="text-light">
           (
           {new Date(
             new Date().setDate(new Date().getDate() - weeksBefore * 7)
@@ -29,25 +29,25 @@ export default function NdviLayerPanel() {
         </span>
       </span>
       <Input
-        type='range'
-        min='0'
-        max='52'
+        type="range"
+        min="0"
+        max="52"
         value={weeksBefore}
         onChange={(e) => setWeeksBefore(e.target.value)}
         style={{ direction: 'rtl' }}
-        className='w-full'
+        className="w-full"
       />
-      <hr />
+      <hr className="dark:border-gray-500 mt-1" />
       {viewMode !== 'PICKER' && (
         <>
           <span>Opacity</span>
           <Input
-            type='range'
-            min='0'
-            max='100'
+            type="range"
+            min="0"
+            max="100"
             value={opacity}
             onChange={handleOpacityChange}
-            className='w-full'
+            className="w-full"
           />
         </>
       )}

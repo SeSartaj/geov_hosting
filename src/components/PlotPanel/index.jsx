@@ -8,6 +8,8 @@ import NdviLayerPanel from '../NdviLayerPanel';
 import LabelValueList from '@/ui-components/LabelValueList';
 import isEmptyObject from '@/utils/isEmptyObject';
 import { MapContext } from '@/contexts/MapContext';
+import MyButton from '@/ui-components/MyButton';
+import Tooltip from '@/ui-components/Tooltip';
 
 export default function PlotPanel() {
   const {
@@ -22,59 +24,20 @@ export default function PlotPanel() {
   } = useContext(PlotContext);
 
   return (
-    <div className='panel-container'>
+    <div className="panel-container">
+      <div className="panel-header-action pb-3">
+        <h3 className="text-lg">Plots</h3>
+        <ToggleButton
+          onTooltip="hide plots"
+          offTooltip="show plots"
+          initialState={showPlots}
+          onToggle={setShowPlots}
+        />
+      </div>
+
       <LabelValueList
-        className='h-full overflow-scroll'
+        className="pr-1"
         list={[
-          {
-            variant: 'collapsable',
-            label: 'Plots',
-            labelEnd: (
-              <ToggleButton
-                onTooltip='hide plots'
-                offTooltip='show plots'
-                initialState={showPlots}
-                onToggle={setShowPlots}
-              />
-            ),
-            value: (
-              <div className='max-h-[300px] overflow-y-scroll'>
-                <ul>
-                  {plots.map((plot, index) => (
-                    <li
-                      key={index}
-                      className='inline-flex justify-between items-center p-1 border border-collapse w-full'
-                    >
-                      <span
-                        onClick={() =>
-                          handleFlyToPlot(plot?.options.geometry.coordinates)
-                        }
-                        className='select-none cursor-pointer font-normal'
-                      >
-                        {plot.name}
-                        {/* (
-                      {!isEmptyObject(plot?.options) &&
-                        squareMetersToAcres(
-                          calculatePolygonArea(plot?.options)
-                        ).toFixed(1)}
-                      acres) */}
-                      </span>
-                      <span className='flex items-center gap-1'>
-                        <span onClick={() => handleDeletePlot(plot)}>
-                          <BiTrash className='action-icon' />
-                        </span>
-                        {plot?.options && !isEmptyObject(plot?.options) && (
-                          <span onClick={() => handleEditPlot(plot)}>
-                            <BiPencil className='action-icon' />
-                          </span>
-                        )}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ),
-          },
           {
             variant: 'collapsable',
             label: 'NDVI Layer',
@@ -91,6 +54,51 @@ export default function PlotPanel() {
         ]}
         itemClasses={'border p-1 m-0'}
       />
+      <div className="panel-content pr-1">
+        {plots.map((plot, index) => (
+          <li
+            key={index}
+            className="inline-flex justify-between items-center p-1 border border-solid border-collapse dark:border-gray-500 w-full"
+          >
+            <span
+              onClick={() =>
+                handleFlyToPlot(plot?.options.geometry.coordinates)
+              }
+              className="select-none cursor-pointer font-normal"
+            >
+              {plot.name}
+              {/* (
+                      {!isEmptyObject(plot?.options) &&
+                        squareMetersToAcres(
+                          calculatePolygonArea(plot?.options)
+                        ).toFixed(1)}
+                      acres) */}
+            </span>
+            <span className="flex items-center gap-1">
+              <Tooltip text="click to delete the plot">
+                <MyButton
+                  variant="icon"
+                  className="rounded-full"
+                  onClick={() => handleDeletePlot(plot)}
+                >
+                  <BiTrash className="action-icon text-red-500" />
+                </MyButton>
+              </Tooltip>
+              {plot?.options && !isEmptyObject(plot?.options) && (
+                <Tooltip text="click to edit the plot">
+                  <MyButton
+                    variant="icon"
+                    className="rounded-full"
+                    onClick={() => handleEditPlot(plot)}
+                  >
+                    <BiPencil className="action-icon" />
+                  </MyButton>
+                </Tooltip>
+              )}
+            </span>
+          </li>
+        ))}
+      </div>
     </div>
   );
 }
