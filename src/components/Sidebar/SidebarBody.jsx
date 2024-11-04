@@ -4,7 +4,7 @@ import './styles.css';
 
 export default function SidebarBody() {
   return (
-    <div className='sidebar-body'>
+    <div className="sidebar-body">
       <Navigation />
     </div>
   );

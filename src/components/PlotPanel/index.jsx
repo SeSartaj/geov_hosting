@@ -36,11 +36,11 @@ export default function PlotPanel() {
       </div>
 
       <LabelValueList
-        className="pr-1"
+        className="pr-1 mb-1"
         list={[
           {
             variant: 'collapsable',
-            label: 'NDVI Layer',
+            label: 'Plot NDVI Layers',
             value: <NdviLayerPanel />,
             labelEnd: (
               <ToggleButton

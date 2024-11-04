@@ -110,7 +110,7 @@ export default function MarkerPanel() {
           </MyButton>
         </Tooltip>
       </span>
-      <div className="panel-content ">
+      <div className="panel-content pr-1">
         <ErrorBoundary>
           {loading ? (
             <Spinner />

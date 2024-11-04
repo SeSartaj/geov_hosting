@@ -13,15 +13,19 @@ export default function MapStyleSwitcher() {
   };
 
   return (
-    <div className='switcher'>
+    <div className="flex justify-between flex-wrap gap-[3px] ">
       {BASEMAP_OPTIONS.map((o) => (
         <MyButton
           data-id={o.id}
           key={o.id}
-          className={o.id === settings.basemap.id ? 'active-switch ' : ''}
+          className={
+            o.id === settings.basemap.id
+              ? 'brightness-[0.8]  w-full sm:w-auto '
+              : 'w-full sm:w-auto'
+          }
           onClick={handleStyleChange}
           disabled={o.id === settings.basemap.id}
-          size='md'
+          size="md"
         >
           {o.name}
         </MyButton>
