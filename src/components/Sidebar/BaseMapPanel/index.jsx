@@ -9,9 +9,9 @@ export default function BaseMapPanel() {
   const map = mapRef.current.getMap();
 
   return (
-    <div className='panel-container'>
-      <span className='panel-header-action'>
-        <h3>Base Map</h3>
+    <div className="panel-container">
+      <span className="panel-header-action">
+        <h3 className="text-lg">Base Map</h3>
         {/* <AddNewStyleModal /> */}
         {/* <p>
           show available styles here so user can switch between them store all
@@ -19,7 +19,7 @@ export default function BaseMapPanel() {
           from backend so each user&apos;s preference are remembered.
           </p> */}
       </span>
-      <hr />
+      <hr className="my-2" />
       <MapStyleSwitcher />
     </div>
   );

@@ -25,7 +25,7 @@ export default function MarkerPanel() {
     loading,
   } = useContext(MarkersContext);
 
-  const {isConfirmed} = useConfirm();
+  const { isConfirmed } = useConfirm();
 
   const markers = markersData.map((m) => transformMarker(m));
 
@@ -41,14 +41,13 @@ export default function MarkerPanel() {
     mapRef.current.flyTo({ center: [lng, lat], zoom: 14 });
   };
 
-  const handleDeleteMarker = async(e) => {
+  const handleDeleteMarker = async (e) => {
     // get marker id from data-marker-id attribute
     const markerId = e.currentTarget.getAttribute('data-marker-id');
     // ask for confirmatino whether to delete the marker or not?
-    const confirmed = await isConfirmed("Do you want to delete this marker?");
+    const confirmed = await isConfirmed('Do you want to delete this marker?');
     console.log('confirmed', confirmed);
-
-  }
+  };
 
   return (
     <div className="panel-container">
@@ -122,7 +121,7 @@ export default function MarkerPanel() {
           </MyButton>
         </Tooltip>
       </span>
-      <div className="panel-content pr-1">
+      <div className="panel-content pr-1 styled-scrollbars">
         <ErrorBoundary>
           {loading ? (
             <Spinner />
@@ -140,7 +139,12 @@ export default function MarkerPanel() {
                     </span>
                     <span className="flex items-center gap-1">
                       <Tooltip text="click to delete the marker">
-                        <MyButton variant="icon" className="rounded-full" onClick={handleDeleteMarker} data-marker-id={marker.id}>
+                        <MyButton
+                          variant="icon"
+                          className="rounded-full"
+                          onClick={handleDeleteMarker}
+                          data-marker-id={marker.id}
+                        >
                           <BiTrash className="action-icon text-red-500 " />
                         </MyButton>
                       </Tooltip>

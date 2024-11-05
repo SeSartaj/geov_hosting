@@ -11,6 +11,8 @@ import { parseDate } from '@internationalized/date';
 import useAccessToken from '@/hooks/useAccessToken';
 import { layerOptions } from '@/constants';
 import useMapStore from '@/stores/mapStore';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/style.css';
 
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
@@ -25,20 +27,20 @@ export default function LayerPanel() {
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const setRasterLayer = useMapStore((state) => state.setRasterLayer);
 
-  const { mapInstance } = useContext(MapContext);
+  const { mapRef } = useContext(MapContext);
+  const mapInstance = mapRef.current.getMap();
   const [passDates, setPassDates] = useState([]);
   const accessToken = useAccessToken();
 
-  function isDateUnavailable(date) {
-    // Convert the input date to a string in the format YYYY-MM-DD
-    const inputDateString = new Date(date).toISOString().split('T')[0];
-
-    // Convert each date in the array to the format YYYY-MM-DD and check for a match
-    return !passDates.some((dateString) => {
-      const formattedDate = new Date(dateString).toISOString().split('T')[0];
-      return formattedDate === inputDateString;
-    });
-  }
+  // Function to disable all days except those in the availableDays array
+  const isDayDisabled = (date) => {
+    return !passDates.some(
+      (passDate) =>
+        date.getFullYear() === passDate.getFullYear() &&
+        date.getMonth() === passDate.getMonth() &&
+        date.getDate() === passDate.getDate()
+    );
+  };
 
   // get bbox from viewport of map and call getSatellitePassDates
   //  and store all dates in a state
@@ -57,7 +59,23 @@ export default function LayerPanel() {
     ];
 
     getSatellitePassDates({ aoi: bbox, accessToken })
-      .then((dates) => {
+      .then((d) => {
+        // const data = await response.json();
+        const data = {
+          features: [
+            { properties: { datetime: '2024-09-05T00:00:00Z' } },
+            { properties: { datetime: '2024-09-09T00:00:00Z' } },
+            { properties: { datetime: '2024-09-22T00:00:00Z' } },
+            { properties: { datetime: '2024-10-03T00:00:00Z' } },
+            { properties: { datetime: '2024-11-01T00:00:00Z' } },
+            { properties: { datetime: '2024-11-05T00:00:00Z' } },
+          ],
+        };
+        // Extract dates from the response and sort in descending order
+        const dates = data.features
+          .map((feature) => new Date(feature.properties.datetime))
+          .sort((a, b) => new Date(b) - new Date(a));
+
         console.log('getting passDates', dates);
         setPassDates(dates);
         if (dates.length > 0) {
@@ -82,47 +100,51 @@ export default function LayerPanel() {
   ]);
 
   // fetch pass dates for visible area from catalog api, sentinel hub
-  // useEffect(() => {
-  //   if (mapInstance) {
-  //     mapInstance.on('moveend', handlePassDates);
-  //     mapInstance.on('zoomend', handlePassDates);
-  //   }
+  useEffect(() => {
+    if (mapInstance) {
+      mapInstance.on('moveend', handlePassDates);
+      mapInstance.on('zoomend', handlePassDates);
+    }
 
-  //   return () => {
-  //     if (mapInstance) {
-  //       mapInstance.off('moveend', handlePassDates);
-  //       mapInstance.off('zoomend', handlePassDates);
-  //     }
-  //   };
-  // }, [mapInstance, handlePassDates]);
+    return () => {
+      if (mapInstance) {
+        mapInstance.off('moveend', handlePassDates);
+        mapInstance.off('zoomend', handlePassDates);
+      }
+    };
+  }, [mapInstance, handlePassDates]);
 
+  // at start run it once
+  useEffect(() => {
+    handlePassDates();
+  }, []);
   // Re-render the Calendar whenever passDates changes
   useEffect(() => {
     // This will trigger a re-render of the Calendar
+    console.log('passDates', passDates);
   }, [passDates]);
 
   return (
-    <div className='panel-container h-full overflow-y-scroll'>
-      <div className='panel-header-action'>
-        <h3 style={{ margin: 0 }}>Map Raster Layers</h3>
+    <div className="panel-container h-full overflow-y-scroll">
+      <div className="panel-header-action mb-2">
+        <h3 className="text-lg">Map Raster Layers</h3>
         {/* <AddNewLayerModal setLayers={setLayers} /> */}
-        <span className='flex items-center'>
+        <span className="flex items-center">
           <ToggleButton
-            onTooltip='hide layer'
-            offTooltip='show layer'
+            onTooltip="hide layer"
+            offTooltip="show layer"
             initialState={isVisible}
             onToggle={setIsVisible}
           />
         </span>
       </div>
-      <hr />
 
       <div></div>
-      <ul className='layers-list'>
-        <FormGroup label='layer:'>
+      <ul className="layers-list">
+        <FormGroup label="layer:">
           <MyReactSelect
-            size='sm'
-            className='w-full'
+            size="sm"
+            className="w-full"
             value={rasterLayer}
             options={layerOptions}
             onChange={(l) => setRasterLayer(l)}
@@ -131,32 +153,42 @@ export default function LayerPanel() {
         </FormGroup>
         {viewMode !== 'PICKER' && (
           <>
-            <hr />
+            {/* <hr /> */}
             <span>Opacity</span>
             <Input
-              type='range'
-              min='0'
-              max='100'
+              type="range"
+              min="0"
+              max="100"
               value={rasterOpacity}
               onChange={handleOpacityChange}
-              className='w-full'
+              className="w-full"
             />
           </>
         )}
-        <hr />
-        {/* <span>Calender:</span> */}
+        {/* <hr /> */}
+        <span>Available Days:</span>
         {/* <DateRangePicker value={dateRange} onChange={setDateRange} /> */}
 
-        {/* <div className='p-4'>
-          <Calendar
-            isDateUnavailable={isDateUnavailable}
-            value={dateRange.start}
-            onChange={(date) => {
+        <div className="p-4">
+          <DayPicker
+            mode="single"
+            selected={dateRange.start}
+            onSelect={(date) => {
+              console.log('onDayClick', date);
               setDateRange({ start: date, end: date });
+            }}
+            modifiers={{
+              disabled: isDayDisabled, // Pass the function here
+              available: passDates,
+            }}
+            modifiersClassNames={{
+              available:
+                'dark:text-white bg-gray-200 dark:bg-gray-600 rounded-full ',
+              selected: 'bg-green-400 dark:bg-green-600',
+              today: 'dark:text-red',
             }}
           />
         </div>
-        */}
       </ul>
     </div>
   );

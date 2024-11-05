@@ -184,15 +184,16 @@ export default function Plots() {
   );
 
   const handleMouseEnter = useCallback(() => {
-    console.log('entering plot area');
-    map.getCanvas().style.cursor = 'pointer';
-  }, [setCursor]);
+    if (map) {
+      map.getCanvas().style.cursor = 'pointer';
+    }
+  }, [setCursor, map]);
 
   const handleMouseLeave = useCallback(() => {
-    console.log('leaving plot area');
-    // resetCursor();
-    map.getCanvas().style.cursor = 'grab';
-  }, [setCursor]);
+    if (map) {
+      map.getCanvas().style.cursor = 'grab';
+    }
+  }, [setCursor, map]);
 
   const isBoundingBoxIntersecting = useCallback((plotBounds, mapBounds) => {
     const [minX, minY, maxX, maxY] = plotBounds;
@@ -302,18 +303,18 @@ export default function Plots() {
 
   // when hovered on a plot, change cursor to pointer
   useEffect(() => {
-    if (map) {
+    if (map && viewMode !== 'PICKER') {
       map.on('mouseenter', 'plots-layer', handleMouseEnter);
       map.on('mouseleave', 'plots-layer', handleMouseLeave);
     }
 
     return () => {
-      if (map) {
+      if (map && viewMode !== 'PICKER') {
         map.off('mouseenter', 'plots-layer', handleMouseEnter);
         map.off('mouseleave', 'plots-layer', handleMouseLeave);
       }
     };
-  }, [map, handleMouseEnter, handleMouseLeave]);
+  }, [map, handleMouseEnter, handleMouseLeave, viewMode]);
 
   if (!showPlots) return null;
 

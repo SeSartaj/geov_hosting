@@ -289,7 +289,15 @@ export async function getSatellitePassDates({
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const data = await response.json();
+    // const data = await response.json();
+    const data = {
+      features: [
+        { properties: { datetime: '2024-09-05T00:00:00Z' } },
+        { properties: { datetime: '2024-09-09T00:00:00Z' } },
+        { properties: { datetime: '2024-09-22T00:00:00Z' } },
+        { properties: { datetime: '2024-10-03T00:00:00Z' } },
+      ],
+    };
     // Extract dates from the response and sort in descending order
     const dates = data.features
       .map((feature) => new Date(feature.properties.datetime).toISOString())

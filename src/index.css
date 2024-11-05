@@ -5,3 +5,40 @@
 .action-icon {
   cursor: pointer;
 }
+
+.rdp-root {
+  --rdp-accent-color: rgb(0, 138, 16); /* Change the accent color to indigo. */
+  --rdp-accent-background-color: #f0f0f0; /* Change the accent background color. */
+  --rdp-day-height: 2.25rem; /* Set your desired height */
+  --rdp-day-width: 2.25rem; /* Set your desired width */
+}
+
+.styled-scrollbars {
+  /* Foreground, Background */
+  scrollbar-color: #999 #b7b7b7b5;
+}
+.styled-scrollbars::-webkit-scrollbar {
+  width: 10px; /* Mostly for vertical scrollbars */
+  height: 10px; /* Mostly for horizontal scrollbars */
+}
+.styled-scrollbars::-webkit-scrollbar-thumb {
+  /* Foreground */
+  background: #999;
+}
+.styled-scrollbars::-webkit-scrollbar-track {
+  /* Background */
+  background: #909090;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .styled-scrollbars {
+    scrollbar-color: #646464 #232323a0;
+  }
+  .styled-scrollbars::-webkit-scrollbar-thumb {
+    background: #666;
+  }
+  .styled-scrollbars::-webkit-scrollbar-track {
+    background: #222;
+  }
+}

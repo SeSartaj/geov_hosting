@@ -57,17 +57,17 @@ const NDVILayer = () => {
   return (
     <>
       <Source
-        id='raster-source'
-        type='raster'
+        id="raster-source"
+        type="raster"
         tiles={[url]}
         tileSize={256}
         minzoom={10}
         maxzoom={21}
       >
         <Layer
-          id='raster-layer'
-          type='raster'
-          source='raster-source'
+          id="raster-layer"
+          type="raster"
+          source="raster-source"
           paint={{ 'raster-opacity': rasterOpacity / 100 }}
           beforeId={beforeId || undefined} // Only apply if beforeId exists
         />
