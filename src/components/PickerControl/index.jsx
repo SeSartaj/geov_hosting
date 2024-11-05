@@ -121,19 +121,22 @@ function PickerControl() {
   // when ESC is clicked, get out of picker mode
   useEffect(() => {
     const handleKeyDown = (event) => {
+      // if in picker mode and clicked escape
       if (event.key === 'Escape') {
         backToPreviousOpacity();
         toNormalMode(); // Call your function to switch to normal mode
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    if (viewMode === 'PICKER') {
+      window.addEventListener('keydown', handleKeyDown);
+    }
 
     // Clean up the event listener when the component unmounts
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toNormalMode, rasterOpacity, mapInstance, backToPreviousOpacity]);
+  }, [toNormalMode, rasterOpacity, mapInstance, backToPreviousOpacity, viewMode]);
 
   // track cursor coords
   useEffect(() => {

@@ -11,6 +11,7 @@ import Spinner from '@/ui-components/Spinner';
 import ErrorBoundary from '../ErrorBoundary';
 import EditMarkerModal from '../EditMarkerModal';
 import { transformMarker } from '@/utils/transformMarker';
+import useConfirm from '@/hooks/useConfirm';
 
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
@@ -23,6 +24,8 @@ export default function MarkerPanel() {
     setShowMarkers,
     loading,
   } = useContext(MarkersContext);
+
+  const {isConfirmed} = useConfirm();
 
   const markers = markersData.map((m) => transformMarker(m));
 
@@ -37,6 +40,15 @@ export default function MarkerPanel() {
     const { lat, lng } = marker.location;
     mapRef.current.flyTo({ center: [lng, lat], zoom: 14 });
   };
+
+  const handleDeleteMarker = async(e) => {
+    // get marker id from data-marker-id attribute
+    const markerId = e.currentTarget.getAttribute('data-marker-id');
+    // ask for confirmatino whether to delete the marker or not?
+    const confirmed = await isConfirmed("Do you want to delete this marker?");
+    console.log('confirmed', confirmed);
+
+  }
 
   return (
     <div className="panel-container">
@@ -128,7 +140,7 @@ export default function MarkerPanel() {
                     </span>
                     <span className="flex items-center gap-1">
                       <Tooltip text="click to delete the marker">
-                        <MyButton variant="icon" className="rounded-full">
+                        <MyButton variant="icon" className="rounded-full" onClick={handleDeleteMarker} data-marker-id={marker.id}>
                           <BiTrash className="action-icon text-red-500 " />
                         </MyButton>
                       </Tooltip>

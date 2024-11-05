@@ -9,6 +9,8 @@ import { RasterLayerProvider } from './contexts/RasterLayerContext';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import ErrorBoundary from './components/ErrorBoundary';
+import ConfirmContextProvider from './contexts/ConfirmContextProvider';
+import DeleteDialog from './ui-components/DeleteDialog';
 
 function App() {
 
@@ -18,6 +20,7 @@ function App() {
       <Provider theme={defaultTheme}>
         <AccessTokenProvider>
           <SettingsProvider>
+            <ConfirmContextProvider>
             <MapProvider>
               <RasterLayerProvider>
                 <PlotProvider>
@@ -28,12 +31,14 @@ function App() {
                     <div style={{ padding: 30, marginTop: 20 }}>
                       <ErrorBoundary >
                         <MyMap />
+                        <DeleteDialog />
                       </ErrorBoundary>
                     </div>
                   </MarkersProvider>
                 </PlotProvider>
               </RasterLayerProvider>
             </MapProvider>
+            </ConfirmContextProvider>
           </SettingsProvider>
         </AccessTokenProvider>
       </Provider>

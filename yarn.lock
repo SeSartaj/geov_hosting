@@ -7418,6 +7418,11 @@ react-aria@^3.34.3:
     "@react-aria/visually-hidden" "^3.8.15"
     "@react-types/shared" "^3.24.1"
 
+react-confirm@^0.3.0-7:
+  version "0.3.0-7"
+  resolved "https://registry.yarnpkg.com/react-confirm/-/react-confirm-0.3.0-7.tgz#d156a197240b7758a31f0d2dc074c1949cf9f1a7"
+  integrity sha512-DxEoq9uKG2Ku4qs1HHcbygbIJervr73L3uULihwQsl7dr2Ca2ltBRoM0vh7G1FPV5YJAJSPmaIbEiGpmTubBKg==
+
 react-dom@^18.3.1:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"

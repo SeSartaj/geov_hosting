@@ -10,6 +10,7 @@ import isEmptyObject from '@/utils/isEmptyObject';
 import { MapContext } from '@/contexts/MapContext';
 import MyButton from '@/ui-components/MyButton';
 import Tooltip from '@/ui-components/Tooltip';
+import useConfirm from '@/hooks/useConfirm';
 
 export default function PlotPanel() {
   const {
@@ -19,9 +20,20 @@ export default function PlotPanel() {
     handleFlyToPlot,
     handleEditPlot,
     showNdviLayer,
-    handleDeletePlot,
     toggleNDVILayersVisibility,
   } = useContext(PlotContext);
+
+  const {isConfirmed} = useConfirm();
+
+
+
+  const handleDeletePlot = async(e) => {
+    // get marker id from data-marker-id attribute
+    // ask for confirmatino whether to delete the marker or not?
+    const confirmed = await isConfirmed("Do you want to delete this marker?");
+    console.log('confirmed', confirmed);
+
+  }
 
   return (
     <div className="panel-container">
@@ -79,7 +91,7 @@ export default function PlotPanel() {
                 <MyButton
                   variant="icon"
                   className="rounded-full"
-                  onClick={() => handleDeletePlot(plot)}
+                  onClick={handleDeletePlot}
                 >
                   <BiTrash className="action-icon text-red-500" />
                 </MyButton>
