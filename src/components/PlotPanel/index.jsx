@@ -23,17 +23,14 @@ export default function PlotPanel() {
     toggleNDVILayersVisibility,
   } = useContext(PlotContext);
 
-  const {isConfirmed} = useConfirm();
+  const { isConfirmed } = useConfirm();
 
-
-
-  const handleDeletePlot = async(e) => {
+  const handleDeletePlot = async (e) => {
     // get marker id from data-marker-id attribute
     // ask for confirmatino whether to delete the marker or not?
-    const confirmed = await isConfirmed("Do you want to delete this marker?");
+    const confirmed = await isConfirmed('Do you want to delete this Plot?');
     console.log('confirmed', confirmed);
-
-  }
+  };
 
   return (
     <div className="panel-container">
