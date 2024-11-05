@@ -1,4 +1,5 @@
 import useMapStore from '@/stores/mapStore';
+import { useEffect } from 'react';
 
 const StatusBar = () => {
   const viewMode = useMapStore((state) => state.viewMode);
@@ -7,7 +8,7 @@ const StatusBar = () => {
 
   console.log('hoveredValue', hoveredValue);
   return (
-    <div className='absolute bottom-0 left-0 w-full  bg-black bg-opacity-50 p-1 text-xs text-white flex justify-between'>
+    <div className="absolute bottom-0 left-0 w-full  bg-black bg-opacity-50 p-1 text-xs text-white flex justify-between">
       <span>mode: {viewMode}</span>
       {viewMode === 'PICKER' && (
         <span>

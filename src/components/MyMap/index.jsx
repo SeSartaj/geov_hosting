@@ -9,7 +9,10 @@ import { MapContext } from '../../contexts/MapContext';
 import Sidebar from '../Sidebar';
 import Markers from '../Markers';
 import MarkerPopup from '../MarkerPopup';
-import { SettingsContext, useInitialView } from '../../contexts/SettingsContext';
+import {
+  SettingsContext,
+  useInitialView,
+} from '../../contexts/SettingsContext';
 import PAWStatusPieChart from '../PAWStatusPieChart';
 import Plots from '../Plots';
 import { DrawPolygonControl } from '../DrawPolygonControl';
@@ -24,7 +27,7 @@ export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
   const initialViewState = useInitialView();
   const viewMode = useMapStore((state) => state.viewMode);
-
+  const cursor = useMapStore((state) => state.cursor);
 
   if (!initialViewState) {
     return <Spinner />;
@@ -36,7 +39,7 @@ export default function MyMap() {
 
   return (
     <Map
-      id='myMap'
+      id="myMap"
       ref={mapRef}
       initialViewState={initialViewState}
       style={{ width: '100%', height: '80vh' }}
@@ -44,8 +47,9 @@ export default function MyMap() {
       attributionControl={false}
       reuseMaps
       preserveDrawingBuffer={true}
+      // cursor={cursor}
     >
-      <FullscreenControl position='top-right' />
+      <FullscreenControl position="top-right" />
       <PickerControl />
       <NDVILayer />
       <Sidebar />

@@ -21,6 +21,8 @@ export default function Plots() {
     showNdviLayer,
   } = useContext(PlotContext);
 
+  const setCursor = useMapStore((state) => state.setCursor);
+  const resetCursor = useMapStore((state) => state.resetCursor);
   const { drawRef, mapRef } = useContext(MapContext);
   const accessToken = useAccessToken();
   const map = mapRef?.current?.getMap();
@@ -182,12 +184,15 @@ export default function Plots() {
   );
 
   const handleMouseEnter = useCallback(() => {
+    console.log('entering plot area');
     map.getCanvas().style.cursor = 'pointer';
-  }, [map]);
+  }, [setCursor]);
 
   const handleMouseLeave = useCallback(() => {
-    map.getCanvas().style.cursor = '';
-  }, [map]);
+    console.log('leaving plot area');
+    // resetCursor();
+    map.getCanvas().style.cursor = 'grab';
+  }, [setCursor]);
 
   const isBoundingBoxIntersecting = useCallback((plotBounds, mapBounds) => {
     const [minX, minY, maxX, maxY] = plotBounds;
@@ -275,8 +280,6 @@ export default function Plots() {
     console.log('runnign useEffect inside plots');
     if (map && viewMode === 'NORMAL' && showNdviLayer && showPlots) {
       console.log('adding viewPortchange event to map');
-      map.on('mouseenter', 'plots-layer', handleMouseEnter);
-      map.on('mouseleave', 'plots-layer', handleMouseLeave);
       map.on('moveend', handleViewportChange);
       map.on('zoomend', handleViewportChange);
     }
@@ -284,8 +287,6 @@ export default function Plots() {
     return () => {
       console.log('adding removing viewPortchange event from map');
       if (map) {
-        map.off('mouseenter', 'plots-layer', handleMouseEnter);
-        map.off('mouseleave', 'plots-layer', handleMouseLeave);
         map.off('moveend', handleViewportChange);
         map.off('zoomend', handleViewportChange);
       }
@@ -297,9 +298,22 @@ export default function Plots() {
     handleMapClick,
     handleViewportChange,
     showNdviLayer,
-    handleMouseEnter,
-    handleMouseLeave,
   ]);
+
+  // when hovered on a plot, change cursor to pointer
+  useEffect(() => {
+    if (map) {
+      map.on('mouseenter', 'plots-layer', handleMouseEnter);
+      map.on('mouseleave', 'plots-layer', handleMouseLeave);
+    }
+
+    return () => {
+      if (map) {
+        map.off('mouseenter', 'plots-layer', handleMouseEnter);
+        map.off('mouseleave', 'plots-layer', handleMouseLeave);
+      }
+    };
+  }, [map, handleMouseEnter, handleMouseLeave]);
 
   if (!showPlots) return null;
 
@@ -308,15 +322,15 @@ export default function Plots() {
   return (
     <>
       <Source
-        id='plots'
-        type='geojson'
+        id="plots"
+        type="geojson"
         data={{
           type: 'FeatureCollection',
           features: plots.map((p) => p?.options),
         }}
       >
-        <Layer key='12kkd' {...plotLineStyle} />
-        <Layer key='12kmsn' {...plotFillStyle} />
+        <Layer key="12kkd" {...plotLineStyle} />
+        <Layer key="12kmsn" {...plotFillStyle} />
       </Source>
 
       {clickedPlot && (

@@ -23,32 +23,32 @@ export default function AreaDetails() {
     <>
       <MyModal open={true} setOpen={() => setPickerData(null)}>
         <Tabs.Root
-          className='flex flex-col w-full h-full overflow-y-hidden'
-          defaultValue='point'
+          className="flex flex-col w-full h-full overflow-y-hidden"
+          defaultValue="point"
         >
           <Tabs.List
-            className='flex flex-shrink-0 justify-start '
-            aria-label='Manage your account'
+            className="flex flex-shrink-0 justify-start "
+            aria-label="Manage your account"
           >
             <TabTrigger
-              value='point'
-              tooltipText='Point'
-              portalContainer={mapInstance.getContainer()}
+              value="point"
+              tooltipText="Point"
+              // portalContainer={mapInstance.getContainer()}
             >
-              <HiOutlineMapPin className='cursor-pointer' />
+              <HiOutlineMapPin className="cursor-pointer" />
             </TabTrigger>
             {pickerData?.plot && (
-              <TabTrigger value='plot' tooltipText='Plot'>
-                <FaRegMap className='cursor-pointer' />
+              <TabTrigger value="plot" tooltipText="Plot">
+                <FaRegMap className="cursor-pointer" />
               </TabTrigger>
             )}
           </Tabs.List>
           <br />
-          <TabContent value='point'>
+          <TabContent value="point">
             <NdviChart point={pickerData.coordinates} />
           </TabContent>
           {pickerData?.plot && (
-            <TabContent value='plot'>
+            <TabContent value="plot">
               <NdviChart plot={pickerData.plot} />
             </TabContent>
           )}

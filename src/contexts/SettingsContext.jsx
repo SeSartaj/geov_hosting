@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { usePrefersDarkMode } from '@/hooks/usePrefersDarkMode';
 import { getMapSettings } from '@/api/mapApi';
 
-
 // Create separate contexts
 export const SettingsContext = createContext();
 export const DarkModeContext = createContext();
@@ -29,8 +28,10 @@ export const SettingsProvider = ({ children }) => {
 
   useEffect(() => {
     getMapSettings().then((data) => {
-      if(!data) {
-        throw new Error('Could not loading map intial View settings from the backend. please try again later, or contact your admin');
+      if (!data) {
+        throw new Error(
+          'Could not loading map intial View settings from the backend. please try again later, or contact your admin'
+        );
       }
       console.log('data from iii', data);
       setInitialViewState({
@@ -46,10 +47,9 @@ export const SettingsProvider = ({ children }) => {
     <SettingsContext.Provider value={{ settings, setSettings }}>
       <DarkModeContext.Provider value={isDarkMode}>
         <InitialViewContext.Provider value={initialViewState}>
-            {children}
+          {children}
         </InitialViewContext.Provider>
       </DarkModeContext.Provider>
     </SettingsContext.Provider>
   );
 };
-

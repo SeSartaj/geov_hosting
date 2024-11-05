@@ -136,7 +136,13 @@ function PickerControl() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toNormalMode, rasterOpacity, mapInstance, backToPreviousOpacity, viewMode]);
+  }, [
+    toNormalMode,
+    rasterOpacity,
+    mapInstance,
+    backToPreviousOpacity,
+    viewMode,
+  ]);
 
   // track cursor coords
   useEffect(() => {

@@ -9,7 +9,7 @@ const VIEW_MODES = {
 
 const MAP_CURSORS = {
   // all posible cursors on react-map-gl (maplibre)
-  DEFAULT: 'default',
+  DEFAULT: '',
   POINTER: 'pointer',
   CROSSHAIR: 'crosshair',
   MOVE: 'move',
@@ -24,7 +24,13 @@ const useMapStore = create((set) => ({
   hoveredValue: null,
   setHoveredValue: (color) => set({ hoveredValue: color }),
   cursor: MAP_CURSORS.DEFAULT,
-  setCursor: (cursor) => set({ cursor }),
+  previousCursor: MAP_CURSORS.DEFAULT,
+  setCursor: (cursor) =>
+    set((state) => ({
+      previousCursor: 'grab',
+      cursor: cursor,
+    })),
+  resetCursor: () => set((state) => ({ cursor: state.previousCursor })),
   viewMode: VIEW_MODES.NORMAL,
   pickerData: null,
   setPickerData: (data) => set({ pickerData: data }),
