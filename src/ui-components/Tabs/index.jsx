@@ -24,7 +24,7 @@ export function TabTrigger({ value, children, tooltipText, ...props }) {
 export function TabContent({ value, children }) {
   return (
     <Tabs.Content
-      className='flex flex-col flex-1 h-full overflow-scroll state-inactive:hidden bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200'
+      className="flex flex-col flex-1 h-full overflow-auto state-inactive:hidden bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
       value={value}
     >
       {children}
@@ -51,13 +51,13 @@ export const MyTabs = ({
   ),
 }) => (
   <Tabs.Root
-    className='flex flex-col w-full h-full overflow-y-hidden'
+    className="flex flex-col w-full h-full overflow-y-hidden"
     defaultValue={defaultId}
-    activationMode='manual'
+    activationMode="manual"
   >
     <Tabs.List
-      className='flex flex-shrink-0 justify-start'
-      aria-label='Manage your account'
+      className="flex flex-shrink-0 justify-start"
+      aria-label="Manage your account"
     >
       {tabs.map(renderTrigger)}
     </Tabs.List>

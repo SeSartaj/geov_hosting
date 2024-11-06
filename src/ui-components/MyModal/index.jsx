@@ -16,13 +16,15 @@ export default function MyModal({
   headerClassName,
   onClose,
 }) {
-
-
   const [portalContainer, setPortalContainer] = useState(document.body);
 
   // Function to detect if fullscreen is active
   const checkFullscreen = () => {
-    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    const fullscreenElement =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
     setPortalContainer(fullscreenElement || document.body);
   };
 
@@ -43,23 +45,25 @@ export default function MyModal({
     };
   }, []);
 
-
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
-      <Dialog.Portal
-        container={portalContainer}
-      >
-        <Dialog.Overlay className='DialogOverlay' />
-        <Dialog.Content className='DialogContent dark:bg-gray-900 m-0 p-0'>
+      <Dialog.Portal container={portalContainer}>
+        <Dialog.Overlay className="DialogOverlay" />
+        <Dialog.Content
+          className="DialogContent dark:bg-gray-900 m-0 p-0"
+          disableFocusLock
+        >
           <div className={headerClassName}>
             {title && (
-              <Dialog.Title className={`text-lg font-semibold DialogTitle dark:text-gray-100 `}>
+              <Dialog.Title
+                className={`text-lg font-semibold DialogTitle dark:text-gray-100 `}
+              >
                 {title}
               </Dialog.Title>
             )}
             {description && (
-              <Dialog.Description className='DialogDescription dark:text-gray-200'>
+              <Dialog.Description className="DialogDescription dark:text-gray-200">
                 {description}
               </Dialog.Description>
             )}
@@ -67,10 +71,10 @@ export default function MyModal({
           {children}
           <Dialog.Close asChild>
             <MyButton
-              color='mute'
-              variant='icon'
+              color="mute"
+              variant="icon"
               style={{ position: 'absolute', top: 10, right: 10 }}
-              aria-label='Close'
+              aria-label="Close"
               onClick={onClose}
             >
               <BiX />

@@ -101,15 +101,15 @@ export default function PlotPopup({ popupInfo, onClose }) {
       closeButton={true}
       closeOnClick={true}
       onClose={onClose}
-      anchor='top'
+      anchor="top"
       style={{ width: 240 }}
-      className='plot-popup overflow-y-hidden max-h-96'
+      className="plot-popup overflow-y-hidden max-h-96"
     >
-      <div className='popup-header dark:text-gray-100 font-black text-[14px]'>
+      <div className="popup-header dark:text-gray-100 font-black text-[14px]">
         <h3>{plot.properties.name}</h3>
       </div>
       <hr />
-      <div className='popup-content '>
+      <div className="popup-content ">
         <LabelValueList
           itemClasses={' border-b border-gray-500 dark:border-gray-300'}
           list={[
@@ -125,15 +125,15 @@ export default function PlotPopup({ popupInfo, onClose }) {
               value: (
                 <>
                   <input
-                    type='range'
-                    min='0'
-                    max='52'
+                    type="range"
+                    min="0"
+                    max="52"
                     value={weeksBefore}
                     onChange={(e) => setWeeksBefore(e.target.value)}
                     style={{ direction: 'rtl' }}
-                    className='w-full'
+                    className="w-full"
                   />
-                  <span className='flex flex-row justify-between items-center'>
+                  <span className="flex flex-row justify-between items-center">
                     {new Date(
                       new Date().setDate(new Date().getDate() - weeksBefore * 7)
                     ).toLocaleDateString()}

@@ -16,7 +16,7 @@ export default function MarkerPopup() {
 
   return (
     <Popup
-      anchor='top'
+      anchor="top"
       longitude={Number(clickedMarker.location.lng)}
       latitude={clickedMarker.location.lat}
       onClose={() => setClickedMarker(null)}
@@ -34,12 +34,12 @@ export default function MarkerPopup() {
 function StationPopupContent({ marker }) {
   return (
     <div>
-      <div className='popup-header dark:text-gray-100 font-black text-[14px]'>
+      <div className="popup-header dark:text-gray-100 font-black text-[14px]">
         <h3>{marker.title}</h3>
         <BatteryIndicator level={marker.battery.percentage} />
       </div>
       <hr />
-      <div className='popup-content'>
+      <div className="popup-content">
         <LabelValueList
           list={[
             {
@@ -54,7 +54,7 @@ function StationPopupContent({ marker }) {
             { label: 'Crop', value: marker.crop },
           ]}
         />
-        <span className='lvi-label dark:text-gray-400'>PAW history: </span>
+        <span className="lvi-label dark:text-gray-400">PAW history: </span>
         <HumidityChart marker={marker} />
       </div>
     </div>
@@ -64,7 +64,7 @@ function StationPopupContent({ marker }) {
 function ForeCastPopupContent({ marker }) {
   return (
     <div>
-      <div className='popup-header'>
+      <div className="popup-header">
         <h3>{marker.title}</h3>
       </div>
       <hr />

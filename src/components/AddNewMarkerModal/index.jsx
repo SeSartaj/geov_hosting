@@ -24,8 +24,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
   const initialValues = {
     longitude: feature?.geometry?.coordinates[0],
     latitude: feature?.geometry?.coordinates[1],
-  }
-
+  };
 
   const handleClose = () => {
     deleteFeature();
@@ -38,9 +37,6 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
     handleClose();
   };
 
-
-
-
   return (
     <MyModal
       trigger={
@@ -48,19 +44,18 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
           <BiPin /> Add New Marker
         </MyButton>
       }
-      title='Add New Marker'
-      headerClassName='m-4'
-      description='add a new marker to the map'
+      title="Add New Marker"
+      headerClassName="m-4"
+      description="add a new marker to the map"
       open={open}
       setOpen={setOpen}
-      portalContainer={
-        mapRef?.current
-          ? mapRef?.current?.getMap().getContainer()
-          : document.body
-      }
       onClose={handleClose}
     >
-      <MarkerForm initialValues={initialValues} onSubmit={handleNewMarkerCreation} onCancel={handleClose}/>
+      <MarkerForm
+        initialValues={initialValues}
+        onSubmit={handleNewMarkerCreation}
+        onCancel={handleClose}
+      />
     </MyModal>
   );
 };

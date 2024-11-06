@@ -12,33 +12,37 @@ const EditMarkerModal = ({ marker, markerId }) => {
   const [open, setOpen] = useState(false);
   const { handleMarkerUpdate } = useContext(MarkersContext);
 
-
   const handleClose = () => {
     setOpen(false);
   };
 
   const handlerEditMarker = (data) => {
-    console.log("marker edited", data)
+    console.log('marker edited', data);
     return handleMarkerUpdate(data);
-  }
+  };
 
   return (
     <MyModal
       trigger={
-        <span >
+        <span>
           <MyButton variant="icon" className="rounded-full">
-            <BiPencil className='action-icon' />
+            <BiPencil className="action-icon" />
           </MyButton>
         </span>
       }
-      title='Edit Marker'
-      headerClassName='m-4'
+      title="Edit Marker"
+      headerClassName="m-4"
       description='make changes and click "save changes" to apply it'
       open={open}
       setOpen={setOpen}
       onClose={handleClose}
     >
-      <MarkerForm marker={marker} onSubmit={handlerEditMarker} onCancel={handleClose} submitButtonText="Save Changes"/>
+      <MarkerForm
+        marker={marker}
+        onSubmit={handlerEditMarker}
+        onCancel={handleClose}
+        submitButtonText="Save Changes"
+      />
     </MyModal>
   );
 };
