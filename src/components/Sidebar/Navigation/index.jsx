@@ -49,7 +49,7 @@ const Navigation = () => {
     return <LayerPanel />;
   }
 
-  return <MyTabs defaultId='markers' tabs={tabs} />;
+  return <MyTabs defaultId="markers" tabs={tabs} />;
 };
 
 export default Navigation;
