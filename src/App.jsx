@@ -22,7 +22,7 @@ function App() {
                 <PlotProvider>
                   <MarkersProvider>
                     <div>
-                      <h1>Dashboard</h1>
+                      <h1>AGVMap Dashboard</h1>
                     </div>
                     <div style={{ padding: 30, marginTop: 20 }}>
                       <ErrorBoundary>
