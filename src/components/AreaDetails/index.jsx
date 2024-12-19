@@ -21,7 +21,11 @@ export default function AreaDetails() {
 
   return (
     <>
-      <MyModal open={true} setOpen={() => setPickerData(null)}>
+      <MyModal
+        open={true}
+        setOpen={() => setPickerData(null)}
+        title="Area Details"
+      >
         <Tabs.Root
           className="flex flex-col w-full h-full overflow-y-hidden"
           defaultValue="point"

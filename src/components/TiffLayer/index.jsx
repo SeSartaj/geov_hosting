@@ -4,7 +4,6 @@ import useMapStore from '@/stores/mapStore';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import GeoTIFF from 'geotiff';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
-import useAccessToken from '@/hooks/useAccessToken';
 
 const evalscript = `//VERSION=3
 function setup() {
@@ -65,7 +64,7 @@ const renderGeoTIFFImage = async (image) => {
 
 export default function TiffLayer() {
   const { mapInstance } = useContext(MapContext);
-  const accessToken = useAccessToken()
+  const accessToken = useContext(AccessTokenContext);
   const [imageUrl, setImageUrl] = useState(null);
   const [geotiffImage, setGeotiffImage] = useState(null);
   const [coordinates, setCoordinates] = useState(null);
@@ -234,8 +233,8 @@ export default function TiffLayer() {
   return (
     <>
       {imageUrl && (
-        <Source type='image' url={imageUrl} coordinates={coordinates}>
-          <Layer id='tiff-layer' type='raster' />
+        <Source type="image" url={imageUrl} coordinates={coordinates}>
+          <Layer id="tiff-layer" type="raster" />
         </Source>
       )}
     </>

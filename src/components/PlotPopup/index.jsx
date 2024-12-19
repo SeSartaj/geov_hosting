@@ -7,14 +7,15 @@ import NdviChart from '../PlotNDVIChart';
 import { useContext, useEffect, useState } from 'react';
 import { PlotContext } from '@/contexts/PlotContext';
 import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
-import useAccessToken from '@/hooks/useAccessToken';
+
 import { MapContext } from '@/contexts/MapContext';
+import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { mapInstance } = useContext(MapContext);
   const { showPlots, clickedPlot } = useContext(PlotContext);
   const [weeksBefore, setWeeksBefore] = useState(0);
-  const accessToken = useAccessToken();
+  const accessToken = useContext(AccessTokenContext);
   const { plot } = popupInfo;
 
   const handleNDVIImageDownload = async () => {

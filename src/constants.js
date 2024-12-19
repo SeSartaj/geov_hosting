@@ -30,9 +30,9 @@ export const API_URL = 'https://agviewer.com/api/dashboard/';
 export const API_URL2 = 'https://agviewer.com/api';
 
 export const layerOptions = [
-  { value: 'NDVI', label: 'NDVI' },
+  { value: '3_NDVI', label: 'NDVI' },
   { value: 'NDVI_RAW', label: 'NDVI_RAW' },
   { value: 'AGRICULTURE', label: 'AGRICULTURE' },
-  { value: 'FALSE-COLOR', label: 'False color (vegetation) ' },
+  { value: '2_FALSE_COLOR', label: 'False color (vegetation) ' },
   { value: 'MOISTURE-INDEX', label: 'Moisture Index' },
 ];

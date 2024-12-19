@@ -22,6 +22,7 @@ import NDVILayer from '../NDVILayer';
 import PickerControl from '../PickerControl';
 import useMapStore from '@/stores/mapStore';
 import ColorLegend from '../ColorLegend';
+import { AccessTokenProvider } from '@/contexts/AccessTokenProvider';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -38,28 +39,30 @@ export default function MyMap() {
   // when the raster layer is toggled off and on, it should render beneath the plots layer
 
   return (
-    <Map
-      id="myMap"
-      ref={mapRef}
-      initialViewState={initialViewState}
-      style={{ width: '100%', height: '80vh' }}
-      mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}
-      attributionControl={false}
-      reuseMaps
-      preserveDrawingBuffer={true}
-      // cursor={cursor}
-    >
-      <FullscreenControl position="top-right" />
-      <PickerControl />
-      <NDVILayer />
-      <Sidebar />
-      {viewMode !== 'PICKER' && <DrawPolygonControl />}
-      <PAWStatusPieChart />
-      <Markers />
-      <MarkerPopup />
-      <Plots />
-      <StatusBar />
-      {viewMode === 'PICKER' && <ColorLegend />}
-    </Map>
+    <AccessTokenProvider>
+      <Map
+        id="myMap"
+        ref={mapRef}
+        initialViewState={initialViewState}
+        style={{ width: '100%', height: '80vh' }}
+        mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}
+        attributionControl={false}
+        reuseMaps
+        preserveDrawingBuffer={true}
+        // cursor={cursor}
+      >
+        <FullscreenControl position="top-right" />
+        <PickerControl />
+        <NDVILayer />
+        <Sidebar />
+        {viewMode !== 'PICKER' && <DrawPolygonControl />}
+        <PAWStatusPieChart />
+        <Markers />
+        <MarkerPopup />
+        <Plots />
+        <StatusBar />
+        {viewMode === 'PICKER' && <ColorLegend />}
+      </Map>
+    </AccessTokenProvider>
   );
 }

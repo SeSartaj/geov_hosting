@@ -4,12 +4,13 @@ import { Source, Layer } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
 import { useMap } from 'react-map-gl/maplibre';
 import PlotPopup from '../PlotPopup';
-import useAccessToken from '@/hooks/useAccessToken';
+
 import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
 import { bbox } from '@turf/turf';
 import debounce from '@/utils/debounce';
 import isEmptyObject from '@/utils/isEmptyObject';
 import useMapStore from '@/stores/mapStore';
+import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 
 export default function Plots() {
   const {
@@ -24,7 +25,7 @@ export default function Plots() {
   const setCursor = useMapStore((state) => state.setCursor);
   const resetCursor = useMapStore((state) => state.resetCursor);
   const { drawRef, mapRef } = useContext(MapContext);
-  const accessToken = useAccessToken();
+  const accessToken = useContext(AccessTokenContext);
   const map = mapRef?.current?.getMap();
   const viewMode = useMapStore((state) => state.viewMode);
   const addLoadingNDVIImage = useMapStore((state) => state.addLoadingNDVIImage);

@@ -8,11 +8,12 @@ import Input from '@/ui-components/Input';
 import { Calendar } from '@adobe/react-spectrum';
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
 import { parseDate } from '@internationalized/date';
-import useAccessToken from '@/hooks/useAccessToken';
+
 import { layerOptions } from '@/constants';
 import useMapStore from '@/stores/mapStore';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/style.css';
+import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
@@ -30,7 +31,7 @@ export default function LayerPanel() {
   const { mapRef } = useContext(MapContext);
   const mapInstance = mapRef.current.getMap();
   const [passDates, setPassDates] = useState([]);
-  const accessToken = useAccessToken();
+  const accessToken = useContext(AccessTokenContext);
 
   // Function to disable all days except those in the availableDays array
   const isDayDisabled = (date) => {
@@ -82,8 +83,8 @@ export default function LayerPanel() {
           console.log('setting date range', dates[0]);
           // set daterange start and end to the first most recent date in the dates
           setDateRange({
-            start: parseDate(dates[0].split('T')[0]),
-            end: parseDate(dates[0].split('T')[0]),
+            start: dates[0].toISOString().split('T')[0],
+            end: dates[0].toISOString().split('T')[0],
           });
         }
       })

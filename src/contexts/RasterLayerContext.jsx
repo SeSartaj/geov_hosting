@@ -12,15 +12,15 @@ export function RasterLayerProvider({ children }) {
   const [opacity, setOpacity] = useState(100);
   const [isDetailActive, setIsDetailActive] = useState(false);
   const [datesLoading, setDatesLoading] = useState(false);
-  // const [dateRange, setDateRange] = useState({
-  //   start: parseDate(
-  //     new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-  //       .toISOString()
-  //       .split('T')[0]
-  //   ),
-  //   end: parseDate(new Date().toISOString().split('T')[0]),
-  // });
-  const [dateRange, setDateRange] = useState({ start: null, end: null });
+  const [dateRange, setDateRange] = useState({  
+    start: parseDate(
+      new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0]
+    ),
+    end: parseDate(new Date().toISOString().split('T')[0]),
+  });
+  // const [dateRange, setDateRange] = useState({ start: null, end: null });
   const [clickedData, setClickedData] = useState(null);
 
   const handleOpacityChange = (e) => {

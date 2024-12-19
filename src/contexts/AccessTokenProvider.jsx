@@ -5,6 +5,7 @@ const clientId = import.meta.env.VITE_SENTINAL_HUB_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_SENTINAL_HUB_CLIENT_SECRET;
 
 export const AccessTokenContext = createContext(null);
+
 export function AccessTokenProvider({ children }) {
   const [accessToken, setAccessToken] = useState(undefined);
   const [expiresIn, setExpiresIn] = useState(null);

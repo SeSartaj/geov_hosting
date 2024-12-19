@@ -49,6 +49,7 @@ const MyReactSelect = forwardRef(function MyReactSelect(
       ...provided,
       backgroundColor: isDarkMode ? '#1f2937' : '#FFFFFF', // gray-800 for dark mode, white for light mode
       color: isDarkMode ? '#FFFFFF' : '#111827', // white text for dark mode, gray-900 for light mode
+      'z-index': 100,
     }),
     option: (provided, state) => ({
       ...provided,

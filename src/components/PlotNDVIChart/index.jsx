@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { fetchMeanNDVI, fetchMeanNDVIForPoint } from '@/api/sentinalHubApi';
 import Spinner from '@/ui-components/Spinner';
-import useAccessToken from '@/hooks/useAccessToken';
+import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 
 function parseNDVIData(data) {
   if (!data) return;
@@ -20,7 +20,7 @@ function parseNDVIData(data) {
 const NdviChart = ({ plot, point }) => {
   const [ndviData, setNdviData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const accessToken = useAccessToken();
+  const accessToken = useContext(AccessTokenContext);
 
   const ndviChartOptions = {
     chart: {
