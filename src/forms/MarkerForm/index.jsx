@@ -234,7 +234,7 @@ export default function MarkerForm({
       <FormErrorMessage error={formError} />
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-        <MyButton variant="text" onClick={onCancel}>
+        <MyButton color="mute" onClick={onCancel}>
           cancel
         </MyButton>
         <MyButton type="submit" disabled={submitting} color="primary">

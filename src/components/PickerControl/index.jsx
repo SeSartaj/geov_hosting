@@ -150,7 +150,8 @@ function PickerControl() {
       const { lng, lat } = event.lngLat;
       setCursorCords([lng, lat]);
     };
-    if (mapInstance && viewMode === 'PICKER') {
+    // if (mapInstance && viewMode === 'PICKER') {
+    if (mapInstance) {
       mapInstance.on('mousemove', handleMouseMove);
     }
     // Cleanup the event listener when the component unmounts

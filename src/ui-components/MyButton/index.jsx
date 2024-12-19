@@ -20,9 +20,7 @@ const MyButton = forwardRef(function MyButton(
       ref={ref}
       className={`my-button ${color} ${size} ${variant} ${
         className ? className : ''
-      } dark:text-gray-100 ${
-        variant == 'text' ? 'bg-gray-100 dark:bg-gray-800' : ''
-      }`}
+      } `}
       disabled={loading}
       {...rest}
     >

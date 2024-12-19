@@ -13,31 +13,29 @@ import ConfirmContextProvider from './contexts/ConfirmContextProvider';
 import DeleteDialog from './ui-components/DeleteDialog';
 
 function App() {
-
-
   return (
     <TooltipPrimitive.Provider delayDuration={200}>
       <Provider theme={defaultTheme}>
         <AccessTokenProvider>
           <SettingsProvider>
             <ConfirmContextProvider>
-            <MapProvider>
-              <RasterLayerProvider>
-                <PlotProvider>
-                  <MarkersProvider>
-                    <div>
-                      <h1>Dashboard</h1>
-                    </div>
-                    <div style={{ padding: 30, marginTop: 20 }}>
-                      <ErrorBoundary >
-                        <MyMap />
-                        <DeleteDialog />
-                      </ErrorBoundary>
-                    </div>
-                  </MarkersProvider>
-                </PlotProvider>
-              </RasterLayerProvider>
-            </MapProvider>
+              <MapProvider>
+                <RasterLayerProvider>
+                  <PlotProvider>
+                    <MarkersProvider>
+                      <div>
+                        <h1>Dashboard</h1>
+                      </div>
+                      <div style={{ padding: 30, marginTop: 20 }}>
+                        <ErrorBoundary>
+                          <MyMap />
+                          <DeleteDialog />
+                        </ErrorBoundary>
+                      </div>
+                    </MarkersProvider>
+                  </PlotProvider>
+                </RasterLayerProvider>
+              </MapProvider>
             </ConfirmContextProvider>
           </SettingsProvider>
         </AccessTokenProvider>

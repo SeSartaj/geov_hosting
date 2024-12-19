@@ -18,11 +18,11 @@ export default function MapStyleSwitcher() {
         <MyButton
           data-id={o.id}
           key={o.id}
-          className={
-            o.id === settings.basemap.id
-              ? 'brightness-[0.8]  w-full sm:w-auto '
-              : 'w-full sm:w-auto'
-          }
+          variant="fill"
+          color="mute"
+          className={`w-full sm:w-auto ${
+            o.id === settings.basemap.id ? 'brightness-[0.8]' : ''
+          }`}
           onClick={handleStyleChange}
           disabled={o.id === settings.basemap.id}
           size="md"

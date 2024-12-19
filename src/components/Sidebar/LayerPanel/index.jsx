@@ -186,6 +186,7 @@ export default function LayerPanel() {
                 'dark:text-white bg-gray-200 dark:bg-gray-600 rounded-full ',
               selected: 'bg-green-400 dark:bg-green-600',
               today: 'dark:text-red',
+              caption_label: 'rdp-caption_label z-0',
             }}
           />
         </div>

@@ -5,9 +5,8 @@ const clientId = import.meta.env.VITE_SENTINAL_HUB_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_SENTINAL_HUB_CLIENT_SECRET;
 
 export const AccessTokenContext = createContext(null);
-
 export function AccessTokenProvider({ children }) {
-  const [accessToken, setAccessToken] = useState(null);
+  const [accessToken, setAccessToken] = useState(undefined);
   const [expiresIn, setExpiresIn] = useState(null);
 
   useEffect(() => {
@@ -19,19 +18,19 @@ export function AccessTokenProvider({ children }) {
         setExpiresIn(Date.now() + data.expires_in * 1000);
       } catch (error) {
         console.error('Failed to fetch access token', error);
+        setAccessToken(null);
+        setExpiresIn(null);
       }
     }
 
-    // Fetch the token only if it's not already available
     if (!accessToken) {
       getToken();
     }
 
-    // Set up the token refresh mechanism
     if (expiresIn) {
       const timeoutId = setTimeout(() => {
         getToken();
-      }, expiresIn - Date.now() - 60000); // Refresh 1 minute before expiration
+      }, expiresIn - Date.now() - 60000);
 
       return () => clearTimeout(timeoutId);
     }
