@@ -51,6 +51,13 @@ export default function LayerPanel() {
     if (!isVisible || mapInstance.getZoom() < 9) {
       setPassDates([]);
     }
+
+    if (rasterLayer?.url) {
+      setPassDates([new Date('2024-11-23')]);
+      setDatesLoading(false);
+      return;
+    }
+
     const bounds = mapInstance.getBounds();
     const bbox = [
       bounds.getWest(),
@@ -60,31 +67,15 @@ export default function LayerPanel() {
     ];
 
     getSatellitePassDates({ aoi: bbox, accessToken })
-      .then((d) => {
-        // const data = await response.json();
-        const data = {
-          features: [
-            { properties: { datetime: '2024-09-05T00:00:00Z' } },
-            { properties: { datetime: '2024-09-09T00:00:00Z' } },
-            { properties: { datetime: '2024-09-22T00:00:00Z' } },
-            { properties: { datetime: '2024-10-03T00:00:00Z' } },
-            { properties: { datetime: '2024-11-01T00:00:00Z' } },
-            { properties: { datetime: '2024-11-05T00:00:00Z' } },
-          ],
-        };
-        // Extract dates from the response and sort in descending order
-        const dates = data.features
-          .map((feature) => new Date(feature.properties.datetime))
-          .sort((a, b) => new Date(b) - new Date(a));
-
+      .then((dates) => {
         console.log('getting passDates', dates);
         setPassDates(dates);
         if (dates.length > 0) {
           console.log('setting date range', dates[0]);
           // set daterange start and end to the first most recent date in the dates
           setDateRange({
-            start: dates[0].toISOString().split('T')[0],
-            end: dates[0].toISOString().split('T')[0],
+            start: dates[0],
+            end: dates[0],
           });
         }
       })
@@ -119,6 +110,7 @@ export default function LayerPanel() {
   useEffect(() => {
     handlePassDates();
   }, []);
+
   // Re-render the Calendar whenever passDates changes
   useEffect(() => {
     // This will trigger a re-render of the Calendar

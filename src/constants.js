@@ -35,4 +35,9 @@ export const layerOptions = [
   { value: 'AGRICULTURE', label: 'AGRICULTURE' },
   { value: '2_FALSE_COLOR', label: 'False color (vegetation) ' },
   { value: 'MOISTURE-INDEX', label: 'Moisture Index' },
+  {
+    value: 'ET',
+    label: 'Evapotranspiration',
+    url: 'http://54.90.109.220:8080/geoserver/ne/wms?service=WMS&version=1.1.0&request=GetMap&layers=ne%3Aet_data&bbox={bbox-epsg-3857}&width=512&height=512&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE',
+  },
 ];
