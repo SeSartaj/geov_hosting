@@ -80,12 +80,12 @@ const ColorLegend = () => {
   const item = items.find((i) => i.color == pixelColor);
   console.log('item', item);
   return (
-    <div className='legend'>
+    <div className="legend">
       <h4>{rasterLayer?.value}</h4>
       {items.map((item, index) => (
-        <div key={index} className='legend-item'>
+        <div key={index} className="legend-item">
           <span
-            className='legend-color'
+            className="legend-color"
             style={{ backgroundColor: item.color }}
           ></span>
           <span>{item.label}</span>

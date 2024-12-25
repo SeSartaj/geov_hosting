@@ -1,0 +1,19 @@
+.maplibregl-ctrl-detailview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.maplibregl-ctrl-detailview .my-ctrl-icon {
+  font-size: 30px;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  color: black;
+}
+
+.maplibregl-ctrl-detailview.active,
+.maplibregl-ctrl-detailview.active:hover {
+  background-color: rgb(0 0 0/6%);
+}

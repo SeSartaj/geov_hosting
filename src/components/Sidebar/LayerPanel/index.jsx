@@ -1,13 +1,10 @@
 import { useState, useContext, useEffect, useCallback } from 'react';
 import { MapContext } from '../../../contexts/MapContext';
 import MyReactSelect from '@/ui-components/MyReactSelect';
-import FormGroup from '@/ui-components/FormGroup';
 import ToggleButton from '@/ui-components/toggleButton';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import Input from '@/ui-components/Input';
-import { Calendar } from '@adobe/react-spectrum';
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
-import { parseDate } from '@internationalized/date';
 
 import { layerOptions } from '@/constants';
 import useMapStore from '@/stores/mapStore';
@@ -20,11 +17,16 @@ import { Popover } from '@/ui-components/popover';
 import { CalenderIcon } from '@/icons/calender';
 import { maxWidth } from '@/constants/index';
 import Card from '@/ui-components/Card';
+import { PlotContext } from '@/contexts/PlotContext';
 
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
     useContext(RasterLayerContext);
+<<<<<<< HEAD
   const [selectedDate, setSelectedDate] = useState(dateRange?.start);
+=======
+  const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
+>>>>>>> bf2b231 (update design of map)
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
   const viewMode = useMapStore((state) => state.viewMode);
@@ -145,9 +147,19 @@ export default function LayerPanel() {
     console.log('passDates', passDates);
   }, [passDates]);
 
-  const _onSelectSentinel = useCallback((e) => {
-    console.log('_onSelectSentinel', e);
-  }, []);
+  const _onSelectSentinel = useCallback(
+    (e) => {
+      console.log('_onSelectSentinel', e);
+      const value = e.target?.value;
+      if (value === 'plot') {
+        toggleNDVILayersVisibility(true);
+      }
+      if (value === 'map') {
+        toggleNDVILayersVisibility(false);
+      }
+    },
+    [toggleNDVILayersVisibility]
+  );
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -158,7 +170,7 @@ export default function LayerPanel() {
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup
-              defaultValue="all"
+              defaultValue={showNdviLayer ? 'plot' : 'map'}
               className="flex items-center"
               onClick={_onSelectSentinel}
             >
@@ -214,47 +226,6 @@ export default function LayerPanel() {
             onChange={(l) => setRasterLayer(l)}
             isClearable={false}
           />
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 rounded-md bg-zinc-50 p-2">
-        <div className="flex items-center justify-between">
-          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
-            ETα
-          </h4>
-          <div className="flex items-center space-x-2">
-            <RadioGroup defaultValue="all" className="flex items-center">
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="plot" id="plot" />
-                <Label htmlFor="plot">Plot</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="map" id="map" />
-                <Label htmlFor="map">Map</Label>
-              </div>
-            </RadioGroup>
-            <ToggleButton
-              onTooltip="hide layer"
-              offTooltip="show layer"
-              initialState={isVisible}
-              onToggle={setIsVisible}
-            />
-          </div>
-        </div>
-        <div className="flex items-center gap-2 justify-between">
-          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
-            Opacity
-          </h4>
-          <Popover
-            trigger={
-              <div className="border border-solid border-gray-700 cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-center">
-                <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
-                  {rasterOpacity}%
-                </h5>
-              </div>
-            }
-          >
-            <Input type="range" min="0" max="100" className="w-full" />
-          </Popover>
         </div>
       </div>
       <div className="w-full flex flex-col gap-2.5 mt-4">

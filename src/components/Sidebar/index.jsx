@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { BiCollapseHorizontal, BiExpandHorizontal } from 'react-icons/bi';
+import { SidebarCloseIcon } from 'lucide-react';
 import './styles.css';
 import MyButton from '@/ui-components/MyButton';
 import useMapStore from '@/stores/mapStore';
 import Card from '@/ui-components/Card';
 import MarkerPanel from '../MarkerPanel';
-import { SidebarCloseIcon } from 'lucide-react';
 import LayerPanel from './LayerPanel';
 import { maxWidth } from '@/constants/index';
 
@@ -28,7 +27,7 @@ export default function Navigation() {
 
   return (
     <Card
-      className={`sidebar sidebar-expanded rounded-sm bg-white dark:bg-gray-900 ${maxWidth}`}
+      className={`sidebar sidebar-expanded rounded-sm bg-white dark:bg-gray-900 h-[calc(100%-32px)] ${maxWidth}`}
       header={
         <div className="flex justify-between items-center mb-1">
           <h1 className="text-lg pr-2 text-black dark:text-white">

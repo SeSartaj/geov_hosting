@@ -1,9 +1,32 @@
 import React from 'react';
-import { BiDroplet, BiSolidDroplet } from 'react-icons/bi';
 import { Marker } from 'react-map-gl/maplibre';
-import { getStationMarkerColor } from '../../utils/getStationMarkerColor';
-import { FaDroplet } from 'react-icons/fa6';
-import { PiDrop, PiDropFill } from 'react-icons/pi';
+import { GPSIcon } from '@/icons/gps';
+import { GPSBlueIcon } from '@/icons/gps-blue';
+
+const GPSColors = (paw_status) => {
+  switch (paw_status) {
+    case 'SEVERE_STRESS':
+      return {
+        mainColor: '#E03052',
+        secondaryColor: '#F75979',
+      };
+    case 'STRESS_START':
+      return {
+        mainColor: '#FFA500',
+        secondaryColor: '#FFD700',
+      };
+    case 'OPTIMAL':
+      return {
+        mainColor: '#20A35F',
+        secondaryColor: '#5CCC91',
+      };
+    case 'EXCESS_WATER':
+      return {
+        mainColor: '#00BFFF',
+        secondaryColor: '#87CEFA',
+      };
+  }
+};
 
 const StationMarker = React.memo(function StationMarker({
   marker,
@@ -18,16 +41,22 @@ const StationMarker = React.memo(function StationMarker({
     }
   };
 
+  const pawStatus = marker?.paw_status;
+
   return (
     <Marker
-      className='map-marker'
-      key={marker.id}
+      className="map-marker"
+      key={marker?.id}
       longitude={longitude}
       latitude={latitude}
-      color={marker.color}
+      color={marker?.color}
       onClick={handleClick}
     >
-      <PiDropFill size={32} color={getStationMarkerColor(marker.paw_status)} />
+      {pawStatus === 'EXCESS_WATER' ? (
+        <GPSBlueIcon />
+      ) : (
+        <GPSIcon colors={GPSColors(pawStatus)} />
+      )}
     </Marker>
   );
 });

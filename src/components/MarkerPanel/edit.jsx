@@ -7,7 +7,7 @@ import MyModal from '@/ui-components/MyModal';
 import Card from '@/ui-components/Card';
 import Tooltip from '@/ui-components/Tooltip';
 
-const EditMarkerModal = ({ marker, markerId }) => {
+const EditMarkerModal = ({ marker, markerId, buttonClassName }) => {
   const [open, setOpen] = useState(false);
   const { handleMarkerUpdate } = useContext(MarkersContext);
 
@@ -22,7 +22,7 @@ const EditMarkerModal = ({ marker, markerId }) => {
   return (
     <MyModal
       trigger={
-        <MyButton variant="icon" className="rounded-full">
+        <MyButton variant="icon" className={`rounded-full ${buttonClassName}`}>
           <Tooltip text="click to edit the marker">
             <BiPencil className="w-5 h-5 action-icon" />
           </Tooltip>

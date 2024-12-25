@@ -17,13 +17,6 @@ export const BASEMAP_OPTIONS = [
       import.meta.env.VITE_MAPTILER_ACCESS_KEY
     }`,
   },
-  {
-    id: 'datavis',
-    name: 'DataVis',
-    url: `https://api.maptiler.com/maps/dataviz/style.json?key=${
-      import.meta.env.VITE_MAPTILER_ACCESS_KEY
-    }`,
-  },
 ];
 
 export const API_URL = 'https://agviewer.com/api/dashboard/';

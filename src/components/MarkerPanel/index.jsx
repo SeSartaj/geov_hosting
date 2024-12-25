@@ -75,7 +75,7 @@ export default function MarkerPanel() {
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup
-              defaultValue="all"
+              defaultValue=""
               className="flex items-center gap-2"
               onClick={_onSelectRadioGroup}
             >

@@ -23,6 +23,7 @@ import PickerControl from '../PickerControl';
 import useMapStore from '@/stores/mapStore';
 import ColorLegend from '../ColorLegend';
 import { AccessTokenProvider } from '@/contexts/AccessTokenProvider';
+import MapControl from './map-control';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -51,6 +52,7 @@ export default function MyMap() {
         preserveDrawingBuffer={true}
         // cursor={cursor}
       >
+        <MapControl />
         <FullscreenControl position="top-right" />
         <PickerControl />
         <NDVILayer />

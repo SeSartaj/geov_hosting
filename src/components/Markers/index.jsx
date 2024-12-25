@@ -14,10 +14,10 @@ export default function Markers() {
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [clusters, setClusters] = useState([]);
   const zoomThreshold = 5;
-  const transformedMarker = markersData.map(m => transformMarker(m));
+  const transformedMarker = markersData.map((m) => transformMarker(m));
 
   const handleMarkerClick = (e, marker) => {
-    // 
+    //
     e.originalEvent.stopPropagation();
     setClickedMarker(marker);
   };
@@ -111,9 +111,9 @@ export default function Markers() {
                     zoom: expansionZoom,
                   });
                 }}
-                className='cluster-marker'
+                className="cluster-marker"
               >
-                <div className='cluster-marker-inner'>{pointCount}</div>
+                <div className="cluster-marker-inner">{pointCount}</div>
               </Marker>
             );
           }
@@ -130,18 +130,17 @@ export default function Markers() {
         })}
 
       {visibleMarkers.length > 0 &&
-        visibleMarkers.map(( marker) => {
+        visibleMarkers.map((marker) => {
           return (
-          <MyMarker
-            key={marker.id}
-            longitude={marker.longitude}
-            latitude={marker.latitude}
-            marker={marker}
-            onClick={(e) => handleMarkerClick(e, marker)}
-          />
-          )
-        }
-        )}
+            <MyMarker
+              key={marker.id}
+              longitude={marker.longitude}
+              latitude={marker.latitude}
+              marker={marker}
+              onClick={(e) => handleMarkerClick(e, marker)}
+            />
+          );
+        })}
     </>
   );
 }
