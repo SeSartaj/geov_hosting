@@ -7,7 +7,8 @@ import MyModal from '@/ui-components/MyModal';
 import Card from '@/ui-components/Card';
 import Tooltip from '@/ui-components/Tooltip';
 
-const EditMarkerModal = ({ marker, markerId, buttonClassName }) => {
+const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
+const EditMarkerModal = ({ marker, markerId }) => {
   const [open, setOpen] = useState(false);
   const { handleMarkerUpdate } = useContext(MarkersContext);
 
