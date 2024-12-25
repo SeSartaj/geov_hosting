@@ -288,7 +288,6 @@ export async function getSatellitePassDates({
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-
     const data = await response.json();
     console.log('data returned from catalog', data);
     // Extract dates from the response and sort in descending order

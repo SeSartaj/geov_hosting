@@ -44,14 +44,18 @@ const NDVILayer = () => {
   const rasterLayer = useMapStore((state) => state.rasterLayer);
 
   const [url, setUrl] = useState(
-    getLayerURL({ layer: rasterLayer.value, dateRange: dateRange })
+    getLayerURL({ layer: rasterLayer.value, dateRange: { ...dateRange } })
   );
   const [beforeId, setBeforeId] = useState(null);
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const { current: mapInstance } = useMap();
   // Update URL when layer or dateRange changes
   useEffect(() => {
-    const u = getLayerURL({ layer: rasterLayer.value, dateRange: dateRange });
+    console.log('dateRange in useEffect layerUrl', dateRange);
+    const u = getLayerURL({
+      layer: rasterLayer.value,
+      dateRange: { ...dateRange },
+    });
     setUrl(u);
   }, [rasterLayer, dateRange]);
 

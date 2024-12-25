@@ -18,6 +18,7 @@ import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
     useContext(RasterLayerContext);
+  const [selectedDate, setSelectedDate] = useState(dateRange?.start);
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
   const viewMode = useMapStore((state) => state.viewMode);
@@ -73,6 +74,7 @@ export default function LayerPanel() {
         if (dates.length > 0) {
           console.log('setting date range', dates[0]);
           // set daterange start and end to the first most recent date in the dates
+          setSelectedDate(dates[0]);
           setDateRange({
             start: dates[0],
             end: dates[0],
@@ -165,10 +167,15 @@ export default function LayerPanel() {
         <div className="p-4">
           <DayPicker
             mode="single"
-            selected={dateRange.start}
+            selected={selectedDate}
             onSelect={(date) => {
               console.log('onDayClick', date);
-              setDateRange({ start: date, end: date });
+              // Convert the selected date to UTC by using Date.UTC and set it in state
+              const utcDate = new Date(
+                Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+              );
+              setSelectedDate(utcDate);
+              setDateRange({ start: utcDate, end: utcDate });
             }}
             modifiers={{
               disabled: isDayDisabled, // Pass the function here
@@ -181,8 +188,10 @@ export default function LayerPanel() {
               today: 'dark:text-red',
               caption_label: 'rdp-caption_label z-0',
             }}
+            footer={selectedDate ? `Selected: ${selectedDate}` : 'Pick a day.'}
           />
         </div>
+        <div>{/* dateRange: {dateRange.start} - {dateRange.end} */}</div>
       </ul>
     </div>
   );
