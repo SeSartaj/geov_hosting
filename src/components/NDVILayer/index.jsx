@@ -12,7 +12,8 @@ const WMTS_ID = import.meta.env.VITE_SENTINAL_HUB_WMTS_ID;
 export const BASE_URL = `https://services.sentinel-hub.com/ogc/wmts/${WMTS_ID}?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}&FORMAT=image/png`;
 
 function getLayerURL({ layer, dateRange }) {
-  if (!layer || !dateRange) {
+  console.log('dateRange', dateRange);
+  if (!layer || !dateRange || !dateRange?.start) {
     return null;
   }
 
@@ -29,7 +30,7 @@ function getLayerURL({ layer, dateRange }) {
   const layerOption = layerOptions.find((l) => l.value === layer);
 
   if (layerOption && layerOption?.url) {
-    const url = `${layerOption.url}&TIME=2024-11-23`;
+    const url = `${layerOption.url}&TIME=${TIME}`;
     return url;
   }
   const url = `${BASE_URL}&LAYER=${layer}&TIME=${TIME}`;

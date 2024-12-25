@@ -39,5 +39,6 @@ export const layerOptions = [
     value: 'ET',
     label: 'Evapotranspiration',
     url: 'https://d27s6pvwcjpmsu.cloudfront.net/geoserver/ne/wms?service=WMS&version=1.1.0&request=GetMap&layers=ne%3Aet_data&bbox={bbox-epsg-3857}&width=512&height=512&srs=EPSG%3A3857&styles=&format=image%2Fpng&transparent=TRUE',
+    passDates: ['2024-11-23', '2024-12-07'],
   },
 ];

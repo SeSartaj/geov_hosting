@@ -14,6 +14,9 @@ import useMapStore from '@/stores/mapStore';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/style.css';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
+import MyButton from '@/ui-components/MyButton';
+import { BiRefresh } from 'react-icons/bi';
+import Tooltip from '@/ui-components/Tooltip';
 
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
@@ -49,42 +52,57 @@ export default function LayerPanel() {
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
     setDatesLoading(true);
+
     if (!isVisible || mapInstance.getZoom() < 9) {
       setPassDates([]);
     }
 
-    if (rasterLayer?.url) {
-      setPassDates([new Date('2024-11-23')]);
-      setDatesLoading(false);
-      return;
-    }
-
-    const bounds = mapInstance.getBounds();
-    const bbox = [
-      bounds.getWest(),
-      bounds.getSouth(),
-      bounds.getEast(),
-      bounds.getNorth(),
-    ];
-
-    getSatellitePassDates({ aoi: bbox, accessToken })
-      .then((dates) => {
-        console.log('getting passDates', dates);
-        setPassDates(dates);
-        if (dates.length > 0) {
-          console.log('setting date range', dates[0]);
-          // set daterange start and end to the first most recent date in the dates
-          setSelectedDate(dates[0]);
-          setDateRange({
-            start: dates[0],
-            end: dates[0],
-          });
-        }
-      })
-      .finally(() => {
-        setDatesLoading(false);
+    if (rasterLayer?.passDates) {
+      console.log('Date not found in passDates');
+      setDateRange({
+        start: new Date(rasterLayer?.passDates[0]),
+        end: new Date(rasterLayer?.passDates[0]),
       });
+      const d = rasterLayer.passDates.map((d) => new Date(d));
+      console.log('dddd', d);
+      setPassDates(d);
+
+      setDatesLoading(false);
+    } else {
+      const bounds = mapInstance.getBounds();
+      const bbox = [
+        bounds.getWest(),
+        bounds.getSouth(),
+        bounds.getEast(),
+        bounds.getNorth(),
+      ];
+
+      getSatellitePassDates({ aoi: bbox, accessToken })
+        .then((dates) => {
+          console.log('getting passDates', dates);
+          setPassDates(dates);
+          if (dates.length > 0) {
+            console.log('setting date range', dates[0]);
+            // set daterange start and end to the first most recent date in the dates
+            setSelectedDate(dates[0]);
+            setDateRange({
+              start: dates[0],
+              end: dates[0],
+            });
+          } else {
+            // set date range to last 10 days
+            setDateRange({
+              start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+              end: new Date(),
+            });
+          }
+        })
+        .finally(() => {
+          setDatesLoading(false);
+        });
+    }
   }, [
+    rasterLayer,
     mapInstance,
     setPassDates,
     isVisible,
@@ -115,7 +133,6 @@ export default function LayerPanel() {
 
   // Re-render the Calendar whenever passDates changes
   useEffect(() => {
-    // This will trigger a re-render of the Calendar
     console.log('passDates', passDates);
   }, [passDates]);
 
@@ -170,12 +187,14 @@ export default function LayerPanel() {
             selected={selectedDate}
             onSelect={(date) => {
               console.log('onDayClick', date);
-              // Convert the selected date to UTC by using Date.UTC and set it in state
-              const utcDate = new Date(
-                Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-              );
-              setSelectedDate(utcDate);
-              setDateRange({ start: utcDate, end: utcDate });
+              if (date) {
+                // Convert the selected date to UTC by using Date.UTC and set it in state
+                const utcDate = new Date(
+                  Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                );
+                setSelectedDate(utcDate);
+                setDateRange({ start: utcDate, end: utcDate });
+              }
             }}
             modifiers={{
               disabled: isDayDisabled, // Pass the function here
