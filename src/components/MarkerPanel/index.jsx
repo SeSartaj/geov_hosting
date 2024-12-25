@@ -66,6 +66,8 @@ export default function MarkerPanel() {
     [markerFilters, setMarkerFilters]
   );
 
+  console.log('showNdviLayer: ', showNdviLayer);
+
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex flex-col gap-2 rounded-md bg-zinc-50 p-2">
@@ -135,7 +137,7 @@ export default function MarkerPanel() {
           <ToggleButton
             onTooltip="hide plots"
             offTooltip="show plots"
-            initialState={showNdviLayer}
+            initialState={!showNdviLayer}
             onToggle={toggleNDVILayersVisibility}
           />
         </div>
