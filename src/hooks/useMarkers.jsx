@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { createMarker, getMarkers, updateMarker } from '../api/markerApi';
+import {
+  createMarker,
+  deleteMarker,
+  getMarkers,
+  updateMarker,
+} from '../api/markerApi';
 import { transformMarker } from '../utils/transformMarker';
 const EMPTY_FILTERS = {
   type: '',
@@ -15,17 +20,14 @@ export const useMarkers = () => {
   const [loading, setLoading] = useState(false);
   const [markerFilters, setMarkerFilters] = useState(EMPTY_FILTERS);
 
-
   const filterMarkers = (markers, filters = markerFilters) => {
-    console.log('markers are ', markers)
-    
+    console.log('markers are ', markers);
+
     setLoading(true);
-    let filteredMarkers = markers
+    let filteredMarkers = markers;
 
     if (filters.type) {
-      filteredMarkers = filteredMarkers.filter(
-        (m) => m.type === filters.type
-      );
+      filteredMarkers = filteredMarkers.filter((m) => m.type === filters.type);
     }
 
     if (filters.farm_id) {
@@ -51,7 +53,14 @@ export const useMarkers = () => {
       );
       setMarkers(updatedMarkers);
     });
-  }
+  };
+
+  const handleDeleteMarker = (markerId) => {
+    return deleteMarker(markerId).then(() => {
+      const updatedMarkers = markers.filter((marker) => marker.id !== markerId);
+      setMarkers(updatedMarkers);
+    });
+  };
 
   const addNewMarker = (newMarker) => {
     console.log('newMarker from addNewMarker', newMarker);
@@ -70,7 +79,6 @@ export const useMarkers = () => {
     handleFilterChange(EMPTY_FILTERS);
   };
 
-
   useEffect(() => {
     if (!showMarkers) return;
     const fetchData = async () => {
@@ -78,7 +86,7 @@ export const useMarkers = () => {
       try {
         const data = await getMarkers();
 
-        console.log('data in getMarkers', data)
+        console.log('data in getMarkers', data);
         // modify the markers
         const modifiedData = data
           .map((marker) => transformMarker(marker))
@@ -109,5 +117,6 @@ export const useMarkers = () => {
     setMarkerFilters: handleFilterChange,
     resetFilters,
     handleMarkerUpdate,
+    handleDeleteMarker,
   };
 };

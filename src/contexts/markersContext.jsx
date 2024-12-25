@@ -17,7 +17,8 @@ const MarkersProvider = ({ children }) => {
     markerFilters,
     setMarkerFilters,
     resetFilters,
-    handleMarkerUpdate
+    handleMarkerUpdate,
+    handleDeleteMarker,
   } = useMarkers();
 
   const handleShowMarkerChange = (value) => {
@@ -42,6 +43,7 @@ const MarkersProvider = ({ children }) => {
         showMarkers,
         setShowMarkers: handleShowMarkerChange,
         handleMarkerUpdate,
+        handleDeleteMarker,
       }}
     >
       {children}

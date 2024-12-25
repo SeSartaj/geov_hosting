@@ -51,7 +51,7 @@ export default function MyModal({
       <Dialog.Portal container={portalContainer}>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content
-          className="DialogContent dark:bg-gray-900 m-0 p-0"
+          className="DialogContent overflow-y-auto dark:bg-gray-900 m-0 p-0"
           disableFocusLock
         >
           <div className={headerClassName}>

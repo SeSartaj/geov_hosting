@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
 const Input = forwardRef(function Input(
-  { size = 'sm', className, ...props },
+  { size = 'sm', className, type, ...props },
   ref
 ) {
   const sizeClasses = {
@@ -14,7 +14,10 @@ const Input = forwardRef(function Input(
   return (
     <input
       ref={ref}
-      className={`border rounded  ${sizeClasses[size]} dark:bg-gray-800 dark:border-gray-500 dark:text-white ${className}`}
+      className={`${type !== 'range' ? 'border' : 'outline-none'} rounded  ${
+        sizeClasses[size]
+      } dark:bg-gray-800 dark:border-gray-500 dark:text-white ${className}`}
+      type={type}
       {...props}
     />
   );

@@ -14,9 +14,12 @@ import useMapStore from '@/stores/mapStore';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/style.css';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
-import MyButton from '@/ui-components/MyButton';
-import { BiRefresh } from 'react-icons/bi';
-import Tooltip from '@/ui-components/Tooltip';
+import { RadioGroup, RadioGroupItem } from '@/ui-components/RadioGroup';
+import Label from '@/ui-components/Label';
+import { Popover } from '@/ui-components/popover';
+import { CalenderIcon } from '@/icons/calender';
+import { maxWidth } from '@/constants/index';
+import Card from '@/ui-components/Card';
 
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
@@ -33,7 +36,7 @@ export default function LayerPanel() {
   const setRasterLayer = useMapStore((state) => state.setRasterLayer);
 
   const { mapRef } = useContext(MapContext);
-  const mapInstance = mapRef.current.getMap();
+  const mapInstance = mapRef.current?.getMap();
   const [passDates, setPassDates] = useState([]);
   const accessToken = useContext(AccessTokenContext);
 
@@ -52,10 +55,16 @@ export default function LayerPanel() {
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
     setDatesLoading(true);
-
-    if (!isVisible || mapInstance.getZoom() < 9) {
+    if (!isVisible || mapInstance?.getZoom() < 9) {
       setPassDates([]);
     }
+    const bounds = mapInstance?.getBounds();
+    const bbox = [
+      bounds?.getWest(),
+      bounds?.getSouth(),
+      bounds?.getEast(),
+      bounds?.getNorth(),
+    ];
 
     if (rasterLayer?.passDates) {
       console.log('Date not found in passDates');
@@ -114,14 +123,14 @@ export default function LayerPanel() {
   // fetch pass dates for visible area from catalog api, sentinel hub
   useEffect(() => {
     if (mapInstance) {
-      mapInstance.on('moveend', handlePassDates);
-      mapInstance.on('zoomend', handlePassDates);
+      mapInstance?.on('moveend', handlePassDates);
+      mapInstance?.on('zoomend', handlePassDates);
     }
 
     return () => {
       if (mapInstance) {
-        mapInstance.off('moveend', handlePassDates);
-        mapInstance.off('zoomend', handlePassDates);
+        mapInstance?.off('moveend', handlePassDates);
+        mapInstance?.off('zoomend', handlePassDates);
       }
     };
   }, [mapInstance, handlePassDates]);
@@ -136,52 +145,123 @@ export default function LayerPanel() {
     console.log('passDates', passDates);
   }, [passDates]);
 
-  return (
-    <div className="panel-container h-full overflow-y-scroll">
-      <div className="panel-header-action mb-2">
-        <h3 className="text-lg">Map Raster Layers</h3>
-        {/* <AddNewLayerModal setLayers={setLayers} /> */}
-        <span className="flex items-center">
-          <ToggleButton
-            onTooltip="hide layer"
-            offTooltip="show layer"
-            initialState={isVisible}
-            onToggle={setIsVisible}
-          />
-        </span>
-      </div>
+  const _onSelectSentinel = useCallback((e) => {
+    console.log('_onSelectSentinel', e);
+  }, []);
 
-      <div></div>
-      <ul className="layers-list">
-        <FormGroup label="layer:">
+  return (
+    <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2 rounded-md bg-zinc-50 p-2">
+        <div className="flex items-center justify-between">
+          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+            Sentinel
+          </h4>
+          <div className="flex items-center space-x-2">
+            <RadioGroup
+              defaultValue="all"
+              className="flex items-center"
+              onClick={_onSelectSentinel}
+            >
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="plot" id="plot" />
+                <Label htmlFor="plot">Plot</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="map" id="map" />
+                <Label htmlFor="map">Map</Label>
+              </div>
+            </RadioGroup>
+            <ToggleButton
+              onTooltip="hide layer"
+              offTooltip="show layer"
+              initialState={isVisible}
+              onToggle={setIsVisible}
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center justify-between w-full">
+            <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+              Opacity
+            </h4>
+            {viewMode !== 'PICKER' && (
+              <Popover
+                trigger={
+                  <div className="border border-solid border-gray-700 cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-center">
+                    <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
+                      {rasterOpacity}%
+                    </h5>
+                  </div>
+                }
+              >
+                <Input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={rasterOpacity}
+                  onChange={handleOpacityChange}
+                  className="w-full"
+                />
+              </Popover>
+            )}
+          </div>
           <MyReactSelect
             size="sm"
             className="w-full"
             value={rasterLayer}
             options={layerOptions}
+            placeholder="Select Data"
             onChange={(l) => setRasterLayer(l)}
             isClearable={false}
           />
-        </FormGroup>
-        {viewMode !== 'PICKER' && (
-          <>
-            {/* <hr /> */}
-            <span>Opacity</span>
-            <Input
-              type="range"
-              min="0"
-              max="100"
-              value={rasterOpacity}
-              onChange={handleOpacityChange}
-              className="w-full"
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 rounded-md bg-zinc-50 p-2">
+        <div className="flex items-center justify-between">
+          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+            ETα
+          </h4>
+          <div className="flex items-center space-x-2">
+            <RadioGroup defaultValue="all" className="flex items-center">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="plot" id="plot" />
+                <Label htmlFor="plot">Plot</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="map" id="map" />
+                <Label htmlFor="map">Map</Label>
+              </div>
+            </RadioGroup>
+            <ToggleButton
+              onTooltip="hide layer"
+              offTooltip="show layer"
+              initialState={isVisible}
+              onToggle={setIsVisible}
             />
-          </>
-        )}
-        {/* <hr /> */}
-        <span>Available Days:</span>
-        {/* <DateRangePicker value={dateRange} onChange={setDateRange} /> */}
-
-        <div className="p-4">
+          </div>
+        </div>
+        <div className="flex items-center gap-2 justify-between">
+          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+            Opacity
+          </h4>
+          <Popover
+            trigger={
+              <div className="border border-solid border-gray-700 cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-center">
+                <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
+                  {rasterOpacity}%
+                </h5>
+              </div>
+            }
+          >
+            <Input type="range" min="0" max="100" className="w-full" />
+          </Popover>
+        </div>
+      </div>
+      <div className="w-full flex flex-col gap-2.5 mt-4">
+        <h4 className="text-lg flex gap-3 font-semibold tracking-tight">
+          <CalenderIcon /> Available Days
+        </h4>
+        <Card className="flex items-center justify-center">
           <DayPicker
             mode="single"
             selected={selectedDate}
@@ -206,12 +286,13 @@ export default function LayerPanel() {
               selected: 'bg-green-400 dark:bg-green-600',
               today: 'dark:text-red',
               caption_label: 'rdp-caption_label z-0',
+              root: maxWidth,
+              table: maxWidth,
             }}
             footer={selectedDate ? `Selected: ${selectedDate}` : 'Pick a day.'}
           />
-        </div>
-        <div>{/* dateRange: {dateRange.start} - {dateRange.end} */}</div>
-      </ul>
+        </Card>
+      </div>
     </div>
   );
 }

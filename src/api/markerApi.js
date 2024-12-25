@@ -1559,14 +1559,11 @@ export const getMarkers = async () => {
   // return DUMMY_RESPONSE;
 };
 
-
 // get a single marker
 export const getMarkerById = async (id) => {
   const response = await fetchWrapper(`${API_URL}marker/${id}/`);
   return response.json();
 };
-
-
 
 export const createMarker = async (data) => {
   const response = await fetchWrapper(`${API_URL}marker/`, {
@@ -1583,20 +1580,29 @@ export const createMarker = async (data) => {
   }
 };
 
+export const updateMarker = (updatedMarker) => {
+  return fetchWrapper(`${API_URL}marker/${updatedMarker.id}/`, {
+    method: 'PUT',
+    body: JSON.stringify(updatedMarker),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+  });
+};
 
-export const updateMarker =  (updatedMarker) => {
-    return fetchWrapper(`${API_URL}marker/${updatedMarker.id}/`, {
-      method: 'PUT',
-      body: JSON.stringify(updatedMarker),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-    })
-} 
+export const deleteMarker = async (id) => {
+  const response = await fetchWrapper(`${API_URL}marker/${id}/`, {
+    method: 'DELETE',
+  });
+
+  if (response.ok) {
+    return response.json();
+  }
+};
 
 export const getPawData = async (markerId) => {
   const response = await fetchWrapper(`${API_URL}marker/paw/${markerId}/`);

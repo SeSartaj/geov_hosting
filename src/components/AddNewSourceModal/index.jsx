@@ -5,6 +5,7 @@ import { useContext, useState } from 'react';
 import { MapContext } from '../../contexts/MapContext';
 import MyModal from '../../ui-components/MyModal';
 import MyButton from '../../ui-components/MyButton';
+import Card from '@/ui-components/Card';
 
 const AddNewSourceModal = ({ setSources }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -47,45 +48,47 @@ const AddNewSourceModal = ({ setSources }) => {
     <MyModal
       open={open}
       setOpen={setOpen}
-      title='Add New GeoJSON Source'
+      title="Add New GeoJSON Source"
       trigger={<MyButton>Add New Source</MyButton>}
-      description='You can add a new source from a GeoJSON url or a file upload'
+      description="You can add a new source from a GeoJSON url or a file upload"
     >
-      <form onSubmit={handleAddSource}>
-        <input
-          type='text'
-          style={{ fontSize: 20, padding: 5, marginBottom: 5 }}
-          placeholder='Source Name'
-          name='name'
-          className='Input'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      <Card>
+        <form onSubmit={handleAddSource}>
+          <input
+            type="text"
+            style={{ fontSize: 20, padding: 5, marginBottom: 5 }}
+            placeholder="Source Name"
+            name="name"
+            className="Input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <input
-          type='text'
-          style={{ fontSize: 20, padding: 5 }}
-          placeholder="geojson file's url here"
-          name='style_url'
-          className='Input'
-          value={url}
-          onChange={handleUrlChange}
-        />
-        <p>Or upload a file</p>
-        <input
-          type='file'
-          style={{ fontSize: 20, padding: 5 }}
-          name='style_file'
-          className='Input'
-          onChange={handleFileChange}
-        />
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <MyButton variant='text' onClick={() => setOpen(false)}>
-            cancel
-          </MyButton>
-          <MyButton type='submit'>Add Marker</MyButton>
-        </div>
-      </form>
+          <input
+            type="text"
+            style={{ fontSize: 20, padding: 5 }}
+            placeholder="geojson file's url here"
+            name="style_url"
+            className="Input"
+            value={url}
+            onChange={handleUrlChange}
+          />
+          <p>Or upload a file</p>
+          <input
+            type="file"
+            style={{ fontSize: 20, padding: 5 }}
+            name="style_file"
+            className="Input"
+            onChange={handleFileChange}
+          />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <MyButton variant="text" onClick={() => setOpen(false)}>
+              cancel
+            </MyButton>
+            <MyButton type="submit">Add Marker</MyButton>
+          </div>
+        </form>
+      </Card>
     </MyModal>
   );
 };

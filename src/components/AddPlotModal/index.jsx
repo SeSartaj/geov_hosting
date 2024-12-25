@@ -7,6 +7,7 @@ import Input from '@/ui-components/Input';
 import FormGroup from '@/ui-components/FormGroup';
 import MyReactSelect from '@/ui-components/MyReactSelect';
 import { getFarmOptions } from '@/api/farmApi';
+import Card from '@/ui-components/Card';
 
 const AddPlotModal = ({ polygon, deleteFeature }) => {
   const [open, setOpen] = useState(false);
@@ -66,9 +67,8 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
   return (
     <MyModal
       trigger={<MyButton color="primary">Add New Plot</MyButton>}
-      title='Add New Plot '
-      headerClassName='m-4'
-      description='add new plot  map'
+      title="Add New Plot "
+      headerClassName="m-4"
       open={open}
       setOpen={setOpen}
       portalContainer={
@@ -77,37 +77,39 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
           : document.body
       }
     >
-      <form onSubmit={handlePlotCreation} className='p-4'>
-        <FormGroup label='Name:'>
-          <Input type='text' name='name' className='w-full' />
-        </FormGroup>
-        <FormGroup label='Farm'>
-          <MyReactSelect
-            className='w-full'
-            value={farm}
-            options={farmOptions}
-            onChange={(f) => setFarm(f)}
-            isLoading={farmsLoading}
-          />
-        </FormGroup>
-        <FormGroup label='description'>
-          <Input type='text' name='description' className='w-full' />
-        </FormGroup>
-        <br />
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-          <MyButton
-            type='cancel'
-            variant='text'
-            onClick={!loading && handleClose}
-            disabled={loading}
-          >
-            cancel
-          </MyButton>
-          <MyButton type='submit' loading={loading} color="primary">
-            Add Plot
-          </MyButton>
-        </div>
-      </form>
+      <Card>
+        <form onSubmit={handlePlotCreation} className="p-4">
+          <FormGroup label="Name:">
+            <Input type="text" name="name" className="w-full" />
+          </FormGroup>
+          <FormGroup label="Farm">
+            <MyReactSelect
+              className="w-full"
+              value={farm}
+              options={farmOptions}
+              onChange={(f) => setFarm(f)}
+              isLoading={farmsLoading}
+            />
+          </FormGroup>
+          <FormGroup label="description">
+            <Input type="text" name="description" className="w-full" />
+          </FormGroup>
+          <br />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <MyButton
+              type="cancel"
+              variant="text"
+              onClick={!loading && handleClose}
+              disabled={loading}
+            >
+              cancel
+            </MyButton>
+            <MyButton type="submit" loading={loading} color="primary">
+              Add Plot
+            </MyButton>
+          </div>
+        </form>
+      </Card>
     </MyModal>
   );
 };

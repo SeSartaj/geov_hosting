@@ -17,8 +17,6 @@ export default function AreaDetails() {
     return null;
   }
 
-  console.log('picker data', pickerData);
-
   return (
     <>
       <MyModal
