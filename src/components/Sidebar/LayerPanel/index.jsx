@@ -22,11 +22,7 @@ import { PlotContext } from '@/contexts/PlotContext';
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
     useContext(RasterLayerContext);
-<<<<<<< HEAD
-  const [selectedDate, setSelectedDate] = useState(dateRange?.start);
-=======
   const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
->>>>>>> bf2b231 (update design of map)
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
   const viewMode = useMapStore((state) => state.viewMode);
@@ -56,6 +52,8 @@ export default function LayerPanel() {
   //  and store all dates in a state
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
+    if (!mapInstance) return;
+
     setDatesLoading(true);
     if (!isVisible || mapInstance?.getZoom() < 9) {
       setPassDates([]);
@@ -70,10 +68,12 @@ export default function LayerPanel() {
 
     if (rasterLayer?.passDates) {
       console.log('Date not found in passDates');
-      setDateRange({
-        start: new Date(rasterLayer?.passDates[0]),
-        end: new Date(rasterLayer?.passDates[0]),
-      });
+      if (!selectedDate) {
+        setDateRange({
+          start: new Date(rasterLayer?.passDates[0]),
+          end: new Date(rasterLayer?.passDates[0]),
+        });
+      }
       const d = rasterLayer.passDates.map((d) => new Date(d));
       console.log('dddd', d);
       setPassDates(d);
@@ -95,17 +95,21 @@ export default function LayerPanel() {
           if (dates.length > 0) {
             console.log('setting date range', dates[0]);
             // set daterange start and end to the first most recent date in the dates
-            setSelectedDate(dates[0]);
-            setDateRange({
-              start: dates[0],
-              end: dates[0],
-            });
+            // setSelectedDate(dates[0]);
+            if (!selectedDate) {
+              setDateRange({
+                start: dates[0],
+                end: dates[0],
+              });
+            }
           } else {
             // set date range to last 10 days
-            setDateRange({
-              start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-              end: new Date(),
-            });
+            if (!selectedDate) {
+              setDateRange({
+                start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+                end: new Date(),
+              });
+            }
           }
         })
         .finally(() => {
