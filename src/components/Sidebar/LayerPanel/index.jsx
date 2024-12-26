@@ -233,7 +233,7 @@ export default function LayerPanel() {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2.5 mt-4">
-        <h4 className="text-base flex gap-3 font-semibold tracking-tight">
+        <h4 className="text-base flex gap-3 font-medium tracking-tight">
           <CalenderIcon /> Available Days
         </h4>
         <Card className="flex items-center justify-center">
