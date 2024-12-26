@@ -12,7 +12,6 @@ import useMapStore from '@/stores/mapStore';
 import { useMap } from 'react-map-gl/maplibre';
 import { SettingsContext } from '@/contexts/SettingsContext';
 import { BASEMAP_OPTIONS } from '@/constants';
-import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 function MapControl() {
   const { current: mapRef } = useMap();
