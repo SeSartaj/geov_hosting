@@ -4,18 +4,22 @@ import MyButton from '../../ui-components/MyButton';
 import LabelValueList from '../../ui-components/LabelValueList';
 import { area, bbox } from '@turf/turf';
 import NdviChart from '../PlotNDVIChart';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { PlotContext } from '@/contexts/PlotContext';
 import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
+import { BiPencil, BiTrash } from 'react-icons/bi';
 
 import { MapContext } from '@/contexts/MapContext';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
+import Tooltip from '@/ui-components/Tooltip';
+import useConfirm from '@/hooks/useConfirm';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { mapInstance } = useContext(MapContext);
-  const { showPlots, clickedPlot } = useContext(PlotContext);
+  const { showPlots, clickedPlot, handleEditPlot } = useContext(PlotContext);
   const [weeksBefore, setWeeksBefore] = useState(0);
   const accessToken = useContext(AccessTokenContext);
+  const { isConfirmed } = useConfirm();
   const { plot } = popupInfo;
 
   const handleNDVIImageDownload = async () => {
@@ -95,6 +99,13 @@ export default function PlotPopup({ popupInfo, onClose }) {
 
   if (!showPlots || !clickedPlot) return null;
 
+  const _onDeletePlot = useCallback(async (e) => {
+    // get marker id from data-marker-id attribute
+    // ask for confirmatino whether to delete the marker or not?
+    const confirmed = await isConfirmed('Do you want to delete this Plot?');
+    console.log('confirmed', confirmed, e);
+  }, []);
+
   return (
     <Popup
       longitude={popupInfo.lngLat.lng}
@@ -104,54 +115,87 @@ export default function PlotPopup({ popupInfo, onClose }) {
       onClose={onClose}
       anchor="top"
       style={{ width: 240 }}
-      className="plot-popup overflow-y-hidden max-h-96"
+      className="plot-popup gap-2 overflow-y-hidden"
     >
-      <div className="popup-header dark:text-gray-100 font-black text-[14px]">
-        <h3>{plot.properties.name}</h3>
-      </div>
-      <hr />
-      <div className="popup-content ">
-        <LabelValueList
-          itemClasses={' border-b border-gray-500 dark:border-gray-300'}
-          list={[
-            {
-              label: 'Area (sqm)',
-              value: area(plot).toFixed(2),
-            },
-            // { label: 'Average NDVI', value: 0.3 },
-            { label: 'Crop', value: 'Potato' },
-            {
-              variant: 'collapsable',
-              label: 'NDVI Image',
-              value: (
-                <>
-                  <input
-                    type="range"
-                    min="0"
-                    max="52"
-                    value={weeksBefore}
-                    onChange={(e) => setWeeksBefore(e.target.value)}
-                    style={{ direction: 'rtl' }}
-                    className="w-full"
-                  />
-                  <span className="flex flex-row justify-between items-center">
-                    {new Date(
-                      new Date().setDate(new Date().getDate() - weeksBefore * 7)
-                    ).toLocaleDateString()}
-                    <MyButton onClick={handleNDVIImageDownload}>
-                      download
-                    </MyButton>
-                  </span>
-                </>
-              ),
-            },
-            {
-              variant: 'collapsable',
-              label: 'NDVI',
-              value: <NdviChart plot={plot} />,
-            },
-          ]}
-        />
+      <div className="flex flex-col gap-1 items-center dark:text-gray-100 font-black text-[14px]">
+        <div className="w-full flex justify-between items-center dark:text-gray-100 font-black text-[14px]">
+          <h3 className="text-wrap">{plot.properties.name}</h3>
+          <span className="flex items-center gap-1">
+            <Tooltip text="click to delete the marker">
+              <MyButton
+                variant="icon"
+                className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+                onClick={_onDeletePlot}
+                data-marker-id={plot?.id}
+              >
+                <BiTrash className="w-5 h-5 action-icon text-red-500" />
+              </MyButton>
+            </Tooltip>
+
+            <Tooltip text="click to edit the plot">
+              <MyButton
+                variant="icon"
+                className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+                onClick={() => handleEditPlot(plot)}
+              >
+                <BiPencil className="w-5 h-5 action-icon" />
+              </MyButton>
+            </Tooltip>
+          </span>
+        </div>
+        <hr />
+        <div className="w-[calc(100%+4px)]">
+          <NdviChart plot={plot} />
+        </div>
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+              Area (sqm)
+            </h4>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-700 dark:text-gray-200">
+                {area(plot).toFixed(2)}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+              Crop
+            </h4>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-700 dark:text-gray-200">
+                Potato
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+              NDVI Image
+            </h4>
+            <div className="flex items-center space-x-2">
+              <input
+                type="range"
+                min="0"
+                max="52"
+                value={weeksBefore}
+                onChange={(e) => setWeeksBefore(e.target.value)}
+                style={{ direction: 'rtl' }}
+                className="w-full"
+              />
+              <span className="flex flex-row justify-between items-center">
+                {new Date(
+                  new Date().setDate(new Date().getDate() - weeksBefore * 7)
+                ).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+              NDVI Download
+            </h4>
+            <MyButton onClick={handleNDVIImageDownload}>download</MyButton>
+          </div>
+        </div>
       </div>
     </Popup>
   );

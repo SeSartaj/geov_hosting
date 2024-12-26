@@ -148,9 +148,7 @@ export default function LayerPanel() {
   }, [passDates]);
 
   const _onSelectSentinel = useCallback(
-    (e) => {
-      console.log('_onSelectSentinel', e);
-      const value = e.target?.value;
+    (value) => {
       if (value === 'plot') {
         toggleNDVILayersVisibility(true);
       }
@@ -163,16 +161,16 @@ export default function LayerPanel() {
 
   return (
     <div className="flex flex-col gap-2.5">
-      <div className="flex flex-col gap-2 rounded-md bg-zinc-50 p-2">
+      <div className="flex flex-col gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
         <div className="flex items-center justify-between">
-          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
-            Sentinel
+          <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
+            Rester Layer
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup
               defaultValue={showNdviLayer ? 'plot' : 'map'}
               className="flex items-center"
-              onClick={_onSelectSentinel}
+              onValueChange={_onSelectSentinel}
             >
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="plot" id="plot" />
@@ -193,13 +191,13 @@ export default function LayerPanel() {
         </div>
         <div className="flex items-center gap-2 justify-between">
           <div className="flex items-center justify-between w-full">
-            <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+            <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
               Opacity
             </h4>
             {viewMode !== 'PICKER' && (
               <Popover
                 trigger={
-                  <div className="border border-solid border-gray-700 cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-center">
+                  <div className="border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-center">
                     <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
                       {rasterOpacity}%
                     </h5>
@@ -229,7 +227,7 @@ export default function LayerPanel() {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2.5 mt-4">
-        <h4 className="text-lg flex gap-3 font-semibold tracking-tight">
+        <h4 className="text-base flex gap-3 font-semibold tracking-tight">
           <CalenderIcon /> Available Days
         </h4>
         <Card className="flex items-center justify-center">

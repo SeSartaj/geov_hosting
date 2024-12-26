@@ -26,7 +26,7 @@ export default function MarkerPopup() {
       longitude={Number(clickedMarker.location.lng)}
       latitude={clickedMarker.location.lat}
       onClose={() => setClickedMarker(null)}
-      className="!max-w-[240px] sm:!max-w-[300px] lg:!max-w-[360px]"
+      className="!max-w-[240px] sm:!max-w-[270px] lg:!max-w-[320px]"
     >
       {clickedMarker.type === 'station' ? (
         <StationPopupContent marker={clickedMarker} />
@@ -61,23 +61,13 @@ function StationPopupContent({ marker }) {
 
   return (
     <div>
-      <div className="popup-header dark:text-gray-100 font-black text-[14px]">
-        <h3>{marker?.title}</h3>
+      <div className="flex gap-2 items-center dark:text-gray-100 font-black text-[14px]">
+        <h3 className="text-wrap">{marker?.title}</h3>
         <span className="flex items-center gap-1">
-          <Tooltip text="click to fly the marker">
-            <MyButton
-              variant="icon"
-              className="rounded-md !border !border-solid !border-gray-700 dark:!border-gray-200 !bg-inherit"
-              onClick={_onFlyMarker}
-              data-marker-id={marker?.id}
-            >
-              <ArrowUpRightIcon />
-            </MyButton>
-          </Tooltip>
           <Tooltip text="click to delete the marker">
             <MyButton
               variant="icon"
-              className="rounded-md !border !border-solid !border-gray-700 dark:!border-gray-200 !bg-inherit"
+              className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
               onClick={_onDeleteMarker}
               data-marker-id={marker?.id}
             >
@@ -87,13 +77,13 @@ function StationPopupContent({ marker }) {
 
           <EditMarkerModal
             marker={marker}
-            buttonClassName="!rounded-md !border !border-solid !border-gray-700 dark:!border-gray-200 !bg-inherit"
+            buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
           />
         </span>
       </div>
       <HumidityChart marker={marker} />
       <div className="flex flex-col items-center gap-3">
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 p-2">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             Battery
           </h4>
@@ -103,7 +93,7 @@ function StationPopupContent({ marker }) {
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 p-2">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             PAW Status
           </h4>
@@ -113,7 +103,7 @@ function StationPopupContent({ marker }) {
             </Badge>
           </div>
         </div>
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 p-2">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             Average PAW
           </h4>
@@ -123,7 +113,7 @@ function StationPopupContent({ marker }) {
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 p-2">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             Crop
           </h4>

@@ -72,7 +72,7 @@ export default function MarkerPlots() {
           open={plotVisible}
           setOpen={setPlotVisible}
           trigger={
-            <div className="w-full border border-solid border-gray-700 cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-between">
+            <div className="w-full border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-between">
               <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
                 Find Plot
               </h5>
@@ -86,7 +86,7 @@ export default function MarkerPlots() {
               <div className="flex items-center gap-2 justify-between">
                 <div className="flex items-center gap-2">
                   <SproutIcon />
-                  <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+                  <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
                     Plots
                   </h4>
                 </div>

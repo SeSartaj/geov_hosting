@@ -60,26 +60,24 @@ export default function MarkerPanel() {
   );
 
   const _onSelectRadioGroup = useCallback(
-    (e) => {
-      setMarkerFilters({ ...markerFilters, type: e?.target.value });
+    (value) => {
+      setMarkerFilters({ ...markerFilters, type: value });
     },
     [markerFilters, setMarkerFilters]
   );
 
-  console.log('showNdviLayer: ', showNdviLayer);
-
   return (
     <div className="flex flex-col gap-2.5">
-      <div className="flex flex-col gap-2 rounded-md bg-zinc-50 p-2">
+      <div className="flex flex-col gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
         <div className="flex items-center justify-between">
-          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+          <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
             Stations
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup
               defaultValue=""
               className="flex items-center gap-2"
-              onClick={_onSelectRadioGroup}
+              onValueChange={_onSelectRadioGroup}
             >
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="" id="all" />
@@ -106,7 +104,7 @@ export default function MarkerPanel() {
           <select
             onChange={_onSelectMarker}
             value={markerFilters.paw_status}
-            className="w-full py-2 px-3 dark:bg-gray-700"
+            className="w-full py-2 px-3 dark:bg-gray-700 border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md"
           >
             {markerOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -116,7 +114,7 @@ export default function MarkerPanel() {
           </select>
           <select
             value={markerFilters.farm_id}
-            className="w-full py-2 px-3 dark:bg-gray-700"
+            className="w-full py-2 px-3 dark:bg-gray-700 border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md"
             onChange={(e) =>
               setMarkerFilters({ ...markerFilters, farm_id: e.target.value })
             }
@@ -129,9 +127,9 @@ export default function MarkerPanel() {
           </select>
         </div>
       </div>
-      <div className="flex items-center justify-between rounded-md bg-zinc-50 gap-2 p-2">
+      <div className="flex items-center justify-between rounded-md bg-zinc-50 dark:bg-zinc-800 gap-2 p-2">
         <div className="flex items-center w-full justify-between">
-          <h4 className="scroll-m-20 text-lg font-medium tracking-tight">
+          <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
             Plots
           </h4>
           <ToggleButton
