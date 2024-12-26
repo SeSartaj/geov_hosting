@@ -67,7 +67,7 @@ export default function PAWStatusPieChart() {
                 color: entry.color,
               }}
             >
-              {entry?.value}%
+              {entry?.value}
             </span>
           </div>
         ))}

@@ -149,6 +149,7 @@ export const usePlots = () => {
   };
 
   const handleDeletePlot = (plot) => {
+    console.log('on delete plot', plot);
     setLoading(true);
     deletePlot(plot.id)
       .then(() => {

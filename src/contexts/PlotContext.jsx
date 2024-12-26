@@ -112,6 +112,7 @@ const PlotProvider = ({ children }) => {
         // add the plot to draw layer
         draw.add(plot?.options);
         setEditingPlot(plot);
+        return plot;
       }
     }
   };

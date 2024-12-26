@@ -319,8 +319,6 @@ export default function Plots() {
 
   if (!showPlots) return null;
 
-  console.log('adding Plots to map');
-
   return (
     <>
       <Source

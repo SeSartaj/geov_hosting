@@ -235,7 +235,7 @@ export default function MarkerForm({
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
         <MyButton color="mute" onClick={onCancel}>
-          cancel
+          Cancel
         </MyButton>
         <MyButton type="submit" disabled={submitting} color="primary">
           {submitting ? 'loading ...' : submitButtonText}
