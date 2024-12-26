@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { MarkersContext } from '../../contexts/markersContext';
 import { getStationMarkerColor } from '../../utils/getStationMarkerColor';
@@ -17,10 +17,6 @@ export default function PAWStatusPieChart() {
   const { markersData, showMarkers } = useContext(MarkersContext);
   const viewMode = useMapStore((state) => state.viewMode);
 
-  if (viewMode === 'PICKER') {
-    return null;
-  }
-
   // Group markers by their paw_status
   const statusCounts = markersData.reduce((acc, marker) => {
     const status = marker.paw_status;
@@ -37,16 +33,16 @@ export default function PAWStatusPieChart() {
     color: getStationMarkerColor(status),
   }));
 
-  if (!showMarkers || !data.length > 0) return null;
-
-  const totalCount = () => {
+  const totalCount = useMemo(() => {
     return data?.reduce(
       (accumulator, currentValue) => accumulator + currentValue?.value,
       0
     );
-  };
+  }, [data]);
 
-  return (
+  console.log('sum', totalCount);
+
+  return viewMode === 'PICKER' || !showMarkers || !data.length > 0 ? null : (
     <Card className="paw-pie-chart bg-white dark:bg-gray-900 p-0">
       <PieChart width={115} height={115}>
         <Pie
@@ -74,7 +70,7 @@ export default function PAWStatusPieChart() {
                 color: entry.color,
               }}
             >
-              {(entry?.value / totalCount) * 100}%
+              {(entry?.value / Number(totalCount)) * 100}%
             </span>
           </div>
         ))}
