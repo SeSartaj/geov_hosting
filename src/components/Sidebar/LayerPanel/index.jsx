@@ -22,6 +22,8 @@ import { PlotContext } from '@/contexts/PlotContext';
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
     useContext(RasterLayerContext);
+  const [selectedDate, setSelectedDate] = useState();
+
   const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
@@ -262,7 +264,7 @@ export default function LayerPanel() {
               root: maxWidth,
               table: maxWidth,
             }}
-            footer={selectedDate ? `Selected: ${selectedDate}` : 'Pick a day.'}
+            // footer={selectedDate ? `Selected: ${selectedDate}` : 'Pick a day.'}
           />
         </Card>
       </div>
