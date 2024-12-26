@@ -169,7 +169,7 @@ export default function LayerPanel() {
     <div className="flex flex-col gap-2.5">
       <div className="flex flex-col gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
         <div className="flex items-center justify-between">
-          <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
+          <h4 className="text-base dark:text-gray-100 tracking-tight">
             Rester Layer
           </h4>
           <div className="flex items-center space-x-2">
@@ -197,7 +197,7 @@ export default function LayerPanel() {
         </div>
         <div className="flex items-center gap-2 justify-between">
           <div className="flex items-center justify-between w-full">
-            <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
+            <h4 className="text-base dark:text-gray-100 tracking-tight">
               Opacity
             </h4>
             {viewMode !== 'PICKER' && (

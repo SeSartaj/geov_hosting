@@ -39,6 +39,13 @@ export default function PAWStatusPieChart() {
 
   if (!showMarkers || !data.length > 0) return null;
 
+  const totalCount = () => {
+    return data?.reduce(
+      (accumulator, currentValue) => accumulator + currentValue?.value,
+      0
+    );
+  };
+
   return (
     <Card className="paw-pie-chart bg-white dark:bg-gray-900 p-0">
       <PieChart width={115} height={115}>
@@ -67,7 +74,7 @@ export default function PAWStatusPieChart() {
                 color: entry.color,
               }}
             >
-              {entry?.value}
+              {(entry?.value / totalCount) * 100}%
             </span>
           </div>
         ))}

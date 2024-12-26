@@ -70,7 +70,7 @@ export default function MarkerPanel() {
     <div className="flex flex-col gap-2.5">
       <div className="flex flex-col gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
         <div className="flex items-center justify-between">
-          <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
+          <h4 className="text-base dark:text-gray-100 tracking-tight">
             Stations
           </h4>
           <div className="flex items-center space-x-2">
@@ -129,9 +129,7 @@ export default function MarkerPanel() {
       </div>
       <div className="flex items-center justify-between rounded-md bg-zinc-50 dark:bg-zinc-800 gap-2 p-2">
         <div className="flex items-center w-full justify-between">
-          <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
-            Plots
-          </h4>
+          <h4 className="text-base dark:text-gray-100 tracking-tight">Plots</h4>
           <ToggleButton
             onTooltip="hide plots"
             offTooltip="show plots"

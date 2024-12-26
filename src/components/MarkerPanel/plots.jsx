@@ -86,7 +86,7 @@ export default function MarkerPlots() {
               <div className="flex items-center gap-2 justify-between">
                 <div className="flex items-center gap-2">
                   <SproutIcon />
-                  <h4 className="text-base dark:text-gray-100 font-medium tracking-tight">
+                  <h4 className="text-base dark:text-gray-100 tracking-tight">
                     Plots
                   </h4>
                 </div>
