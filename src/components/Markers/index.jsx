@@ -17,7 +17,7 @@ export default function Markers() {
   const transformedMarker = markersData.map((m) => transformMarker(m));
 
   const handleMarkerClick = (e, marker) => {
-    //
+    console.log('marker clicked');
     e.originalEvent.stopPropagation();
     setClickedMarker(marker);
   };

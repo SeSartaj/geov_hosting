@@ -5,6 +5,8 @@ import MyButton from '../MyButton';
 import PropTypes from 'prop-types';
 import { BiX } from 'react-icons/bi';
 import { useContext, useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { XIcon } from 'lucide-react';
 
 export default function MyModal({
   trigger,
@@ -70,15 +72,14 @@ export default function MyModal({
           </div>
           {children}
           <Dialog.Close asChild>
-            <MyButton
-              color="mute"
-              variant="icon"
+            <Button
+              variant="ghost"
               style={{ position: 'absolute', top: 10, right: 10 }}
               aria-label="Close"
               onClick={onClose}
             >
-              <BiX />
-            </MyButton>
+              <XIcon />
+            </Button>
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>

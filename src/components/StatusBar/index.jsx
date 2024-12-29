@@ -6,7 +6,6 @@ const StatusBar = () => {
   const cursorCords = useMapStore((state) => state.cursorCords);
   const hoveredValue = useMapStore((state) => state.hoveredValue);
 
-  console.log('hoveredValue', hoveredValue);
   return (
     <div className="absolute bottom-0 left-0 w-full  bg-black bg-opacity-50 p-1 text-xs text-white flex justify-between">
       <span>mode: {viewMode}</span>

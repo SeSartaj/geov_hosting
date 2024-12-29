@@ -15,6 +15,7 @@ import { ArrowUpRightIcon } from '@/icons/arrow-up-right';
 import Card from '@/ui-components/Card';
 import { SproutIcon } from '@/icons/sprout';
 import Input from '@/ui-components/Input';
+import { PlotContext } from '@/contexts/PlotContext';
 
 export default function MarkerPlots() {
   const [searchPlot, setSearchPlot] = useState('');
@@ -25,6 +26,10 @@ export default function MarkerPlots() {
     loading,
     handleDeleteMarker,
   } = useContext(MarkersContext);
+
+  const { plots } = useContext(PlotContext);
+
+  console.log('plots', plots);
   const { isConfirmed } = useConfirm();
   const allMarkers = useMemo(() => {
     return markersData.map((m) => transformMarker(m));

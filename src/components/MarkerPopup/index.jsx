@@ -14,6 +14,7 @@ import EditMarkerModal from '../MarkerPanel/edit';
 import { MapContext } from '@/contexts/MapContext';
 import useConfirm from '@/hooks/useConfirm';
 import { CrossIcon, XIcon } from 'lucide-react';
+import { Button } from '../ui/button';
 
 export default function MarkerPopup() {
   const { clickedMarker, setClickedMarker, showMarkers } =
@@ -27,7 +28,7 @@ export default function MarkerPopup() {
       longitude={Number(clickedMarker.location.lng)}
       latitude={clickedMarker.location.lat}
       closeButton={false}
-      // onClose={() => setClickedMarker(null)}
+      onClose={() => setClickedMarker(null)}
       className="!max-w-[240px] sm:!max-w-[270px] lg:!max-w-[320px]"
     >
       {clickedMarker.type === 'station' ? (
@@ -72,30 +73,30 @@ function StationPopupContent({ marker, closePopup }) {
       <div className="flex gap-2 items-center dark:text-gray-100 font-black text-[14px]">
         <h3 className="text-wrap">{marker?.title}</h3>
         <span className="flex items-center gap-1">
-          <Tooltip text="delete the marker">
-            <MyButton
-              variant="icon"
-              className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
-              onClick={_onDeleteMarker}
-              data-marker-id={marker?.id}
-            >
-              <BiTrash className="w-5 h-5 action-icon text-red-500 " />
-            </MyButton>
-          </Tooltip>
+          {/* <Tooltip text="delete the marker"> */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={_onDeleteMarker}
+            data-marker-id={marker?.id}
+          >
+            <BiTrash className="w-5 h-5 action-icon text-red-500 " />
+          </Button>
+          {/* </Tooltip> */}
 
           <EditMarkerModal
             marker={marker}
             buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
           />
           <Tooltip text="close popup">
-            <MyButton
-              variant="icon"
-              className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+            <Button
+              variant="outline"
+              size="sm"
               onClick={closePopup}
               data-marker-id={marker?.id}
             >
-              <XIcon className="w-5 h-5 action-icon text-red-500 " />
-            </MyButton>
+              <XIcon className="w-5 h-5 action-icon " />
+            </Button>
           </Tooltip>
         </span>
       </div>

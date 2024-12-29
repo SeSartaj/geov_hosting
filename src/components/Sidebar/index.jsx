@@ -19,7 +19,7 @@ export default function Navigation() {
   return (
     <>
       {!expand && (
-        <div className="sidebar-opener bg-white dark:bg-gray-900 mt-3">
+        <div className="sidebar-opener bg-white dark:bg-gray-900 mt-3 ">
           <MyButton variant="icon" className="border-left-0">
             <SidebarOpenIcon onClick={() => setExpand(true)} />
           </MyButton>
@@ -28,7 +28,7 @@ export default function Navigation() {
       <Card
         className={`sidebar ${
           expand && 'sidebar-expanded'
-        } rounded-sm  h-full ${maxWidth} `}
+        } rounded-l-none  h-full ${maxWidth} `}
         header={
           <div className="flex justify-between items-center mb-1">
             <h1 className="text-lg pr-2 text-black dark:text-white">
