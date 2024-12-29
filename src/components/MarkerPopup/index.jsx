@@ -89,12 +89,7 @@ function StationPopupContent({ marker, closePopup }) {
             buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
           />
           <Tooltip text="close popup">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={closePopup}
-              data-marker-id={marker?.id}
-            >
+            <Button variant="outline" size="sm" onClick={closePopup}>
               <XIcon className="w-5 h-5 action-icon " />
             </Button>
           </Tooltip>

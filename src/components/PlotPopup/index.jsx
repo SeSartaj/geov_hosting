@@ -10,6 +10,8 @@ import { BiTrash } from 'react-icons/bi';
 import Tooltip from '@/ui-components/Tooltip';
 import useConfirm from '@/hooks/useConfirm';
 import { EditPlotModal } from './edit';
+import { XIcon } from 'lucide-react';
+import { Button } from '../ui/button';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { showPlots, plots, clickedPlot, handleDeletePlot } =
@@ -31,28 +33,33 @@ export default function PlotPopup({ popupInfo, onClose }) {
     <Popup
       longitude={popupInfo.lngLat.lng}
       latitude={popupInfo.lngLat.lat}
-      // closeButton={true}
+      closeButton={false}
       closeOnClick={true}
       onClose={onClose}
       anchor="top"
       style={{ width: 240 }}
-      className="plot-popup gap-2 overflow-y-hidden"
+      className="plot-popup overflow-y-hidden"
     >
       <div className="flex flex-col gap-1 items-center dark:text-gray-100 font-black text-[14px]">
         <div className="w-full flex justify-between items-center dark:text-gray-100 font-black text-[14px]">
           <h3 className="text-wrap">{plot.properties.name}</h3>
           <span className="flex items-center gap-1">
-            <Tooltip text="click to delete the marker">
-              <MyButton
-                variant="icon"
-                className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
-                onClick={_onDeletePlot}
-                data-marker-id={plot?.id}
-              >
-                <BiTrash className="w-5 h-5 action-icon text-red-500" />
-              </MyButton>
-            </Tooltip>
+            {/* <Tooltip text="click to delete the marker"> */}
+            <MyButton
+              variant="icon"
+              className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+              onClick={_onDeletePlot}
+              data-marker-id={plot?.id}
+            >
+              <BiTrash className="w-5 h-5 action-icon text-red-500" />
+            </MyButton>
+            {/* </Tooltip> */}
             <EditPlotModal plot={findPlot} />
+            <Tooltip text="close popup">
+              <Button variant="outline" size="sm" onClick={onClose}>
+                <XIcon className="w-5 h-5 action-icon " />
+              </Button>
+            </Tooltip>
           </span>
         </div>
         <hr />

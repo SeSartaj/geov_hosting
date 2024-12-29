@@ -19,7 +19,7 @@ export function ThemeProvider({
     // Reset any previous theme classes
     root.classList.remove('light', 'dark');
 
-    if (theme === 'system') {
+    if (theme === 'system' && root) {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
         .matches
         ? 'dark'
