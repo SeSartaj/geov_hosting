@@ -57,13 +57,13 @@ export default function MyMap() {
           <MapControl />
           <FullscreenControl position="top-right" />
           <PickerControl />
-          {/* <NDVILayer /> */}
+          <NDVILayer />
           <Sidebar />
           {viewMode !== 'PICKER' && <DrawPolygonControl />}
           <PAWStatusPieChart />
           <Markers />
           <MarkerPopup />
-          {/* <Plots /> */}
+          <Plots />
           <StatusBar />
           {viewMode === 'PICKER' && <ColorLegend />}
         </Map>
