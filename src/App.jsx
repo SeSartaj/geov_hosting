@@ -5,16 +5,16 @@ import { MarkersProvider } from './contexts/markersContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { PlotProvider } from './contexts/PlotContext';
 import { RasterLayerProvider } from './contexts/RasterLayerContext';
-import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import ErrorBoundary from './components/ErrorBoundary';
 import ConfirmContextProvider from './contexts/ConfirmContextProvider';
 import DeleteDialog from './ui-components/DeleteDialog';
+import { ThemeProvider } from './contexts/ShadcnThemeProvider';
 
 function App() {
   return (
-    <TooltipPrimitive.Provider delayDuration={200}>
-      <Provider theme={defaultTheme}>
+    <ThemeProvider defaultTheme="system">
+      <TooltipPrimitive.Provider delayDuration={200}>
         <SettingsProvider>
           <ConfirmContextProvider>
             <MapProvider>
@@ -36,8 +36,8 @@ function App() {
             </MapProvider>
           </ConfirmContextProvider>
         </SettingsProvider>
-      </Provider>
-    </TooltipPrimitive.Provider>
+      </TooltipPrimitive.Provider>
+    </ThemeProvider>
   );
 }
 

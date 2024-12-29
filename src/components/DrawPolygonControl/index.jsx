@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
-import MapboxDraw, { constants } from '@mapbox/mapbox-gl-draw';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import './mapbox-draw-style.css';
 import './styles.css';
@@ -14,6 +14,8 @@ export function DrawPolygonControl() {
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const { drawRef, mapRef, showDrawActionPopup, setShowDrawActionPopup } =
     useContext(MapContext);
+
+  const constants = MapboxDraw.constants;
 
   // Set the custom classes for MapLibre
   constants.classes.CONTROL_BASE = 'maplibregl-ctrl';

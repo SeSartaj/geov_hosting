@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SidebarCloseIcon } from 'lucide-react';
+import { SidebarCloseIcon, SidebarOpenIcon } from 'lucide-react';
 import './styles.css';
 import MyButton from '@/ui-components/MyButton';
 import useMapStore from '@/stores/mapStore';
@@ -16,32 +16,40 @@ export default function Navigation() {
   const viewMode = useMapStore((state) => state.viewMode);
   const [expand, setExpand] = useState(true);
 
-  if (!expand)
-    return (
-      <div className="sidebar bg-gray-100 dark:bg-gray-900 rounded">
-        <MyButton onClick={() => setExpand(true)} variant="icon">
-          <SidebarCloseIcon onClick={() => setExpand(true)} />
-        </MyButton>
-      </div>
-    );
-
   return (
-    <Card
-      className={`sidebar sidebar-expanded rounded-sm bg-white dark:bg-gray-900 h-[calc(100%-32px)] ${maxWidth}`}
-      header={
-        <div className="flex justify-between items-center mb-1">
-          <h1 className="text-lg pr-2 text-black dark:text-white">
-            Configurations
-          </h1>
-          <MyButton onClick={() => setExpand(false)} variant="icon">
-            <SidebarCloseIcon onClick={() => setExpand(false)} />
+    <>
+      {!expand && (
+        <div className="sidebar-opener bg-white dark:bg-gray-900 mt-3">
+          <MyButton variant="icon" className="border-left-0">
+            <SidebarOpenIcon onClick={() => setExpand(true)} />
           </MyButton>
         </div>
-      }
-    >
-      <MarkerPanel />
-      {divider}
-      <LayerPanel />
-    </Card>
+      )}
+      <Card
+        className={`sidebar ${
+          expand && 'sidebar-expanded'
+        } rounded-sm  h-full ${maxWidth} `}
+        header={
+          <div className="flex justify-between items-center mb-1">
+            <h1 className="text-lg pr-2 text-black dark:text-white">
+              Configurations
+            </h1>
+            <div className="bg-white dark:bg-gray-900 ">
+              <MyButton variant="icon" className="border-left-0">
+                {expand ? (
+                  <SidebarCloseIcon onClick={() => setExpand(false)} />
+                ) : (
+                  <SidebarOpenIcon onClick={() => setExpand(true)} />
+                )}
+              </MyButton>
+            </div>
+          </div>
+        }
+      >
+        <MarkerPanel />
+        {divider}
+        <LayerPanel />
+      </Card>
+    </>
   );
 }

@@ -31,7 +31,7 @@ export default function PlotPopup({ popupInfo, onClose }) {
     <Popup
       longitude={popupInfo.lngLat.lng}
       latitude={popupInfo.lngLat.lat}
-      closeButton={true}
+      // closeButton={true}
       closeOnClick={true}
       onClose={onClose}
       anchor="top"

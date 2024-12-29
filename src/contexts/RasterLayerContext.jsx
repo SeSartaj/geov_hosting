@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect, useContext } from 'react';
-import { parseDate } from '@internationalized/date';
 import { MapContext } from './MapContext';
 import { layerOptions } from '@/constants';
 

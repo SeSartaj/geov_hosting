@@ -39,7 +39,7 @@
 }
 
 .my-button.mute {
-  background-color: rgba(119, 119, 119, 0.137);
+  /* background-color: rgb(255, 255, 255); */
   color: rgb(43, 43, 43);
 }
 
@@ -48,8 +48,7 @@
   padding: 5px 10px;
   font-size: 12px;
 }
-
-.my-button.md {
+Configurations .my-button.md {
   padding: 10px 20px;
   font-size: 14px;
 }
@@ -127,7 +126,7 @@
   }
 
   .my-button.mute {
-    background-color: rgba(119, 119, 119, 0.137);
+    /* background-color: rgba(119, 119, 119, 0.137); */
     color: rgb(210, 210, 210);
   }
 

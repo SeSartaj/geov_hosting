@@ -1,24 +1,48 @@
 .sidebar {
   position: absolute;
   top: 0;
-  left: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  margin: 20px;
+  left: -100%;
+  transition: left 0.5s ease-in-out;
+  width: 300px; /* Adjust the width as needed */
+  height: 100%;
   font-size: 13px;
-  color: #404042;
-  outline: none;
   display: flex;
   flex-direction: column;
   z-index: 9;
 }
 
-.sidebar-button {
-  cursor: pointer;
+.sidebar-opener {
+  position: absolute;
+  top: 0;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  z-index: 9;
+  animation: 0.5s;
+}
+
+.sidebar-container {
+  position: relative;
+  overflow: visible;
 }
 
 .sidebar-expanded {
-  height: 80%;
   width: 90%;
+  left: 0;
+}
+
+.trigger {
+  position: absolute;
+  top: 50%;
+  right: -30px; /* Adjust the offset so it's visible outside the sidebar */
+  transform: translateY(-50%);
+  z-index: 10; /* Ensure the trigger is always on top */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+}
+
+.sidebar-button {
+  cursor: pointer;
 }
 
 .sidebar-body {
