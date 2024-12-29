@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { Popup } from 'react-map-gl/maplibre';
-import { BiTrash } from 'react-icons/bi';
+import { BiCross, BiTrash } from 'react-icons/bi';
 import { MarkersContext } from '../../contexts/markersContext';
 import HumidityChart from '../MarkerChart';
 import './styles.css';
@@ -13,6 +13,7 @@ import { ArrowUpRightIcon } from '@/icons/arrow-up-right';
 import EditMarkerModal from '../MarkerPanel/edit';
 import { MapContext } from '@/contexts/MapContext';
 import useConfirm from '@/hooks/useConfirm';
+import { CrossIcon, XIcon } from 'lucide-react';
 
 export default function MarkerPopup() {
   const { clickedMarker, setClickedMarker, showMarkers } =
@@ -25,19 +26,26 @@ export default function MarkerPopup() {
       anchor="top"
       longitude={Number(clickedMarker.location.lng)}
       latitude={clickedMarker.location.lat}
-      onClose={() => setClickedMarker(null)}
+      closeButton={false}
+      // onClose={() => setClickedMarker(null)}
       className="!max-w-[240px] sm:!max-w-[270px] lg:!max-w-[320px]"
     >
       {clickedMarker.type === 'station' ? (
-        <StationPopupContent marker={clickedMarker} />
+        <StationPopupContent
+          marker={clickedMarker}
+          closePopup={() => setClickedMarker(null)}
+        />
       ) : (
-        <ForeCastPopupContent marker={clickedMarker} />
+        <ForeCastPopupContent
+          marker={clickedMarker}
+          closePopup={() => setClickedMarker(null)}
+        />
       )}
     </Popup>
   );
 }
 
-function StationPopupContent({ marker }) {
+function StationPopupContent({ marker, closePopup }) {
   const { mapRef } = useContext(MapContext);
 
   const { handleDeleteMarker } = useContext(MarkersContext);
@@ -64,7 +72,7 @@ function StationPopupContent({ marker }) {
       <div className="flex gap-2 items-center dark:text-gray-100 font-black text-[14px]">
         <h3 className="text-wrap">{marker?.title}</h3>
         <span className="flex items-center gap-1">
-          <Tooltip text="click to delete the marker">
+          <Tooltip text="delete the marker">
             <MyButton
               variant="icon"
               className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
@@ -79,6 +87,16 @@ function StationPopupContent({ marker }) {
             marker={marker}
             buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
           />
+          <Tooltip text="close popup">
+            <MyButton
+              variant="icon"
+              className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+              onClick={closePopup}
+              data-marker-id={marker?.id}
+            >
+              <XIcon className="w-5 h-5 action-icon text-red-500 " />
+            </MyButton>
+          </Tooltip>
         </span>
       </div>
       <HumidityChart marker={marker} />
@@ -128,11 +146,21 @@ function StationPopupContent({ marker }) {
   );
 }
 
-function ForeCastPopupContent({ marker }) {
+function ForeCastPopupContent({ marker, closePopup }) {
   return (
     <div>
       <div className="popup-header">
         <h3>{marker.title}</h3>
+        <Tooltip text="close popup">
+          <MyButton
+            variant="icon"
+            className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+            onClick={closePopup}
+            data-marker-id={marker?.id}
+          >
+            <XIcon className="w-5 h-5 action-icon text-red-500 " />
+          </MyButton>
+        </Tooltip>
       </div>
       <hr />
     </div>

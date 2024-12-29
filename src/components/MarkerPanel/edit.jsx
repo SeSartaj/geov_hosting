@@ -23,7 +23,7 @@ const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
     <MyModal
       trigger={
         <MyButton variant="icon" className={`rounded-full ${buttonClassName}`}>
-          <Tooltip text="click to edit the marker">
+          <Tooltip text="edit the marker">
             <BiPencil className="w-5 h-5 action-icon" />
           </Tooltip>
         </MyButton>
