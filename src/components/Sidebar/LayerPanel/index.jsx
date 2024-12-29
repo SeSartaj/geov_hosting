@@ -8,7 +8,7 @@ import { getSatellitePassDates } from '@/api/sentinalHubApi';
 
 import { layerOptions } from '@/constants';
 import useMapStore from '@/stores/mapStore';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, Month, MonthGrid, Months } from 'react-day-picker';
 import 'react-day-picker/style.css';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 import { RadioGroup, RadioGroupItem } from '@/ui-components/RadioGroup';
@@ -19,6 +19,41 @@ import { maxWidth } from '@/constants/index';
 import Card from '@/ui-components/Card';
 import { PlotContext } from '@/contexts/PlotContext';
 import debounce from '@/utils/debounce';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+const CalenderNavComponent = ({
+  previousMonth,
+  nextMonth,
+  onPreviousClick,
+  onNextClick,
+}) => {
+  // get current month from previous month
+  const currentMonth = new Date(
+    previousMonth.getFullYear(),
+    previousMonth.getMonth() + 1,
+    1
+  );
+  return (
+    <div className="flex items-center justify-between w-full px-5">
+      {/* Left Arrow */}
+      <Button onClick={onPreviousClick} variant="ghost">
+        <ChevronLeft />
+      </Button>
+      {/* Month and Year */}
+      <span className="text-lg font-medium text-center mx-4">
+        {currentMonth.toLocaleDateString('en-US', {
+          month: 'long',
+          year: 'numeric',
+        })}
+      </span>
+      {/* Right Arrow */}
+      <Button onClick={onNextClick} variant="ghost">
+        <ChevronRight />
+      </Button>
+    </div>
+  );
+};
 
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
@@ -130,7 +165,7 @@ export default function LayerPanel() {
   ]);
 
   const debouncedHandlePassDates = useMemo(
-    () => debounce(handlePassDates, 2000),
+    () => debounce(handlePassDates, 3000),
     [handlePassDates]
   );
 
@@ -250,6 +285,9 @@ export default function LayerPanel() {
           <DayPicker
             mode="single"
             selected={selectedDate}
+            classNames={{
+              months: 'rdp-months justify-center',
+            }}
             onSelect={(date) => {
               console.log('onDayClick', date);
               if (date) {
@@ -271,10 +309,13 @@ export default function LayerPanel() {
               selected: 'bg-green-400 dark:bg-green-600',
               today: 'dark:text-red',
               caption_label: 'rdp-caption_label z-0',
-              root: maxWidth,
-              table: maxWidth,
+              // root: maxWidth,
+              // table: maxWidth,
             }}
-            // footer={selectedDate ? `Selected: ${selectedDate}` : 'Pick a day.'}
+            components={{
+              Nav: CalenderNavComponent,
+              MonthCaption: () => <span></span>,
+            }}
           />
         </Card>
       </div>
