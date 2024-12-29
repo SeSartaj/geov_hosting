@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import { MapContext } from '../../../contexts/MapContext';
 import MyReactSelect from '@/ui-components/MyReactSelect';
 import ToggleButton from '@/ui-components/toggleButton';
@@ -18,6 +18,7 @@ import { CalenderIcon } from '@/icons/calender';
 import { maxWidth } from '@/constants/index';
 import Card from '@/ui-components/Card';
 import { PlotContext } from '@/contexts/PlotContext';
+import debounce from '@/utils/debounce';
 
 export default function LayerPanel() {
   const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
@@ -128,24 +129,33 @@ export default function LayerPanel() {
     accessToken,
   ]);
 
+  const debouncedHandlePassDates = useMemo(
+    () => debounce(handlePassDates, 2000),
+    [handlePassDates]
+  );
+
   // fetch pass dates for visible area from catalog api, sentinel hub
   useEffect(() => {
     if (mapInstance) {
-      mapInstance?.on('moveend', handlePassDates);
-      mapInstance?.on('zoomend', handlePassDates);
+      mapInstance?.on('moveend', debouncedHandlePassDates);
+      mapInstance?.on('zoomend', debouncedHandlePassDates);
     }
 
     return () => {
       if (mapInstance) {
-        mapInstance?.off('moveend', handlePassDates);
-        mapInstance?.off('zoomend', handlePassDates);
+        mapInstance?.off('moveend', debouncedHandlePassDates);
+        mapInstance?.off('zoomend', debouncedHandlePassDates);
       }
+      debouncedHandlePassDates.cancel();
     };
-  }, [mapInstance, handlePassDates]);
+  }, [mapInstance, debouncedHandlePassDates]);
 
   // at start run it once
   useEffect(() => {
-    handlePassDates();
+    debouncedHandlePassDates();
+    return () => {
+      debouncedHandlePassDates.cancel();
+    };
   }, []);
 
   // Re-render the Calendar whenever passDates changes
