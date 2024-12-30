@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import FormGroup, { FormErrorMessage } from '@/ui-components/FormGroup';
 import Input from '@/ui-components/Input';
 import MyButton from '@/ui-components/MyButton';
@@ -69,12 +70,12 @@ export default function PlotForm({
       <FormErrorMessage error={formError} />
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-        <MyButton color="mute" onClick={onCancel}>
+        <Button onClick={onCancel} variant="outline">
           Cancel
-        </MyButton>
-        <MyButton type="submit" disabled={submitting} color="primary">
+        </Button>
+        <Button type="submit" disabled={submitting}>
           {submitting ? 'loading ...' : submitButtonText}
-        </MyButton>
+        </Button>
       </div>
     </form>
   );

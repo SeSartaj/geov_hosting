@@ -102,7 +102,14 @@ export async function fetchAccessToken(clientId, clientSecret) {
 //   return data;
 // }
 
-export async function fetchMeanNDVI(plot, { accessToken }) {
+export async function fetchMeanNDVI(plot, { accessToken, startDate, endDate }) {
+  // if startDate is not provided, set it to the past 3 months
+  const START_DATE =
+    startDate ||
+    new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString();
+  // if endDate is not provided, set it to the current date
+  const END_DATE = endDate || new Date().toISOString();
+
   const sentinelHubStatUrl =
     'https://services.sentinel-hub.com/api/v1/statistics';
 
@@ -129,8 +136,8 @@ export async function fetchMeanNDVI(plot, { accessToken }) {
     },
     aggregation: {
       timeRange: {
-        from: '2024-01-01T00:00:00Z',
-        to: '2024-07-31T00:00:00Z',
+        from: START_DATE,
+        to: END_DATE,
       },
       aggregationInterval: {
         of: 'P30D',
@@ -164,10 +171,20 @@ export async function fetchMeanNDVI(plot, { accessToken }) {
   }
 }
 
-export async function fetchMeanNDVIForPoint(point, { accessToken }) {
+export async function fetchMeanNDVIForPoint(
+  point,
+  { accessToken, startDate, endDate }
+) {
   const longitude = point.lng;
   const latitude = point.lat;
   const smallOffset = 0.0001; // Adjust the offset to define the size of the polygon
+
+  // if startDate is not provided, set it to the past 3 months
+  const START_DATE =
+    startDate ||
+    new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString();
+  // if endDate is not provided, set it to the current date
+  const END_DATE = endDate || new Date().toISOString();
 
   const smallPolygon = {
     type: 'Polygon',
@@ -204,8 +221,8 @@ export async function fetchMeanNDVIForPoint(point, { accessToken }) {
     },
     aggregation: {
       timeRange: {
-        from: '2024-01-01T00:00:00Z',
-        to: '2024-07-31T00:00:00Z',
+        from: START_DATE,
+        to: END_DATE,
       },
       aggregationInterval: {
         of: 'P30D',

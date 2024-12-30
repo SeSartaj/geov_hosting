@@ -82,11 +82,15 @@ function MapControl() {
 
   const onClickMap = useCallback(
     (e) => {
-      console.log('click', e.currentTarget?.id);
+      const maptile = e.currentTarget?.id;
+      console.log('click', maptile);
       setChangeMap((prev) => !prev);
       setSettings({
         ...settings,
-        basemap: { ...settings.basemap, id: e.currentTarget?.id },
+        basemap: {
+          ...settings.basemap,
+          id: maptile === 'basic' ? 'satellite' : 'basic',
+        },
       });
     },
     [basedMap]
@@ -105,7 +109,7 @@ function MapControl() {
       button.title = 'Change view mode';
       button.id = basedMap?.id;
 
-      const icon = basedMap?.id === 'basic' ? basicIcon : satelliteIcon;
+      const icon = basedMap?.id === 'basic' ? satelliteIcon : basicIcon;
 
       button.appendChild(icon);
       container.appendChild(button);

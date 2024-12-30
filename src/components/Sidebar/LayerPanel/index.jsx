@@ -103,15 +103,44 @@ export default function LayerPanel() {
       bounds?.getEast(),
       bounds?.getNorth(),
     ];
+    console.log('selectedDate', selectedDate);
 
     if (rasterLayer?.passDates) {
-      console.log('Date not found in passDates');
-      if (!selectedDate) {
-        setDateRange({
-          start: new Date(rasterLayer?.passDates[0]),
-          end: new Date(rasterLayer?.passDates[0]),
-        });
+      let isCurrentDateExist;
+      // change the selectedDate to yyyy-mm-dd format
+      if (selectedDate) {
+        isCurrentDateExist = rasterLayer?.passDates.includes(
+          selectedDate?.toISOString()?.split('T')[0]
+        );
       }
+
+      console.log(
+        'selectedDate current exist',
+        isCurrentDateExist,
+        selectedDate,
+        selectedDate?.toISOString()?.split('T')[0],
+        rasterLayer?.passDates
+      );
+
+      if (!selectedDate || !isCurrentDateExist) {
+        console.log('raster layer have no current date exist');
+        // it is assumed that passDates are sorted in chronological order
+        setDateRange({
+          start: new Date(
+            rasterLayer?.passDates[rasterLayer.passDates.length - 1]
+          ),
+          end: new Date(
+            rasterLayer?.passDates[rasterLayer.passDates.length - 1]
+          ),
+        });
+        setSelectedDate(
+          new Date(rasterLayer?.passDates[rasterLayer.passDates.length - 1])
+        );
+      }
+
+      // if (!selectedDate) {
+
+      // }
       const d = rasterLayer.passDates.map((d) => new Date(d));
       console.log('dddd', d);
       setPassDates(d);
@@ -133,8 +162,10 @@ export default function LayerPanel() {
           if (dates.length > 0) {
             console.log('setting date range', dates[0]);
             // set daterange start and end to the first most recent date in the dates
-            // setSelectedDate(dates[0]);
-            if (!selectedDate) {
+            // if selected date was not in list of dates, set it to the first date
+            // otherwise lave the date untouched
+            if (!dates.includes(selectedDate)) {
+              setSelectedDate(dates[0]);
               setDateRange({
                 start: dates[0],
                 end: dates[0],
@@ -185,18 +216,9 @@ export default function LayerPanel() {
     };
   }, [mapInstance, debouncedHandlePassDates]);
 
-  // at start run it once
   useEffect(() => {
-    debouncedHandlePassDates();
-    return () => {
-      debouncedHandlePassDates.cancel();
-    };
-  }, []);
-
-  // Re-render the Calendar whenever passDates changes
-  useEffect(() => {
-    console.log('passDates', passDates);
-  }, [passDates]);
+    handlePassDates();
+  }, [mapInstance, rasterLayer]);
 
   const _onSelectSentinel = useCallback(
     (value) => {
@@ -215,7 +237,7 @@ export default function LayerPanel() {
       <div className="flex flex-col gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
         <div className="flex items-center justify-between">
           <h4 className="text-base dark:text-gray-100 tracking-tight">
-            Rester Layer
+            Raster Layer
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup

@@ -1,3 +1,4 @@
+import { GPSBlueIcon } from '@/icons/gps-blue';
 import React from 'react';
 import { BiDroplet, BiSolidCloud, BiSolidDroplet } from 'react-icons/bi';
 import { Marker } from 'react-map-gl/maplibre';
@@ -8,7 +9,6 @@ const ForecastMarker = React.memo(function ForecastMarker({
   longitude,
   onClick,
 }) {
-
   const handleClick = (event) => {
     if (onClick) {
       onClick(event);
@@ -17,13 +17,13 @@ const ForecastMarker = React.memo(function ForecastMarker({
 
   return (
     <Marker
-      className='map-marker'
+      className="map-marker"
       key={marker.id}
       longitude={longitude}
       latitude={latitude}
       onClick={handleClick}
     >
-      <BiSolidCloud size={32} color='blue' />
+      <GPSBlueIcon size={32} color="blue" />
     </Marker>
   );
 });

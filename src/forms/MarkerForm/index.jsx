@@ -1,6 +1,7 @@
 import { getFarmOptions } from '@/api/farmApi';
 import { getAllGraphOptions, getPawGraphOptions } from '@/api/graphsApi';
 import { getStationOptions } from '@/api/stationApi';
+import { Button } from '@/components/ui/button';
 import { SettingsContext } from '@/contexts/SettingsContext';
 import useAsync from '@/hooks/useAsync';
 import FormGroup, { FormErrorMessage } from '@/ui-components/FormGroup';
@@ -234,12 +235,12 @@ export default function MarkerForm({
       <FormErrorMessage error={formError} />
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-        <MyButton color="mute" onClick={onCancel}>
+        <Button onClick={onCancel} variant="outline">
           Cancel
-        </MyButton>
-        <MyButton type="submit" disabled={submitting} color="primary">
+        </Button>
+        <Button type="submit" disabled={submitting}>
           {submitting ? 'loading ...' : submitButtonText}
-        </MyButton>
+        </Button>
       </div>
     </form>
   );

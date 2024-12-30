@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import * as Tabs from '@radix-ui/react-tabs';
+// import * as Tabs from '@radix-ui/react-tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import { MapContext } from '@/contexts/MapContext';
 import MyModal from '@/ui-components/MyModal';
 import NdviChart from '../PlotNDVIChart';
@@ -23,28 +25,32 @@ export default function AreaDetails() {
         open={true}
         setOpen={() => setPickerData(null)}
         title="Area Details"
+        headerClassName="m-4"
       >
-        <Tabs.Root
+        <Tabs
           className="flex flex-col w-full h-full overflow-y-hidden"
           defaultValue="point"
         >
-          <Tabs.List
-            className="flex flex-shrink-0 justify-start "
+          <TabsList
+            className="grid w-full grid-cols-2"
             aria-label="Manage your account"
           >
-            <TabTrigger
+            <TabsTrigger
               value="point"
               tooltipText="Point"
               // portalContainer={mapInstance.getContainer()}
             >
-              <HiOutlineMapPin className="cursor-pointer" />
-            </TabTrigger>
+              <HiOutlineMapPin className="cursor-pointer" /> &nbsp;
+              <span>Point</span>
+            </TabsTrigger>
             {pickerData?.plot && (
-              <TabTrigger value="plot" tooltipText="Plot">
+              <TabsTrigger value="plot" tooltipText="Plot">
                 <FaRegMap className="cursor-pointer" />
-              </TabTrigger>
+                &nbsp;
+                <span>Plot</span>
+              </TabsTrigger>
             )}
-          </Tabs.List>
+          </TabsList>
           <br />
           <TabContent value="point">
             <NdviChart point={pickerData.coordinates} />
@@ -54,7 +60,7 @@ export default function AreaDetails() {
               <NdviChart plot={pickerData.plot} />
             </TabContent>
           )}
-        </Tabs.Root>
+        </Tabs>
       </MyModal>
     </>
   );

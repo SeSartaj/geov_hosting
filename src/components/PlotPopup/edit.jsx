@@ -6,6 +6,7 @@ import Tooltip from '@/ui-components/Tooltip';
 import { PlotContext } from '@/contexts/PlotContext';
 import MyModal from '@/ui-components/MyModal';
 import PlotForm from '@/forms/plot';
+import { Button } from '../ui/button';
 
 export const EditPlotModal = ({ plot }) => {
   const [open, setOpen] = useState(false);
@@ -22,14 +23,11 @@ export const EditPlotModal = ({ plot }) => {
   return (
     <MyModal
       trigger={
-        <MyButton
-          variant="icon"
-          className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
-        >
+        <Button variant="outline" size="icon">
           <Tooltip text="click to edit the plot">
             <BiPencil className="w-5 h-5 action-icon" />
           </Tooltip>
-        </MyButton>
+        </Button>
       }
       title="Edit Plot"
       open={open}

@@ -76,9 +76,10 @@ function StationPopupContent({ marker, closePopup }) {
           {/* <Tooltip text="delete the marker"> */}
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={_onDeleteMarker}
             data-marker-id={marker?.id}
+            tabIndex={-1}
           >
             <BiTrash className="w-5 h-5 action-icon text-red-500 " />
           </Button>
@@ -89,7 +90,7 @@ function StationPopupContent({ marker, closePopup }) {
             buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
           />
           <Tooltip text="close popup">
-            <Button variant="outline" size="sm" onClick={closePopup}>
+            <Button variant="outline" size="icon" onClick={closePopup}>
               <XIcon className="w-5 h-5 action-icon " />
             </Button>
           </Tooltip>

@@ -45,18 +45,18 @@ export default function PlotPopup({ popupInfo, onClose }) {
           <h3 className="text-wrap">{plot.properties.name}</h3>
           <span className="flex items-center gap-1">
             {/* <Tooltip text="click to delete the marker"> */}
-            <MyButton
-              variant="icon"
-              className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+            <Button
+              variant="outline"
+              size="icon"
               onClick={_onDeletePlot}
               data-marker-id={plot?.id}
             >
               <BiTrash className="w-5 h-5 action-icon text-red-500" />
-            </MyButton>
+            </Button>
             {/* </Tooltip> */}
             <EditPlotModal plot={findPlot} />
             <Tooltip text="close popup">
-              <Button variant="outline" size="sm" onClick={onClose}>
+              <Button variant="outline" size="icon" onClick={onClose}>
                 <XIcon className="w-5 h-5 action-icon " />
               </Button>
             </Tooltip>
@@ -86,16 +86,6 @@ export default function PlotPopup({ popupInfo, onClose }) {
                 Potato
               </span>
             </div>
-          </div>
-          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
-            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-              NDVI Image
-            </h4>
-            <span className="flex flex-row justify-between items-center">
-              {new Date(
-                new Date().setDate(new Date().getDate() - 0 * 7)
-              ).toLocaleDateString()}
-            </span>
           </div>
         </div>
       </div>
