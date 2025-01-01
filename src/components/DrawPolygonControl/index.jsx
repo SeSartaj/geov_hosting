@@ -7,10 +7,17 @@ import DrawActionsPopup from '../DrawActionsPopup';
 import { useControl } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
 import useMapStore from '@/stores/mapStore';
+import { VIEW_MODES } from '@/stores/mapStore';
+import { FaPlantWilt } from 'react-icons/fa6';
+import { Button } from '../ui/button';
+import ActionsPopup from '../ActionsPopup';
 
 export function DrawPolygonControl() {
   const [features, setFeatures] = useState({});
-  const { mode, setMode } = useContext(MapContext);
+  const setViewMode = useMapStore((state) => state.setViewMode);
+  const viewMode = useMapStore((state) => state.viewMode);
+  const [drawMode, setDrawMode] = useState();
+
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const { drawRef, mapRef, showDrawActionPopup, setShowDrawActionPopup } =
     useContext(MapContext);
@@ -37,8 +44,8 @@ export function DrawPolygonControl() {
 
   const onDelete = useCallback((e) => {
     // when editing plot
-    if (mode === 'editing-plot') {
-      setMode('view');
+    if (viewMode in [VIEW_MODES.EDIT_PLOT, VIEW_MODES.EDIT_MARKER]) {
+      setViewMode(VIEW_MODES.NORMAL);
     }
     console.log('mode after deleting', e.mode);
     setFeatures((currFeatures) => {
@@ -54,12 +61,6 @@ export function DrawPolygonControl() {
     () => {
       const draw = new MapboxDraw({
         displayControlsDefault: false,
-        controls: {
-          point: true,
-          polygon: true,
-          trash: true,
-        },
-        // defaultMode: 'draw_polygon',
       });
 
       drawRef.current = draw;
@@ -83,8 +84,7 @@ export function DrawPolygonControl() {
   const handleModeChange = (e) => {
     console.log('mode changed', e);
     // when everything is cleared, set mode to view
-    console.log('mode: ', e.mode);
-    // setMode(e.mode);
+    setDrawMode(e.mode);
   };
 
   const handleSelectionChange = (e) => {
@@ -109,9 +109,20 @@ export function DrawPolygonControl() {
     };
   }, [drawRef]);
 
-  if (selectedFeatures && showDrawActionPopup) {
+  if (drawMode == 'simple_select' && showDrawActionPopup) {
     return (
       <div>
+        {/* a control on the right side of the screen with three bottoms top of each other */}
+        {viewMode === VIEW_MODES.EDIT_PLOT && (
+          <ActionsPopup feature={selectedFeatures.features[0]}>
+            <Button
+              variant="outline"
+              onClick={() => setViewMode(VIEW_MODES.NORMAL)}
+            >
+              <FaPlantWilt /> Save changes
+            </Button>
+          </ActionsPopup>
+        )}
         {selectedFeatures?.features?.map((feature) => (
           <DrawActionsPopup key={feature.id} feature={feature} />
         ))}

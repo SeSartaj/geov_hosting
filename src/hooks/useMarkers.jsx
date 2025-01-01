@@ -48,6 +48,7 @@ export const useMarkers = () => {
   const handleMarkerUpdate = (data) => {
     return updateMarker(data).then((updatedMarker) => {
       if (!updatedMarker) return;
+      // update the markers list
       const updatedMarkers = markers.map((marker) =>
         marker.id === updatedMarker.id ? updatedMarker : marker
       );

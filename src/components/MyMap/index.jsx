@@ -20,11 +20,13 @@ import Spinner from '@/ui-components/Spinner';
 import StatusBar from '../StatusBar';
 import NDVILayer from '../NDVILayer';
 import PickerControl from '../PickerControl';
-import useMapStore from '@/stores/mapStore';
+import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import ColorLegend from '../ColorLegend';
 import { AccessTokenProvider } from '@/contexts/AccessTokenProvider';
 import MapControl from './map-control';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { FaExclamation } from 'react-icons/fa6';
+import { Button } from '../ui/button';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -52,15 +54,35 @@ export default function MyMap() {
           attributionControl={false}
           reuseMaps
           preserveDrawingBuffer={true}
-          // cursor={cursor}
+          cursor={cursor}
         >
-          <MapControl />
-          <FullscreenControl position="top-right" />
-          <PickerControl />
-          <NDVILayer />
+          {/* <NDVILayer /> */}
           <Sidebar />
-          {viewMode !== 'PICKER' && <DrawPolygonControl />}
-          <PAWStatusPieChart />
+
+          <div className="absolute top-0 left-0"></div>
+          <div className="absolute top-0 right-0 m-2" style={{ zIndex: 2 }}>
+            <MapControl />
+          </div>
+          {/* {
+            viewMode == VIEW_MODES.ADD_PLOT && 
+            <AddPolygonControl />
+          }
+          {
+            viewMode == VIEW_MODES.EDIT_PLOT && 
+            <EditPlotControl />
+          }
+          {
+            viewMode == VIEW_MODES.ADD_MARKER && 
+            <AddMarkerControl />
+          }
+
+          {
+            viewMode == VIEW_MODES.EDIT_MARKER &&
+            <EditMarkerControl />
+          } */}
+
+          <DrawPolygonControl />
+          {/* <PAWStatusPieChart /> */}
           <Markers />
           <MarkerPopup />
           <Plots />

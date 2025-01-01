@@ -1,0 +1,16 @@
+- [ ] Map button icons are incomplete
+  - [x] Map type button is inverted -- should show map icon when satellite is selected and vice versa
+  - [ ] Use icons from figma
+- [x] Unable to render ET layer (tile server is unresponsive)
+- [x] Available dates are not shown after changing layers until zoomed in or out
+- [x] Raster Layer text is misspelled
+- [x] Time series modals are not made with shadcn to match the global style
+- [x] Plot pop-up close button is bigger in size than the adjacent buttons
+- [x] Marker pop-up action buttons are too big relative to the size of the icons
+- [x] Time series charts show a fixed range (i think between March and June) of data. Should show the last month or last couple of weeks.
+- [x] After changing layer e.g. ET to NDVI you should not have to select a date for the layer to render. Instead, the most recent date should be automatically selected and rendered.
+- [x] Unable to update plot or marker details e.g. update the title or change graphs of a marker
+- [ ] Delete button on the map is unintuitive and usage is unclear
+- [x] Plot pop-up NDVI Image field is unnecessary
+- [-] No way to enter or edit crop type and area of a plot
+- [ ] Spanish version of the UI (low priority)

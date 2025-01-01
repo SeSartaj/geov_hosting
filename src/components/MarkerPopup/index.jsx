@@ -97,8 +97,8 @@ function StationPopupContent({ marker, closePopup }) {
         </span>
       </div>
       <HumidityChart marker={marker} />
-      <div className="flex flex-col items-center gap-3">
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+      <div className="flex flex-col items-center gap-1">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             Battery
           </h4>
@@ -108,7 +108,7 @@ function StationPopupContent({ marker, closePopup }) {
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             PAW Status
           </h4>
@@ -118,7 +118,7 @@ function StationPopupContent({ marker, closePopup }) {
             </Badge>
           </div>
         </div>
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             Average PAW
           </h4>
@@ -128,7 +128,7 @@ function StationPopupContent({ marker, closePopup }) {
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+        <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
             Crop
           </h4>

@@ -61,21 +61,24 @@ export default function MarkerForm({
   const formRef = useRef();
 
   const serializeData = (formData) => {
+    console.log('data before serialization', formData);
     const data = {
       marker_map: settings.mapId,
       lng: formData.longitude,
       lat: formData.latitude,
       location_name: formData.name,
-      farm: formData.farm.value,
+      farm: formData?.farm?.id,
       use_custom_location: true,
     };
 
     if (formData?.id) data.id = formData.id;
-    if (formData.station) data.device = formData.station.value;
+    if (formData.station) data.device = formData.station.serial;
     if (formData.graphs?.length > 0)
-      data.graphs = formData.graphs.map((g) => g.value);
+      data.graphs = formData.graphs.map((g) => g.id || g.value);
+    else data.graphs = [];
     if (formData.paw_graphs?.length > 0)
-      data.graphs = formData.paw_graphs.map((g) => g.value);
+      data.paw_graphs = formData.paw_graphs.map((g) => g.id || g.value);
+    else data.paw_graphs = [];
 
     return data;
   };

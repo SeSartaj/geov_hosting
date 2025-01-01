@@ -10,6 +10,8 @@ import { usePlots } from '../hooks/usePlots';
 import { MapContext } from './MapContext';
 import { LngLatBounds } from 'maplibre-gl';
 import { deletePlot } from '@/api/plotApi';
+import useMapStore from '@/stores/mapStore';
+import { VIEW_MODES } from '@/stores/mapStore';
 
 // Create a new context for the map
 const PlotContext = createContext();
@@ -23,6 +25,7 @@ const PlotProvider = ({ children }) => {
   const [showPlots, setShowPlots] = useState(true);
   const [weeksBefore, setWeeksBefore] = useState(0);
   const [showNdviLayer, setShowNdviLayer] = useState(false);
+  const setViewMode = useMapStore((state) => state.setViewMode);
 
   const map = mapRef?.current?.getMap();
   const draw = drawRef?.current;
@@ -105,8 +108,8 @@ const PlotProvider = ({ children }) => {
     if (map) {
       const draw = drawRef.current;
       handleFlyToPlot(plot?.options.geometry.coordinates);
+      setViewMode(VIEW_MODES.EDIT_PLOT);
       if (draw) {
-        setMode('editing-plot');
         // remove anything drawn before
         draw.deleteAll();
         // add the plot to draw layer
@@ -150,6 +153,7 @@ const PlotProvider = ({ children }) => {
         plots,
         addNewPlot,
         clickedPlot,
+        handlePlotUpdate,
         setClickedPlot,
         showPlots,
         setShowPlots: handleShowPlots,

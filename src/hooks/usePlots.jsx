@@ -185,6 +185,7 @@ export const usePlots = () => {
 
   const handlePlotUpdate = (updatedPlot) => {
     console.log('updating plot', updatedPlot);
+
     // locally change the plot location
     setPlots((prev) => {
       const updatedPlots = prev.map((plot) => {
@@ -199,7 +200,7 @@ export const usePlots = () => {
       return updatedPlots;
     });
 
-    updatePlot(updatedPlot).then(() => {
+    return updatePlot(updatedPlot).then(() => {
       getPlotsList();
     });
   };

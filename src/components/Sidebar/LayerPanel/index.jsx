@@ -90,6 +90,7 @@ export default function LayerPanel() {
   //  and store all dates in a state
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
+    return;
     if (!mapInstance) return;
 
     setDatesLoading(true);

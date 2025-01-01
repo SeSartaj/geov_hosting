@@ -60,7 +60,7 @@ export const GPSBlueIcon = (props) => (
         />
         <feOffset dy="4" />
         <feGaussianBlur stdDeviation="2" />
-        <feComposite in2="hardAlpha" operator="out" />
+        {/* <feComposite in2="hardAlpha" operator="out" /> */}
         <feColorMatrix
           type="matrix"
           values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"

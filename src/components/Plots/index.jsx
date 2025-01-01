@@ -185,15 +185,11 @@ export default function Plots() {
   );
 
   const handleMouseEnter = useCallback(() => {
-    if (map) {
-      map.getCanvas().style.cursor = 'pointer';
-    }
+    setCursor('pointer');
   }, [setCursor, map]);
 
   const handleMouseLeave = useCallback(() => {
-    if (map) {
-      map.getCanvas().style.cursor = 'grab';
-    }
+    resetCursor();
   }, [setCursor, map]);
 
   const isBoundingBoxIntersecting = useCallback((plotBounds, mapBounds) => {

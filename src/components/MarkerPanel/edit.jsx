@@ -17,6 +17,10 @@ const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
   }, []);
 
   const handlerEditMarker = (data) => {
+    // check which fields has changed and send only those to the backend
+    console.log('data after editing', data);
+    console.log('data before editing', marker);
+
     return handleMarkerUpdate(data);
   };
 

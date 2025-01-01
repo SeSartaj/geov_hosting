@@ -8,6 +8,7 @@ import FormGroup from '@/ui-components/FormGroup';
 import MyReactSelect from '@/ui-components/MyReactSelect';
 import { getFarmOptions } from '@/api/farmApi';
 import Card from '@/ui-components/Card';
+import { Button } from '../ui/button';
 
 const AddPlotModal = ({ polygon, deleteFeature }) => {
   const [open, setOpen] = useState(false);
@@ -66,7 +67,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
 
   return (
     <MyModal
-      trigger={<MyButton color="primary">Add New Plot</MyButton>}
+      trigger={<Button color="primary">Add New Plot</Button>}
       title="Add New Plot "
       headerClassName="m-4"
       open={open}
@@ -96,17 +97,17 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
           </FormGroup>
           <br />
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <MyButton
+            <Button
               type="cancel"
-              variant="text"
+              variant="outline"
               onClick={!loading && handleClose}
               disabled={loading}
             >
               cancel
-            </MyButton>
-            <MyButton type="submit" loading={loading} color="primary">
+            </Button>
+            <Button type="submit" loading={loading} color="primary">
               Add Plot
-            </MyButton>
+            </Button>
           </div>
         </form>
       </Card>

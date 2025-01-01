@@ -7,17 +7,30 @@ import { PlotContext } from '@/contexts/PlotContext';
 import MyModal from '@/ui-components/MyModal';
 import PlotForm from '@/forms/plot';
 import { Button } from '../ui/button';
+import useMapStore from '@/stores/mapStore';
 
 export const EditPlotModal = ({ plot }) => {
   const [open, setOpen] = useState(false);
-  const { handleEditPlot } = useContext(PlotContext);
+  const toDrawMode = useMapStore((state) => state.toDrawMode);
+  const toNormalMode = useMapStore((state) => state.toNormalMode);
+
+  const { handlePlotUpdate, handleEditPlot, setClickedPlot } =
+    useContext(PlotContext);
 
   const _onChangeVisibility = useCallback(() => {
     setOpen((prev) => !prev);
   }, []);
 
-  const handlerEditPlot = (data) => {
-    return handleEditPlot(data);
+  const handleGeometryEdit = (e) => {
+    setOpen(false);
+    setClickedPlot(null);
+    handleEditPlot(plot);
+  };
+
+  const plotUpdateHandler = (data) => {
+    return handlePlotUpdate(data).then(() => {
+      setClickedPlot(null);
+    });
   };
 
   return (
@@ -38,8 +51,9 @@ export const EditPlotModal = ({ plot }) => {
       <Card>
         <PlotForm
           plot={plot}
-          onSubmit={handlerEditPlot}
+          onSubmit={plotUpdateHandler}
           onCancel={_onChangeVisibility}
+          onGeometryChange={handleGeometryEdit}
           submitButtonText="Save Changes"
         />
       </Card>

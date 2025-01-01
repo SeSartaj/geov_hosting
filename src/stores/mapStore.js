@@ -1,10 +1,14 @@
 import { layerOptions } from '@/constants';
 import { create } from 'zustand';
 
-const VIEW_MODES = {
+export const VIEW_MODES = {
   PICKER: 'PICKER',
   NORMAL: 'NORMAL',
   DRAW: 'DRAW',
+  EDIT_PLOT: 'EDIT_PLOT',
+  ADD_PLOT: 'ADD_PLOT',
+  ADD_MARKER: 'ADD_MARKER',
+  EDIT_MARKER: 'EDIT_MARKER',
 };
 
 const MAP_CURSORS = {
@@ -21,6 +25,8 @@ const MAP_CURSORS = {
 };
 
 const useMapStore = create((set) => ({
+  sidebarExpanded: true,
+  setSidebarExpanded: (expanded) => set({ sidebarExpanded: expanded }),
   hoveredValue: null,
   setHoveredValue: (color) => set({ hoveredValue: color }),
   cursor: MAP_CURSORS.DEFAULT,

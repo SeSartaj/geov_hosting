@@ -8,21 +8,13 @@ import AddNewMarkerModal from '../AddNewMarkerModal';
 import useMapStore from '@/stores/mapStore';
 import { VIEW_MODES } from '@/stores/mapStore';
 
-export default function DrawActionsPopup({ feature }) {
+export default function ActionsPopup({ feature, children }) {
   const { drawRef, mapRef, setShowDrawActionPopup, mode } =
     useContext(MapContext);
   const [drawMode, setDrawMode] = useState('');
   const viewMode = useMapStore((state) => state.viewMode);
 
   const mapInstance = mapRef?.current;
-
-  const handleDeleteFeature = () => {
-    if (drawRef?.current) {
-      drawRef.current.delete(feature.id);
-    }
-    setDrawMode('');
-    setShowDrawActionPopup(false);
-  };
 
   // keep the drawMode updated
   useEffect(() => {
@@ -51,32 +43,14 @@ export default function DrawActionsPopup({ feature }) {
     return null;
   }
 
-  if (feature.geometry.type == 'Point') {
-    return (
-      <Popup
-        latitude={feature.geometry.coordinates[1]}
-        longitude={feature.geometry.coordinates[0]}
-        closeOnClick={true}
-        anchor="top"
-      >
-        <AddNewMarkerModal
-          feature={feature}
-          deleteFeature={handleDeleteFeature}
-        />
-      </Popup>
-    );
-  }
-
-  if (viewMode === VIEW_MODES.ADD_PLOT) {
-    return (
-      <Popup
-        latitude={feature.geometry.coordinates[0][0][1]}
-        longitude={feature.geometry.coordinates[0][0][0]}
-        closeOnClick={true}
-        anchor="top"
-      >
-        <AddPlotModal polygon={feature} deleteFeature={handleDeleteFeature} />
-      </Popup>
-    );
-  }
+  return (
+    <Popup
+      latitude={feature.geometry.coordinates[0][0][1]}
+      longitude={feature.geometry.coordinates[0][0][0]}
+      closeOnClick={true}
+      anchor="top"
+    >
+      {children}
+    </Popup>
+  );
 }

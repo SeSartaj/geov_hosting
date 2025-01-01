@@ -66,8 +66,8 @@ export default function PlotPopup({ popupInfo, onClose }) {
         <div className="w-[calc(100%+4px)]">
           <NdviChart plot={plot} />
         </div>
-        <div className="w-full flex flex-col items-center gap-3">
-          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+        <div className="w-full flex flex-col items-center gap-1">
+          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
             <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
               Area (sqm)
             </h4>
@@ -77,7 +77,7 @@ export default function PlotPopup({ popupInfo, onClose }) {
               </span>
             </div>
           </div>
-          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
+          <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
             <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
               Crop
             </h4>
