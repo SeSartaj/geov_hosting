@@ -90,10 +90,10 @@ export default function LayerPanel() {
   //  and store all dates in a state
   // create a function handlePassDates
   const handlePassDates = useCallback(() => {
-    return;
     if (!mapInstance) return;
 
     setDatesLoading(true);
+    // too much zoom out? don't bother fetching available dates
     if (!isVisible || mapInstance?.getZoom() < 9) {
       setPassDates([]);
     }
@@ -139,9 +139,6 @@ export default function LayerPanel() {
         );
       }
 
-      // if (!selectedDate) {
-
-      // }
       const d = rasterLayer.passDates.map((d) => new Date(d));
       console.log('dddd', d);
       setPassDates(d);
@@ -232,6 +229,11 @@ export default function LayerPanel() {
     },
     [toggleNDVILayersVisibility]
   );
+
+  useEffect(() => {
+    console.log('changed!!!", selectedDate', selectedDate);
+    console.log('changed!!!", passDates', passDates);
+  }, [selectedDate, passDates]);
 
   return (
     <div className="flex flex-col gap-2.5">

@@ -24,10 +24,10 @@ export const API_URL2 = 'https://agviewer.com/api';
 
 export const layerOptions = [
   { value: '3_NDVI', label: 'NDVI' },
-  { value: 'NDVI_RAW', label: 'NDVI_RAW' },
-  { value: 'AGRICULTURE', label: 'AGRICULTURE' },
+  // { value: 'NDVI_RAW', label: 'NDVI_RAW' },
+  // { value: 'AGRICULTURE', label: 'AGRICULTURE' },
   { value: '2_FALSE_COLOR', label: 'False color (vegetation) ' },
-  { value: 'MOISTURE-INDEX', label: 'Moisture Index' },
+  { value: '5-MOISTURE-INDEX1', label: 'Moisture Index' },
   {
     value: 'ET',
     label: 'Evapotranspiration',

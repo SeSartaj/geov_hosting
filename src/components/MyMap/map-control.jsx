@@ -65,6 +65,7 @@ function MapControl() {
   const { settings, setSettings } = useContext(SettingsContext);
   const [isFullScreen, setisFullScreen] = useState(false);
   const setViewMode = useMapStore((state) => state.setViewMode);
+  const viewMode = useMapStore((state) => state.viewMode);
 
   const handleMapStyleChange = useCallback(() => {
     setChangeMap((prev) => !prev);
@@ -101,6 +102,10 @@ function MapControl() {
     }
     setisFullScreen(true);
   }, [mapInstance]);
+
+  if (viewMode === VIEW_MODES.ADD_PLOT || viewMode === VIEW_MODES.ADD_MARKER) {
+    return null;
+  }
 
   return (
     <>

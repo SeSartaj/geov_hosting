@@ -115,25 +115,27 @@ export function AddStationControl() {
 
   return (
     <>
-      <div className="absolute bottom-0 right-0  pb-8 p-3  z-2 flex justify-end align-bottom gap-2">
-        <Button variant="outline" size="icon" onClick={handleEditCancel}>
-          <XIcon />
-        </Button>
-        <Button variant="outline" size="icon" onClick={handleTrashClick}>
-          <Trash />
-        </Button>
-        {/* a control on the right side of the screen with three bottoms top of each other */}
-        <AddNewMarkerModal
-          trigger={
-            <Button variant="outline" size="icon">
-              <Tooltip text="add station">
-                <Save />
-              </Tooltip>
-            </Button>
-          }
-          feature={plotShape}
-          deleteFeature={handleDeleteFeature}
-        />
+      <div className="absolute top-0 right-0 m-2 ">
+        <div className=" gap-1 flex flex-col">
+          <Button variant="outline" size="icon" onClick={handleEditCancel}>
+            <XIcon />
+          </Button>
+          <Button variant="outline" size="icon" onClick={handleTrashClick}>
+            <Trash />
+          </Button>
+          {/* a control on the right side of the screen with three bottoms top of each other */}
+          <AddNewMarkerModal
+            trigger={
+              <Button variant="outline" size="icon">
+                <Tooltip text="add station">
+                  <Save />
+                </Tooltip>
+              </Button>
+            }
+            feature={plotShape}
+            deleteFeature={handleDeleteFeature}
+          />
+        </div>
       </div>
     </>
   );
