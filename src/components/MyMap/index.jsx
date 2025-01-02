@@ -89,7 +89,7 @@ export default function MyMap() {
           <MarkerPopup />
           <Plots />
           <StatusBar />
-          {viewMode === 'PICKER' && <ColorLegend />}
+          {viewMode === VIEW_MODES.PICKER && <ColorLegend />}
         </Map>
       </AccessTokenProvider>
     </SidebarProvider>

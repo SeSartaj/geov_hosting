@@ -61,16 +61,16 @@ const ColorLegend = () => {
   console.log('colorLegend rasterLayer', rasterLayer);
   let items;
   switch (rasterLayer?.value) {
-    case 'NDVI':
+    case '3_NDVI':
       items = NDVI_Legend;
       break;
     case 'AGRICULTURE':
       items = Agriculture_Legend;
       break;
-    case 'FALSE-COLOR':
+    case '2_FALSE_COLOR':
       items = FalseColor_Legend;
       break;
-    case 'MOISTURE-INDEX':
+    case '5-MOISTURE-INDEX1':
       items = MoistureIndex_Legend;
       break;
   }
