@@ -61,6 +61,88 @@ export function DrawPolygonControl() {
     () => {
       const draw = new MapboxDraw({
         displayControlsDefault: false,
+        styles: [
+          // Style for the polygon fill
+          {
+            id: 'gl-draw-polygon-fill',
+            type: 'fill',
+            filter: [
+              'all',
+              ['==', '$type', 'Polygon'],
+              ['!=', 'mode', 'static'],
+            ],
+            paint: {
+              'fill-color': '#FF0000', // Red fill color
+              'fill-opacity': 0.5, // Semi-transparent
+            },
+          },
+          // Style for the active line while drawing
+          {
+            id: 'gl-draw-line-active',
+            type: 'line',
+            filter: [
+              'all',
+              ['==', '$type', 'LineString'],
+              ['==', 'active', 'true'], // Active drawing lines
+            ],
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round',
+            },
+            paint: {
+              'line-color': '#FF0000', // Red line
+              'line-width': 3, // Line width
+              'line-dasharray': [2, 2], // Dashed line
+            },
+          },
+          // Style for the polygon outline
+          {
+            id: 'gl-draw-polygon-stroke-active',
+            type: 'line',
+            filter: [
+              'all',
+              ['==', '$type', 'Polygon'],
+              ['!=', 'mode', 'static'],
+            ],
+            layout: {
+              'line-cap': 'round',
+              'line-join': 'round',
+            },
+            paint: {
+              'line-color': '#0000FF', // Blue outline
+              'line-width': 2,
+            },
+          },
+          // Style for the midpoints (handles for editing)
+          {
+            id: 'gl-draw-polygon-midpoint',
+            type: 'circle',
+            filter: ['all', ['==', 'meta', 'midpoint']],
+            paint: {
+              'circle-radius': 5,
+              'circle-color': '#00FF00', // Green midpoint
+            },
+          },
+          // Style for the vertices (points at corners)
+          {
+            id: 'gl-draw-polygon-vertex',
+            type: 'circle',
+            filter: ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point']],
+            paint: {
+              'circle-radius': 7,
+              'circle-color': '#FFA500', // Orange vertices
+            },
+          },
+          {
+            id: 'gl-draw-polygon-point-active',
+            type: 'circle',
+            filter: ['all', ['==', 'active', 'true'], ['==', '$type', 'Point']],
+            paint: {
+              'circle-radius': 10,
+              'circle-color': 'red', // Orange for active vertex
+            },
+          },
+        ],
       });
 
       drawRef.current = draw;
@@ -82,7 +164,7 @@ export function DrawPolygonControl() {
   );
 
   const handleModeChange = (e) => {
-    console.log('mode changed', e);
+    console.log('mode changed', e.mode);
     // when everything is cleared, set mode to view
     setDrawMode(e.mode);
   };
@@ -108,27 +190,6 @@ export function DrawPolygonControl() {
       mapInstance.off('draw.selectionchange', handleSelectionChange);
     };
   }, [drawRef]);
-
-  if (drawMode == 'simple_select' && showDrawActionPopup) {
-    return (
-      <div>
-        {/* a control on the right side of the screen with three bottoms top of each other */}
-        {viewMode === VIEW_MODES.EDIT_PLOT && (
-          <ActionsPopup feature={selectedFeatures.features[0]}>
-            <Button
-              variant="outline"
-              onClick={() => setViewMode(VIEW_MODES.NORMAL)}
-            >
-              <FaPlantWilt /> Save changes
-            </Button>
-          </ActionsPopup>
-        )}
-        {selectedFeatures?.features?.map((feature) => (
-          <DrawActionsPopup key={feature.id} feature={feature} />
-        ))}
-      </div>
-    );
-  }
 
   return null;
 }

@@ -9,7 +9,7 @@ import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
 import { bbox } from '@turf/turf';
 import debounce from '@/utils/debounce';
 import isEmptyObject from '@/utils/isEmptyObject';
-import useMapStore from '@/stores/mapStore';
+import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 
 export default function Plots() {
@@ -329,7 +329,7 @@ export default function Plots() {
         <Layer key="12kmsn" {...plotFillStyle} />
       </Source>
 
-      {clickedPlot && (
+      {clickedPlot && viewMode == VIEW_MODES.NORMAL && (
         <PlotPopup
           popupInfo={clickedPlot}
           onClose={() => setClickedPlot(null)}

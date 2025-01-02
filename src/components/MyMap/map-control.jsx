@@ -1,7 +1,7 @@
 import './styles.css';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useControl } from 'react-map-gl/maplibre';
-import useMapStore from '@/stores/mapStore';
+import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import { useMap } from 'react-map-gl/maplibre';
 import { SettingsContext } from '@/contexts/SettingsContext';
 import { BASEMAP_OPTIONS } from '@/constants';
@@ -9,9 +9,12 @@ import { Button } from '../ui/button';
 import { FaExclamation, FaSatellite, FaSatelliteDish } from 'react-icons/fa6';
 import {
   ChevronRight,
+  Hexagon,
+  LandPlot,
   MapIcon,
   Maximize,
   Minimize,
+  Pin,
   Satellite,
   SatelliteDish,
   SatelliteDishIcon,
@@ -61,6 +64,7 @@ function MapControl() {
   const controlRef = useRef(null);
   const { settings, setSettings } = useContext(SettingsContext);
   const [isFullScreen, setisFullScreen] = useState(false);
+  const setViewMode = useMapStore((state) => state.setViewMode);
 
   const handleMapStyleChange = useCallback(() => {
     setChangeMap((prev) => !prev);
@@ -116,6 +120,22 @@ function MapControl() {
           {isFullScreen ? <Minimize /> : <Maximize />}
         </Button>
         <PickerControl />
+        <Button
+          variant="outline"
+          size="icon"
+          title="add new plot"
+          onClick={() => setViewMode(VIEW_MODES.ADD_PLOT)}
+        >
+          <Hexagon />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          title="add new station"
+          onClick={() => setViewMode(VIEW_MODES.ADD_MARKER)}
+        >
+          <Pin />
+        </Button>
       </div>
     </>
   );

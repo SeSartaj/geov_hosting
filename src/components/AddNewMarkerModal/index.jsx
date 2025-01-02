@@ -8,7 +8,7 @@ import { BiPin } from 'react-icons/bi';
 import MarkerForm from '@/forms/MarkerForm';
 import Card from '@/ui-components/Card';
 
-const AddNewMarkerModal = ({ feature, deleteFeature }) => {
+const AddNewMarkerModal = ({ feature, deleteFeature, trigger }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
   const { addNewMarker } = useContext(MarkersContext);
@@ -18,6 +18,7 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
     latitude: feature?.geometry?.coordinates[1],
   };
 
+  console.log('feature', feature);
   const handleClose = () => {
     deleteFeature();
     setOpen(false);
@@ -29,12 +30,16 @@ const AddNewMarkerModal = ({ feature, deleteFeature }) => {
     handleClose();
   };
 
+  console.log('initialValues', initialValues);
+
   return (
     <MyModal
       trigger={
-        <MyButton color="primary">
-          <BiPin /> Add New Marker
-        </MyButton>
+        trigger || (
+          <MyButton color="primary">
+            <BiPin /> Add New Marker
+          </MyButton>
+        )
       }
       title="Add New Marker"
       headerClassName="m-4"

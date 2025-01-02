@@ -3,7 +3,7 @@ import './styles.css';
 import MyButton from '../../ui-components/MyButton';
 import { area } from '@turf/turf';
 import NdviChart from '../PlotNDVIChart';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { PlotContext } from '@/contexts/PlotContext';
 import { BiTrash } from 'react-icons/bi';
 
@@ -12,12 +12,14 @@ import useConfirm from '@/hooks/useConfirm';
 import { EditPlotModal } from './edit';
 import { XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
+import Spinner from '@/ui-components/Spinner';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { showPlots, plots, clickedPlot, handleDeletePlot } =
     useContext(PlotContext);
   const { isConfirmed } = useConfirm();
   const { plot } = popupInfo;
+  const [deletingPlot, setDeletingPlot] = useState(false);
 
   const findPlot = useMemo(() => {
     return plots?.find((p) => p?.options?.id === plot?.properties?.id);
@@ -26,7 +28,14 @@ export default function PlotPopup({ popupInfo, onClose }) {
   const _onDeletePlot = useCallback(async () => {
     const confirmed = await isConfirmed('Do you want to delete this marker?');
     if (!confirmed) return;
-    handleDeletePlot(findPlot);
+    setDeletingPlot(true);
+    handleDeletePlot(findPlot)
+      .then(() => {
+        console.log('plot deleted successfully');
+      })
+      .finally(() => {
+        setDeletingPlot(false);
+      });
   }, [findPlot, isConfirmed]);
 
   return !showPlots || !clickedPlot ? null : (
@@ -51,7 +60,11 @@ export default function PlotPopup({ popupInfo, onClose }) {
               onClick={_onDeletePlot}
               data-marker-id={plot?.id}
             >
-              <BiTrash className="w-5 h-5 action-icon text-red-500" />
+              {deletingPlot ? (
+                <Spinner size="small" />
+              ) : (
+                <BiTrash className="w-5 h-5 action-icon text-red-500" />
+              )}
             </Button>
             {/* </Tooltip> */}
             <EditPlotModal plot={findPlot} />

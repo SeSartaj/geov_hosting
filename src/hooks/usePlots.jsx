@@ -151,10 +151,13 @@ export const usePlots = () => {
   const handleDeletePlot = (plot) => {
     console.log('on delete plot', plot);
     setLoading(true);
-    deletePlot(plot.id)
+    return deletePlot(plot.id)
       .then(() => {
+        console.log('count before deletion', plots.length);
         // remove the plot from plots
         const newPlotsList = [...plots];
+        console.log('count after deletion', newPlotsList.length, newPlotsList);
+
         setPlots(newPlotsList.filter((p) => p.id !== plot.id));
       })
       .catch((error) => {
@@ -184,8 +187,6 @@ export const usePlots = () => {
   }, []);
 
   const handlePlotUpdate = (updatedPlot) => {
-    console.log('updating plot', updatedPlot);
-
     // locally change the plot location
     setPlots((prev) => {
       const updatedPlots = prev.map((plot) => {
@@ -199,7 +200,7 @@ export const usePlots = () => {
 
       return updatedPlots;
     });
-
+    // update the plot on the server
     return updatePlot(updatedPlot).then(() => {
       getPlotsList();
     });

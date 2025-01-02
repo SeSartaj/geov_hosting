@@ -27,6 +27,9 @@ import MapControl from './map-control';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { FaExclamation } from 'react-icons/fa6';
 import { Button } from '../ui/button';
+import { EditPlotGeometryControl } from '../EditPlotGeometryControl';
+import { AddPlotControl } from '../AddPlotControl';
+import { AddStationControl } from '../AddStationControl';
 
 export default function MyMap() {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -56,21 +59,15 @@ export default function MyMap() {
           preserveDrawingBuffer={true}
           cursor={cursor}
         >
-          {/* <NDVILayer /> */}
+          <NDVILayer />
           <Sidebar />
 
           <div className="absolute top-0 left-0"></div>
           <div className="absolute top-0 right-0 m-2" style={{ zIndex: 2 }}>
             <MapControl />
           </div>
-          {/* {
-            viewMode == VIEW_MODES.ADD_PLOT && 
-            <AddPolygonControl />
-          }
-          {
-            viewMode == VIEW_MODES.EDIT_PLOT && 
-            <EditPlotControl />
-          }
+          {/* 
+
           {
             viewMode == VIEW_MODES.ADD_MARKER && 
             <AddMarkerControl />
@@ -81,7 +78,12 @@ export default function MyMap() {
             <EditMarkerControl />
           } */}
 
+          {/* DrawPolygonControl is a canvas and should always be present. any drawing will be painted on this */}
           <DrawPolygonControl />
+          {viewMode == VIEW_MODES.EDIT_PLOT && <EditPlotGeometryControl />}
+          {viewMode == VIEW_MODES.ADD_PLOT && <AddPlotControl />}
+          {viewMode == VIEW_MODES.ADD_MARKER && <AddStationControl />}
+
           {/* <PAWStatusPieChart /> */}
           <Markers />
           <MarkerPopup />

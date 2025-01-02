@@ -165,7 +165,7 @@ function PickerControl() {
     } else {
       resetCursor();
     }
-  }, viewMode);
+  }, [viewMode]);
 
   return (
     <Button

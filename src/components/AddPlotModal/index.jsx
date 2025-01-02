@@ -10,7 +10,7 @@ import { getFarmOptions } from '@/api/farmApi';
 import Card from '@/ui-components/Card';
 import { Button } from '../ui/button';
 
-const AddPlotModal = ({ polygon, deleteFeature }) => {
+const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
   const { addNewPlot } = useContext(PlotContext);
@@ -67,7 +67,7 @@ const AddPlotModal = ({ polygon, deleteFeature }) => {
 
   return (
     <MyModal
-      trigger={<Button color="primary">Add New Plot</Button>}
+      trigger={trigger || <Button color="primary">Add New Plot</Button>}
       title="Add New Plot "
       headerClassName="m-4"
       open={open}

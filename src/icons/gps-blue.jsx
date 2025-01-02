@@ -49,9 +49,9 @@ export const GPSBlueIcon = (props) => (
         width="42.3792"
         height="58.5951"
         filterUnits="userSpaceOnUse"
-        color-interpolation-filters="sRGB"
+        colorInterpolationFilters="sRGB"
       >
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
@@ -86,8 +86,8 @@ export const GPSBlueIcon = (props) => (
         gradientTransform="translate(22.2183 16.9279) scale(17.1741 25.2115)"
       >
         <stop offset="0.177083" />
-        <stop offset="0.453125" stop-opacity="0.53" />
-        <stop offset="0.911458" stop-opacity="0" />
+        <stop offset="0.453125" stopOpacity="0.53" />
+        <stop offset="0.911458" stopOpacity="0" />
       </radialGradient>
     </defs>
   </svg>

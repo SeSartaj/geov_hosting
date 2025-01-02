@@ -20,6 +20,33 @@ export default function MarkerPopup() {
   const { clickedMarker, setClickedMarker, showMarkers } =
     useContext(MarkersContext);
 
+  const { mapRef } = useContext(MapContext);
+
+  const { handleDeleteMarker } = useContext(MarkersContext);
+  const { isConfirmed } = useConfirm();
+
+  const _onFlyMarker = () => {
+    if (!mapRef?.current) return;
+    const { lat, lng } = clickedMarker?.location;
+    mapRef.current.flyTo({ center: [lng, lat], zoom: 14 });
+  };
+
+  const _onDeleteMarker = useCallback(
+    async (e) => {
+      const markerId = e.currentTarget.getAttribute('data-marker-id');
+      const confirmed = await isConfirmed('Do you want to delete this marker?');
+      if (!confirmed) return;
+      handleDeleteMarker(markerId);
+    },
+    [isConfirmed]
+  );
+
+  const closePopup = () => {
+    setClickedMarker(null);
+  };
+
+  console.log('clicked marker', clickedMarker);
+
   if (!clickedMarker || !showMarkers) return null;
 
   return (
@@ -31,6 +58,32 @@ export default function MarkerPopup() {
       onClose={() => setClickedMarker(null)}
       className="!max-w-[240px] sm:!max-w-[270px] lg:!max-w-[320px]"
     >
+      <div className="flex gap-2 items-center dark:text-gray-100 font-black text-[14px]">
+        <h3 className="text-wrap">{clickedMarker?.title}</h3>
+        <span className="flex items-center gap-1">
+          {/* <Tooltip text="delete the marker"> */}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={_onDeleteMarker}
+            data-marker-id={clickedMarker?.id}
+            tabIndex={-1}
+          >
+            <BiTrash className="w-5 h-5 action-icon text-red-500 " />
+          </Button>
+          {/* </Tooltip> */}
+
+          <EditMarkerModal
+            marker={clickedMarker}
+            buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
+          />
+          <Tooltip text="close popup">
+            <Button variant="outline" size="icon" onClick={closePopup}>
+              <XIcon className="w-5 h-5 action-icon " />
+            </Button>
+          </Tooltip>
+        </span>
+      </div>
       {clickedMarker.type === 'station' ? (
         <StationPopupContent
           marker={clickedMarker}
@@ -47,55 +100,8 @@ export default function MarkerPopup() {
 }
 
 function StationPopupContent({ marker, closePopup }) {
-  const { mapRef } = useContext(MapContext);
-
-  const { handleDeleteMarker } = useContext(MarkersContext);
-  const { isConfirmed } = useConfirm();
-
-  const _onFlyMarker = () => {
-    if (!mapRef?.current) return;
-    const { lat, lng } = marker?.location;
-    mapRef.current.flyTo({ center: [lng, lat], zoom: 14 });
-  };
-
-  const _onDeleteMarker = useCallback(
-    async (e) => {
-      const markerId = e.currentTarget.getAttribute('data-marker-id');
-      const confirmed = await isConfirmed('Do you want to delete this marker?');
-      if (!confirmed) return;
-      handleDeleteMarker(markerId);
-    },
-    [isConfirmed]
-  );
-
   return (
     <div>
-      <div className="flex gap-2 items-center dark:text-gray-100 font-black text-[14px]">
-        <h3 className="text-wrap">{marker?.title}</h3>
-        <span className="flex items-center gap-1">
-          {/* <Tooltip text="delete the marker"> */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={_onDeleteMarker}
-            data-marker-id={marker?.id}
-            tabIndex={-1}
-          >
-            <BiTrash className="w-5 h-5 action-icon text-red-500 " />
-          </Button>
-          {/* </Tooltip> */}
-
-          <EditMarkerModal
-            marker={marker}
-            buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
-          />
-          <Tooltip text="close popup">
-            <Button variant="outline" size="icon" onClick={closePopup}>
-              <XIcon className="w-5 h-5 action-icon " />
-            </Button>
-          </Tooltip>
-        </span>
-      </div>
       <HumidityChart marker={marker} />
       <div className="flex flex-col items-center gap-1">
         <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
@@ -143,21 +149,12 @@ function StationPopupContent({ marker, closePopup }) {
   );
 }
 
-function ForeCastPopupContent({ marker, closePopup }) {
+function ForeCastPopupContent({ marker }) {
+  console.log('forecast marker', marker);
   return (
     <div>
       <div className="popup-header">
         <h3>{marker.title}</h3>
-        <Tooltip text="close popup">
-          <MyButton
-            variant="icon"
-            className="rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
-            onClick={closePopup}
-            data-marker-id={marker?.id}
-          >
-            <XIcon className="w-5 h-5 action-icon text-red-500 " />
-          </MyButton>
-        </Tooltip>
       </div>
       <hr />
     </div>

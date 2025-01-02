@@ -72,9 +72,11 @@ const MyReactSelect = forwardRef(function MyReactSelect(
     event.preventDefault();
 
     // Get all focusable elements within the modal
-    const focusableElements = formRef.current?.querySelectorAll(
+    const focusableElements = formRef?.current?.querySelectorAll(
       'button, [href], input#react-select, select, textarea, [tabindex]:not([tabindex="-1"]):not(:disabled)'
     );
+
+    console.log('focusableElements', focusableElements, formRef.current);
 
     const firstFocusableElement = focusableElements?.[0];
 

@@ -60,6 +60,8 @@ export default function MarkerForm({
 
   const formRef = useRef();
 
+  console.log('initialValues inside form', initialValues);
+
   const serializeData = (formData) => {
     console.log('data before serialization', formData);
     const data = {
@@ -72,13 +74,16 @@ export default function MarkerForm({
     };
 
     if (formData?.id) data.id = formData.id;
-    if (formData.station) data.device = formData.station.serial;
+    if (formData.station)
+      data.device = formData.station?.serial || formData.station?.value;
     if (formData.graphs?.length > 0)
       data.graphs = formData.graphs.map((g) => g.id || g.value);
     else data.graphs = [];
     if (formData.paw_graphs?.length > 0)
       data.paw_graphs = formData.paw_graphs.map((g) => g.id || g.value);
     else data.paw_graphs = [];
+
+    console.log('data being sent to server', data);
 
     return data;
   };
@@ -98,7 +103,11 @@ export default function MarkerForm({
     };
   };
 
-  const deserializedData = marker ? deserializeData(marker) : {};
+  const deserializedData = marker
+    ? deserializeData(marker)
+    : { ...initialValues };
+
+  console.log('deserializedValue', deserializedData);
   // if user doesn't include all values in initialValues, emptyValues will be used
   const [formData, setFormData] = useState({ ...deserializedData });
 

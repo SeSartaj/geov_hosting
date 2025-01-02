@@ -95,56 +95,32 @@ const PlotProvider = ({ children }) => {
       console.log('mode', event.mode);
       // delete draws after completion
       console.log('event', event);
-      if (event.mode === 'simple_select' && mode === 'editing-plot') {
-        draw.deleteAll();
-        setMode('view');
-      }
+      draw.deleteAll();
+      setMode('view');
+      setViewMode(VIEW_MODES.NORMAL);
     },
     [draw, mode]
   );
 
   const handleEditPlot = (plot) => {
     console.log('plot', plot);
+    console.log('draw is ', draw);
     if (map) {
       const draw = drawRef.current;
       handleFlyToPlot(plot?.options.geometry.coordinates);
       setViewMode(VIEW_MODES.EDIT_PLOT);
       if (draw) {
+        console.log('draw exsit');
         // remove anything drawn before
         draw.deleteAll();
         // add the plot to draw layer
         draw.add(plot?.options);
+        console.log('setEditingPlot(plot);', plot);
         setEditingPlot(plot);
         return plot;
       }
     }
   };
-
-  const handleDrawChange = useCallback(
-    (event) => {
-      // if editing a plot
-      console.log('handling draw change', event);
-      // Update the plot when it is edited
-      if (event.features && event.features.length > 0) {
-        handlePlotUpdate({ ...editingPlot, options: event.features[0] });
-      }
-    },
-    [editingPlot, handlePlotUpdate]
-  );
-
-  useEffect(() => {
-    if (map && draw) {
-      // Listen to draw.update event for edits
-      map.on('draw.update', handleDrawChange);
-      map.on('draw.modechange', handleDrawComplete);
-
-      // Clean up the event listeners when the component unmounts
-      return () => {
-        map.off('draw.update', handleDrawChange);
-        map.off('draw.modechange', handleDrawComplete);
-      };
-    }
-  }, [map, draw, handleDrawChange, handleDrawComplete]);
 
   return (
     <PlotContext.Provider
@@ -159,9 +135,9 @@ const PlotProvider = ({ children }) => {
         setShowPlots: handleShowPlots,
         handleFlyToPlot,
         handleEditPlot,
-        handleDrawChange,
         weeksBefore,
         setWeeksBefore,
+        editingPlot,
         showNdviLayer,
         setNDVILayersVisibility,
         toggleNDVILayersVisibility,

@@ -102,6 +102,7 @@ export default function PlotForm({
           options={farmOptions}
           onChange={(f) => setFormData({ ...formData, farm: f })}
           isClearable={true}
+          formRef={formRef}
           // isLoading={farmsLoading}
         />
       </FormGroup>
@@ -111,7 +112,7 @@ export default function PlotForm({
         <div>
           <Button variant="outline" onClick={onGeometryChange}>
             <BiGlobeAlt />
-            Edit Geomtry
+            Change Shape
           </Button>
         </div>
         <div className="flex justify-end gap-3">

@@ -24,6 +24,7 @@ export const EditPlotModal = ({ plot }) => {
   const handleGeometryEdit = (e) => {
     setOpen(false);
     setClickedPlot(null);
+    console.log('plot is', plot);
     handleEditPlot(plot);
   };
 

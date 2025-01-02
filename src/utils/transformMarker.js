@@ -48,9 +48,12 @@ function transformStationMarker(marker) {
 }
 
 function transformForecastMarker(marker) {
+  console.log('marker in transformForecastMarker', marker);
   return {
     type: 'forecast',
-    title: `Forecast marker `,
+    title: `${marker?.device?.name || ''}${
+      marker?.device?.serial ? `[${marker?.device?.serial}]` : ''
+    } ${marker?.location_name || ''}`,
     location: marker.use_custom_location
       ? { lng: marker.lng, lat: marker.lat }
       : marker?.device?.details?.location,
