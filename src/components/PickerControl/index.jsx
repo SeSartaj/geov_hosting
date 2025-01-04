@@ -73,6 +73,40 @@ function PickerControl() {
     viewMode,
   ]);
 
+  const handleMapClick = useCallback(
+    (e) => {
+      let data = {
+        coordinates: e.lngLat,
+      };
+
+      // clicked inside a plot
+      if (mapInstance.getLayer('plots-layer')) {
+        const features = mapInstance.queryRenderedFeatures(e.point, {
+          layers: ['plots-layer'],
+        });
+        if (features.length > 0) {
+          data.plot = features[0];
+        }
+      }
+      console.log('setting picker data', data);
+      setPickerData(data);
+    },
+    [mapInstance, setPickerData]
+  );
+
+  // handle click on map in picker mode
+  useEffect(() => {
+    if (mapInstance && viewMode === 'PICKER') {
+      mapInstance.on('click', handleMapClick);
+    }
+
+    return () => {
+      if (mapInstance) {
+        mapInstance.off('click', handleMapClick);
+      }
+    };
+  }, [mapInstance, viewMode, setPickerData]);
+
   // track cursor coords
   useEffect(() => {
     const handleMouseMove = (event) => {
