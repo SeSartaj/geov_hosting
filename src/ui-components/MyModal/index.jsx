@@ -7,6 +7,7 @@ import { BiX } from 'react-icons/bi';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { XIcon } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
 export default function MyModal({
   trigger,
@@ -53,34 +54,37 @@ export default function MyModal({
       <Dialog.Portal container={portalContainer}>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content
-          className="DialogContent overflow-y-auto dark:bg-gray-900 m-0 p-0"
+          className="DialogContent overflow-y-auto  m-0 p-0"
           disableFocusLock
+          asChild
         >
-          <div className={headerClassName}>
-            {title && (
-              <Dialog.Title
-                className={`text-lg font-semibold DialogTitle dark:text-gray-100 `}
+          <Card>
+            <div className={headerClassName}>
+              {title && (
+                <Dialog.Title
+                  className={`text-lg font-semibold DialogTitle dark:text-gray-100 `}
+                >
+                  {title}
+                </Dialog.Title>
+              )}
+              {description && (
+                <Dialog.Description className="DialogDescription dark:text-gray-200">
+                  {description}
+                </Dialog.Description>
+              )}
+            </div>
+            {children}
+            <Dialog.Close asChild>
+              <Button
+                variant="ghost"
+                style={{ position: 'absolute', top: 10, right: 10 }}
+                aria-label="Close"
+                onClick={onClose}
               >
-                {title}
-              </Dialog.Title>
-            )}
-            {description && (
-              <Dialog.Description className="DialogDescription dark:text-gray-200">
-                {description}
-              </Dialog.Description>
-            )}
-          </div>
-          {children}
-          <Dialog.Close asChild>
-            <Button
-              variant="ghost"
-              style={{ position: 'absolute', top: 10, right: 10 }}
-              aria-label="Close"
-              onClick={onClose}
-            >
-              <XIcon />
-            </Button>
-          </Dialog.Close>
+                <XIcon />
+              </Button>
+            </Dialog.Close>
+          </Card>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
@@ -88,7 +92,7 @@ export default function MyModal({
 }
 
 MyModal.propTypes = {
-  trigger: PropTypes.node.isRequired,
+  trigger: PropTypes.node,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
