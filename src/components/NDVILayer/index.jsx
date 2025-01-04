@@ -75,6 +75,37 @@ const NDVILayer = () => {
     }
   }, [mapInstance]);
 
+  // handle layer order
+  const handleLayerOrder = () => {
+    console.log('handleLayerOrder');
+    const map = mapInstance.getMap();
+    // Check if both layers exist on the map
+    const rasterLayerId = 'raster-layer';
+    const plotLineLayerId = 'plots-line-layer';
+
+    if (map.getLayer(rasterLayerId) && map.getLayer(plotLineLayerId)) {
+      try {
+        // Move the raster layer to be below the plot line layer
+        map.moveLayer(rasterLayerId, plotLineLayerId);
+      } catch (error) {
+        console.error('Error moving layer:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const map = mapInstance.getMap();
+    if (map) {
+      map.on('styledata', handleLayerOrder);
+    }
+
+    return () => {
+      if (map) {
+        map.off('styledata', handleLayerOrder);
+      }
+    };
+  }, [mapInstance]);
+
   if (!isVisible || !url) {
     return null;
   }
