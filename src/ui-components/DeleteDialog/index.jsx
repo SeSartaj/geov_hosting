@@ -22,8 +22,8 @@ const DeleteDialog = () => {
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-900 p-6 rounded shadow-lg">
+        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30 z-20" />
+        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-900 p-6 rounded shadow-lg z-20">
           <Dialog.Title className="text-lg font-bold dark:text-gray-200">
             Warning
           </Dialog.Title>

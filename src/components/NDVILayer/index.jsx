@@ -50,6 +50,8 @@ const NDVILayer = () => {
   const [beforeId, setBeforeId] = useState(null);
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const { current: mapInstance } = useMap();
+  const map = mapInstance.getMap();
+
   // Update URL when layer or dateRange changes
   useEffect(() => {
     console.log('dateRange in useEffect layerUrl', dateRange);
@@ -76,25 +78,87 @@ const NDVILayer = () => {
   }, [mapInstance]);
 
   // handle layer order
-  const handleLayerOrder = () => {
-    console.log('handleLayerOrder');
-    const map = mapInstance.getMap();
-    // Check if both layers exist on the map
-    const rasterLayerId = 'raster-layer';
-    const plotLineLayerId = 'plots-line-layer';
+  // const handleLayerOrder = useCallback(
+  //   (e) => {
+  //     console.log('handleLayerOrder', map.getLayersOrder());
 
-    if (map.getLayer(rasterLayerId) && map.getLayer(plotLineLayerId)) {
-      try {
-        // Move the raster layer to be below the plot line layer
-        map.moveLayer(rasterLayerId, plotLineLayerId);
-      } catch (error) {
-        console.error('Error moving layer:', error);
+  //     // Define the desired layer order
+  //     // first ones are on top, last one at bottom
+  //     const layerOrder = ['raster-layer', 'plots-line-layer'];
+
+  //     // Check if all layers exist
+  //     const allLayersExist = layerOrder.every((layerId) =>
+  //       map.getLayer(layerId)
+  //     );
+
+  //     if (allLayersExist) {
+  //       console.log('handleLayerOrder all layer exist', map.getLayersOrder());
+
+  //       // Get the current layer order from the map
+  //       const currentLayers = map.getStyle().layers.map((layer) => layer.id);
+
+  //       // Check if the layers are in the correct order
+  //       const isCorrectOrder = layerOrder.every((layerId, index) => {
+  //         const currentIndex = currentLayers.indexOf(layerId);
+  //         const expectedPreviousIndex =
+  //           index === 0 ? -1 : currentLayers.indexOf(layerOrder[index - 1]);
+  //         return currentIndex > expectedPreviousIndex;
+  //       });
+
+  //       if (isCorrectOrder) {
+  //         console.log('handleLayerOrder Layer order is correct.');
+  //       } else {
+  //         try {
+  //           console.log('handleLayerOrder Layer order is not correct.');
+
+  //           // Iterate from top to bottom and ensure correct order
+  //           layerOrder.slice().forEach((layerId, index) => {
+  //             const nextLayer = layerOrder[layerOrder.length - index - 2]; // Get the next layer
+  //             try {
+  //               if (nextLayer) {
+  //                 map.moveLayer(layerId, nextLayer); // Place current layer above the next one
+  //               } else {
+  //                 map.moveLayer(layerId); // Place on top if no next layer
+  //               }
+  //             } catch (error) {
+  //               console.error(`Error reordering layer ${layerId}:`, error);
+  //             }
+  //           });
+
+  //           console.log(
+  //             'Updated layer order:',
+  //             map.getStyle().layers.map((l) => l.id)
+  //           );
+  //         } catch (error) {
+  //           console.error('Error reordering layers:', error);
+  //         }
+  //       }
+  //     } else {
+  //       console.warn('One or more layers in the list do not exist on the map.');
+  //     }
+  //   },
+  //   [mapInstance]
+  // );
+
+  const handleLayerOrder = useCallback(
+    (e) => {
+      console.log('handleLayerOrder');
+      if (map.getLayer('plots-line-layer') && map.getLayer('raster-layer')) {
+        const layers = map.getLayersOrder();
+
+        // if plots-line-layer was below raster-layer
+        if (
+          layers.indexOf('plots-line-layer') < layers.indexOf('raster-layer')
+        ) {
+          console.log('reordering layers');
+          map.moveLayer('raster-layer', 'plots-line-layer');
+        }
       }
-    }
-  };
+    },
+    [mapInstance]
+  );
 
   useEffect(() => {
-    const map = mapInstance.getMap();
     if (map) {
       map.on('styledata', handleLayerOrder);
     }

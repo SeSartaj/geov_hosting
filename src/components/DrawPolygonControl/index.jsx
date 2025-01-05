@@ -42,21 +42,6 @@ export function DrawPolygonControl() {
 
   const onUpdate = onCreate;
 
-  const onDelete = useCallback((e) => {
-    // when editing plot
-    if (viewMode in [VIEW_MODES.EDIT_PLOT, VIEW_MODES.EDIT_MARKER]) {
-      setViewMode(VIEW_MODES.NORMAL);
-    }
-    console.log('mode after deleting', e.mode);
-    setFeatures((currFeatures) => {
-      const newFeatures = { ...currFeatures };
-      for (const f of e.features) {
-        delete newFeatures[f.id];
-      }
-      return newFeatures;
-    });
-  }, []);
-
   useControl(
     () => {
       const draw = new MapboxDraw({
@@ -151,12 +136,10 @@ export function DrawPolygonControl() {
     ({ map }) => {
       map.on('draw.create', onCreate);
       map.on('draw.update', onUpdate);
-      map.on('draw.delete', onDelete);
     },
     ({ map }) => {
       map.off('draw.create', onCreate);
       map.off('draw.update', onUpdate);
-      map.off('draw.delete', onDelete);
     },
     {
       position: 'top-right',

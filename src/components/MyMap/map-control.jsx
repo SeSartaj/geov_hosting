@@ -103,7 +103,12 @@ function MapControl() {
     setisFullScreen(true);
   }, [mapInstance]);
 
-  if (viewMode === VIEW_MODES.ADD_PLOT || viewMode === VIEW_MODES.ADD_MARKER) {
+  if (
+    viewMode === VIEW_MODES.ADD_PLOT ||
+    viewMode === VIEW_MODES.ADD_MARKER ||
+    viewMode === VIEW_MODES.EDIT_PLOT ||
+    viewMode === VIEW_MODES.EDIT_MARKER
+  ) {
     return null;
   }
 

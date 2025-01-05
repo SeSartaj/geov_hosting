@@ -56,6 +56,16 @@ export function AddPlotControl() {
     const selected = drawRef.current.getSelected();
     setSelectedFeatures(selected);
   };
+  const handleDelete = (e) => {
+    console.log('delete event', e, draw.getMode());
+    // if features are zero and mode is simple-select, change mode to draw-polygon
+    if (
+      draw.getAll().features.length === 0 &&
+      draw.getMode() === 'simple_select'
+    ) {
+      draw.changeMode('draw_polygon');
+    }
+  };
 
   const handlePlotShapeChange = useCallback((event) => {
     console.log('running plot shape change', event.features);
@@ -78,6 +88,7 @@ export function AddPlotControl() {
 
   const handleTrashClick = () => {
     const selectedFeatures = draw.getSelectedIds();
+
     draw.trash();
   };
 
@@ -97,12 +108,14 @@ export function AddPlotControl() {
     if (map && draw) {
       // Listen to draw.update event for edits
       // when shape is changed, store it in a stta
+      mapRef.on('draw.delete', handleDelete);
       mapRef.on('draw.create', handlePlotShapeChange);
       mapRef.on('draw.update', handlePlotShapeChange);
       // mapRef.on('draw.modechange', handleDrawComplete);
 
       // Clean up the event listeners when the component unmounts
       return () => {
+        mapRef.off('draw.delete', handleDelete);
         mapRef.off('draw.create', handlePlotShapeChange);
         mapRef.off('draw.update', handlePlotShapeChange);
 
