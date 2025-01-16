@@ -54,6 +54,14 @@ const MoistureIndex_Legend = [
   { color: '#66bd63', label: 'Water Body' },
 ];
 
+const Evapotranspiration_Legend = [
+  { color: '#00008B', label: 'Very Low (0.001)' }, // Dark Blue
+  { color: '#0000FF', label: 'Low (3)' }, // Blue
+  { color: '#00FF00', label: 'Moderate (6)' }, // Green
+  { color: '#FFA500', label: 'High (9)' }, // Orange
+  { color: '#FF0000', label: 'Very High (12)' }, // Red
+];
+
 const ColorLegend = () => {
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const pixelColor = useMapStore((state) => state.pixelColor);
@@ -73,6 +81,8 @@ const ColorLegend = () => {
     case '5-MOISTURE-INDEX1':
       items = MoistureIndex_Legend;
       break;
+    case 'ET':
+      items = Evapotranspiration_Legend;
   }
 
   if (!items) return null;

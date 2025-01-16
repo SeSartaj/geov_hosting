@@ -77,69 +77,6 @@ const NDVILayer = () => {
     }
   }, [mapInstance]);
 
-  // handle layer order
-  // const handleLayerOrder = useCallback(
-  //   (e) => {
-  //     console.log('handleLayerOrder', map.getLayersOrder());
-
-  //     // Define the desired layer order
-  //     // first ones are on top, last one at bottom
-  //     const layerOrder = ['raster-layer', 'plots-line-layer'];
-
-  //     // Check if all layers exist
-  //     const allLayersExist = layerOrder.every((layerId) =>
-  //       map.getLayer(layerId)
-  //     );
-
-  //     if (allLayersExist) {
-  //       console.log('handleLayerOrder all layer exist', map.getLayersOrder());
-
-  //       // Get the current layer order from the map
-  //       const currentLayers = map.getStyle().layers.map((layer) => layer.id);
-
-  //       // Check if the layers are in the correct order
-  //       const isCorrectOrder = layerOrder.every((layerId, index) => {
-  //         const currentIndex = currentLayers.indexOf(layerId);
-  //         const expectedPreviousIndex =
-  //           index === 0 ? -1 : currentLayers.indexOf(layerOrder[index - 1]);
-  //         return currentIndex > expectedPreviousIndex;
-  //       });
-
-  //       if (isCorrectOrder) {
-  //         console.log('handleLayerOrder Layer order is correct.');
-  //       } else {
-  //         try {
-  //           console.log('handleLayerOrder Layer order is not correct.');
-
-  //           // Iterate from top to bottom and ensure correct order
-  //           layerOrder.slice().forEach((layerId, index) => {
-  //             const nextLayer = layerOrder[layerOrder.length - index - 2]; // Get the next layer
-  //             try {
-  //               if (nextLayer) {
-  //                 map.moveLayer(layerId, nextLayer); // Place current layer above the next one
-  //               } else {
-  //                 map.moveLayer(layerId); // Place on top if no next layer
-  //               }
-  //             } catch (error) {
-  //               console.error(`Error reordering layer ${layerId}:`, error);
-  //             }
-  //           });
-
-  //           console.log(
-  //             'Updated layer order:',
-  //             map.getStyle().layers.map((l) => l.id)
-  //           );
-  //         } catch (error) {
-  //           console.error('Error reordering layers:', error);
-  //         }
-  //       }
-  //     } else {
-  //       console.warn('One or more layers in the list do not exist on the map.');
-  //     }
-  //   },
-  //   [mapInstance]
-  // );
-
   const handleLayerOrder = useCallback(
     (e) => {
       console.log('handleLayerOrder');

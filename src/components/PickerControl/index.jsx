@@ -176,21 +176,21 @@ function PickerControl() {
   }, [mapInstance, viewMode, setHoveredValue, rasterLayer]);
 
   // turn of move and zoom
-  useEffect(() => {
-    if (mapInstance) {
-      if (viewMode === 'PICKER') {
-        mapInstance.scrollZoom.disable();
-        mapInstance.boxZoom.disable();
-        mapInstance.dragPan.disable();
-        mapInstance.dragRotate.disable();
-      } else {
-        mapInstance.scrollZoom.enable();
-        mapInstance.boxZoom.enable();
-        mapInstance.dragPan.enable();
-        mapInstance.dragRotate.enable();
-      }
-    }
-  }, [viewMode, mapInstance]);
+  // useEffect(() => {
+  //   if (mapInstance) {
+  //     if (viewMode === 'PICKER') {
+  //       mapInstance.scrollZoom.disable();
+  //       mapInstance.boxZoom.disable();
+  //       mapInstance.dragPan.disable();
+  //       mapInstance.dragRotate.disable();
+  //     } else {
+  //       mapInstance.scrollZoom.enable();
+  //       mapInstance.boxZoom.enable();
+  //       mapInstance.dragPan.enable();
+  //       mapInstance.dragRotate.enable();
+  //     }
+  //   }
+  // }, [viewMode, mapInstance]);
 
   // change cursor to crosshair when in picker mode
   useEffect(() => {

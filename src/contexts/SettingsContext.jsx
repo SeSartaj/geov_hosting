@@ -16,7 +16,7 @@ export const SettingsProvider = ({ children }) => {
   // Individual state hooks for each value
   const [settings, setSettings] = useState({
     basemap: {
-      id: 'basic',
+      id: 'satellite',
       zoom: 6,
       longitude: -40.153113,
       latitude: -35.9503019,
