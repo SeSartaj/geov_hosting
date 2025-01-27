@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/ui-components/RadioGroup';
 import MyReactSelect from '@/ui-components/MyReactSelect';
 import MarkerPlots from './plots';
 import { PlotContext } from '@/contexts/PlotContext';
+import PlotSearch from './plotSearch';
 
 const markerOptions = [
   {
@@ -126,6 +127,7 @@ export default function MarkerPanel() {
             ))}
           </select>
         </div>
+        <MarkerPlots />
       </div>
       <div className="flex items-center justify-between rounded-md bg-zinc-50 dark:bg-zinc-800 gap-2 p-2">
         <div className="flex items-center w-full justify-between">
@@ -137,7 +139,7 @@ export default function MarkerPanel() {
             onToggle={toggleNDVILayersVisibility}
           />
         </div>
-        <MarkerPlots />
+        <PlotSearch />
       </div>
     </div>
   );

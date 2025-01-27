@@ -84,7 +84,7 @@ const PlotProvider = ({ children }) => {
       });
 
       map.fitBounds(bounds, {
-        padding: 150,
+        padding: 200,
         essential: true,
       });
     }
