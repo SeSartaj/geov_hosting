@@ -42,5 +42,55 @@ export const layerOptions = [
       '2024-12-07',
       '2024-12-19',
     ],
+    getAvailableDates: async function getAvailableDates(bbox) {
+      const wmsUrl = 'https://d27s6pvwcjpmsu.cloudfront.net/geoserver/ne/wms';
+      const layerName = 'et_data';
+
+      // Construct the GetCapabilities request URL
+      const capabilitiesUrl = `${wmsUrl}?service=WMS&version=1.1.0&request=GetCapabilities`;
+
+      try {
+        // Fetch the GetCapabilities XML
+        const response = await fetch(capabilitiesUrl);
+        const xmlText = await response.text();
+
+        // Parse the XML response
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+
+        // Find the et_data layer (nested inside another Layer node)
+        const layerNodes = xmlDoc.querySelectorAll('Layer');
+        let layerNode = null;
+
+        for (const node of layerNodes) {
+          const nameNode = node.querySelector('Name');
+          if (nameNode && nameNode.textContent === layerName) {
+            layerNode = node;
+            break;
+          }
+        }
+
+        if (!layerNode) {
+          throw new Error(`Layer ${layerName} not found in capabilities.`);
+        }
+
+        // Extract the time dimension values for the layer
+        const dimensionNode = layerNode.querySelector("Dimension[name='time']");
+        if (!dimensionNode) {
+          throw new Error('Time dimension not found for the layer.');
+        }
+
+        const extentNode = layerNode.querySelector("Extent[name='time']");
+        if (!extentNode) {
+          throw new Error('Time extent not found for the layer.');
+        }
+
+        const timeValues = extentNode.textContent.trim().split(',');
+        return timeValues;
+      } catch (error) {
+        console.error('Error fetching available dates:', error);
+        return [];
+      }
+    },
   },
 ];

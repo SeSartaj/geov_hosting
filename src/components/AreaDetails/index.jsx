@@ -27,6 +27,7 @@ export default function AreaDetails() {
 
   function getValueAtPointWCS(e) {
     setLoading(true);
+    setPointEtValue(null);
     const coordinates = pickerData.coordinates;
     // get x,y and map size
     const map = mapRef.current.getMap();
@@ -153,9 +154,16 @@ export default function AreaDetails() {
               <Spinner />
             ) : (
               pointEtValue && (
-                <h3 className="text-lg p-2">
-                  ET value at this point is: {pointEtValue.toFixed(3)}
-                </h3>
+                <div className="flex items-center  justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2 ">
+                  <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+                    ET value at this point
+                  </h4>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-gray-700 dark:text-gray-200 font-bold">
+                      {pointEtValue.toFixed(3)}
+                    </span>
+                  </div>
+                </div>
               )
             )}
           </TabContent>

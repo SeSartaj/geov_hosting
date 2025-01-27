@@ -104,7 +104,7 @@ export default function LayerPanel() {
   const mapInstance = mapRef.current?.getMap();
   const [passDates, setPassDates] = useState([]);
   const accessToken = useContext(AccessTokenContext);
-  const [previousBbox, setPreviousBbox] = useState();
+  const [previousBbox, setPreviousBbox] = useState([]);
 
   // Function to disable all days except those in the availableDays array
   const isDayDisabled = (date) => {
@@ -116,124 +116,114 @@ export default function LayerPanel() {
     );
   };
 
+  const handleLayerDatesChange = (dates) => {
+    if (dates.length > 0) {
+      let isCurrentDateExist;
+      // if selectedDates is present in the new dates list, keep it uncahnged
+      if (selectedDate) {
+        isCurrentDateExist = dates
+          .map((d) => d.getTime())
+          .includes(selectedDate.getTime());
+      }
+      // first sort the dates in reverse cronological ordeer
+      dates.sort((a, b) => b - a);
+      console.log('setting date range', dates[0]);
+      // set daterange start and end to the first most recent date in the dates
+      // if selected date was not in list of dates, set it to the first date
+      // otherwise lave the date untouched
+      if (selectedDate && !isCurrentDateExist) {
+        console.log(
+          'dates doesnt include selected date. choosing most recent date'
+        );
+        setSelectedDate(dates[0]);
+        setDateRange({
+          start: dates[0],
+          end: dates[0],
+        });
+      } else {
+        console.log(
+          'currently selected date is included in new available dates, itll stay the same'
+        );
+      }
+    } else {
+      console.log('no available date fetched');
+      // set date range to last 10 days
+      if (!selectedDate) {
+        setDateRange({
+          start: undefined,
+          end: undefined,
+        });
+      }
+    }
+  };
+
   // get bbox from viewport of map and call getSatellitePassDates
   //  and store all dates in a state
   // create a function handlePassDates
   const handlePassDates = useCallback(
-    (e) => {
-      if (!mapInstance) return;
+    (options) => {
+      console.log('inside handlePassDates. options', options);
+      if (!mapInstance) {
+        console.log('no map instance found to load available dates');
+      }
 
       setDatesLoading(true);
       // too much zoom out? don't bother fetching available dates
       if (!isVisible || mapInstance?.getZoom() < 9) {
+        console.log('layer is not visible or zoom is smaller than 9');
         setPassDates([]);
       }
       const bounds = mapInstance?.getBounds();
-      const bbox = [
-        bounds?.getWest(),
-        bounds?.getSouth(),
-        bounds?.getEast(),
-        bounds?.getNorth(),
-      ];
 
-      setPreviousBbox(bbox);
-
-      // if the map moved/zoomed in/zoomed out by a very small amount, don't refetch the dates
-      if (!hasBboxChanged(previousBbox, bbox)) {
-        console.log('bbox has not changed significantly');
-        setDatesLoading(false);
-        return;
+      let bbox = [];
+      if (
+        bounds?.getWest() &&
+        bounds?.getSouth() &&
+        bounds?.getEast() &&
+        bounds?.getNorth()
+      ) {
+        bbox = [
+          bounds?.getWest(),
+          bounds?.getSouth(),
+          bounds?.getEast(),
+          bounds?.getNorth(),
+        ];
       } else {
-        console.log('bbox has changed significantly');
+        console.warn('no bounds found. not fetching available dates');
       }
 
-      console.log('selectedDate', selectedDate);
-
-      if (rasterLayer?.passDates) {
-        let isCurrentDateExist;
-        // change the selectedDate to yyyy-mm-dd format
-        if (selectedDate) {
-          isCurrentDateExist = rasterLayer?.passDates
-            .map((d) => new Date(d).getTime())
-            .includes(selectedDate.getTime());
+      if (!options?.layerChanged && peviousBbox.length > 0) {
+        // if the map moved/zoomed in/zoomed out by a very small amount, don't refetch the dates
+        if (!hasBboxChanged(previousBbox, bbox)) {
+          setPreviousBbox(bbox);
+          console.log('bbox has not changed significantly');
+          setDatesLoading(false);
+          return;
         }
+      }
+      setPreviousBbox(bbox);
 
-        console.log(
-          'selectedDate current exist',
-          isCurrentDateExist,
-          selectedDate,
-          selectedDate?.toISOString()?.split('T')[0],
-          rasterLayer?.passDates
-        );
-
-        if (!selectedDate || !isCurrentDateExist) {
-          console.log('raster layer have no current date exist');
-          // it is assumed that passDates are sorted in chronological order
-          setDateRange({
-            start: new Date(
-              rasterLayer?.passDates[rasterLayer.passDates.length - 1]
-            ),
-            end: new Date(
-              rasterLayer?.passDates[rasterLayer.passDates.length - 1]
-            ),
+      if (rasterLayer?.getAvailableDates) {
+        rasterLayer
+          .getAvailableDates()
+          .then((dates) => {
+            // convert all dates to js date object
+            const d = dates.map((d) => new Date(d));
+            setPassDates(d);
+            handleLayerDatesChange(d);
+          })
+          .finally(() => {
+            setDatesLoading(false);
           });
-          setSelectedDate(
-            new Date(rasterLayer?.passDates[rasterLayer.passDates.length - 1])
-          );
-        }
-
-        const d = rasterLayer.passDates.map((d) => new Date(d));
-        console.log('dddd', d);
-        setPassDates(d);
-
-        setDatesLoading(false);
       } else {
-        const bounds = mapInstance.getBounds();
-        const bbox = [
-          bounds.getWest(),
-          bounds.getSouth(),
-          bounds.getEast(),
-          bounds.getNorth(),
-        ];
-
+        if (!accessToken) {
+          console.warn('No access token found');
+        }
         getSatellitePassDates({ aoi: bbox, accessToken })
           .then((dates) => {
-            console.log('getting passDates', dates);
+            console.log('dates are: ', dates);
             setPassDates(dates);
-
-            if (dates.length > 0) {
-              console.log('setting date range', dates[0]);
-              // set daterange start and end to the first most recent date in the dates
-              // if selected date was not in list of dates, set it to the first date
-              // otherwise lave the date untouched
-
-              if (
-                selectedDate &&
-                !dates.map((d) => d.getTime()).includes(selectedDate.getTime())
-              ) {
-                console.log(
-                  'dates doesnt include selected date. choosing most recent date'
-                );
-                setSelectedDate(dates[0]);
-                setDateRange({
-                  start: dates[0],
-                  end: dates[0],
-                });
-              } else {
-                console.log(
-                  'currently selected date is included in new available dates, itll stay the same'
-                );
-              }
-            } else {
-              console.log('no available date fetched');
-              // set date range to last 10 days
-              if (!selectedDate) {
-                setDateRange({
-                  start: undefined,
-                  end: undefined,
-                });
-              }
-            }
+            handleLayerDatesChange(dates);
           })
           .finally(() => {
             setDatesLoading(false);
@@ -274,8 +264,12 @@ export default function LayerPanel() {
   }, [mapInstance, debouncedHandlePassDates]);
 
   useEffect(() => {
-    handlePassDates();
-  }, [mapInstance, rasterLayer]);
+    handlePassDates({ layerChanged: true });
+  }, [mapInstance, rasterLayer, accessToken]);
+
+  // useEffect(() => {
+  //   handlePassDates({ layerChanged: true });
+  // }, []);
 
   const _onSelectSentinel = useCallback(
     (value) => {
@@ -288,11 +282,6 @@ export default function LayerPanel() {
     },
     [toggleNDVILayersVisibility]
   );
-
-  useEffect(() => {
-    console.log('changed!!!", selectedDate', selectedDate);
-    console.log('changed!!!", passDates', passDates);
-  }, [selectedDate, passDates]);
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -356,7 +345,7 @@ export default function LayerPanel() {
             value={rasterLayer}
             options={layerOptions}
             placeholder="Select Data"
-            onChange={(l) => setRasterLayer(l)}
+            onChange={setRasterLayer}
             isClearable={false}
           />
         </div>
