@@ -140,7 +140,11 @@ export default function LayerPanel() {
         dates,
         isCurrentDateExist
       );
-      if (selectedDate && !isCurrentDateExist) {
+      if (isCurrentDateExist) {
+        console.log(
+          'currently selected date is included in new available dates, itll stay the same'
+        );
+      } else {
         console.log(
           'dates doesnt include selected date. choosing most recent date'
         );
@@ -149,15 +153,6 @@ export default function LayerPanel() {
           start: dates[0],
           end: dates[0],
         });
-      } else {
-        if (selectedDate) {
-          console.log(
-            'currently selected date is included in new available dates, itll stay the same'
-          );
-        } else {
-          setDateRange({ start: dates[0], end: dates[0] });
-          setSelectedDate(dates[0]);
-        }
       }
     } else {
       console.log('ddd no available date fetched');
