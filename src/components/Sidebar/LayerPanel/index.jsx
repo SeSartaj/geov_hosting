@@ -22,6 +22,7 @@ import debounce from '@/utils/debounce';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as turf from '@turf/turf';
+import Spinner from '@/ui-components/Spinner';
 
 function hasBboxChanged(previousBbox, currentBbox) {
   if (!previousBbox || !currentBbox) return true;
@@ -45,7 +46,7 @@ function hasBboxChanged(previousBbox, currentBbox) {
   );
 
   // Return true if any corner moves more than 1 km
-  if (westSouthDistance > 2 || eastNorthDistance > 2) return true;
+  if (westSouthDistance > 1 || eastNorthDistance > 1) return true;
 
   // Otherwise, return false
   return false;
@@ -85,8 +86,9 @@ const CalenderNavComponent = ({
 };
 
 export default function LayerPanel() {
-  const { dateRange, setDateRange, setDatesLoading, isVisible, setIsVisible } =
+  const { dateRange, setDateRange, isVisible, setIsVisible } =
     useContext(RasterLayerContext);
+  const [datesLoading, setDatesLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState();
 
   const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
@@ -117,8 +119,9 @@ export default function LayerPanel() {
   };
 
   const handleLayerDatesChange = (dates) => {
+    console.log('dates inside handleLayerDatesChange', dates);
     if (dates.length > 0) {
-      let isCurrentDateExist;
+      let isCurrentDateExist = false;
       // if selectedDates is present in the new dates list, keep it uncahnged
       if (selectedDate) {
         isCurrentDateExist = dates
@@ -131,6 +134,12 @@ export default function LayerPanel() {
       // set daterange start and end to the first most recent date in the dates
       // if selected date was not in list of dates, set it to the first date
       // otherwise lave the date untouched
+      console.log(
+        'ddd selectedDate, new dates, isCurrentExist',
+        selectedDate,
+        dates,
+        isCurrentDateExist
+      );
       if (selectedDate && !isCurrentDateExist) {
         console.log(
           'dates doesnt include selected date. choosing most recent date'
@@ -141,12 +150,17 @@ export default function LayerPanel() {
           end: dates[0],
         });
       } else {
-        console.log(
-          'currently selected date is included in new available dates, itll stay the same'
-        );
+        if (selectedDate) {
+          console.log(
+            'currently selected date is included in new available dates, itll stay the same'
+          );
+        } else {
+          setDateRange({ start: dates[0], end: dates[0] });
+          setSelectedDate(dates[0]);
+        }
       }
     } else {
-      console.log('no available date fetched');
+      console.log('ddd no available date fetched');
       // set date range to last 10 days
       if (!selectedDate) {
         setDateRange({
@@ -189,10 +203,11 @@ export default function LayerPanel() {
           bounds?.getNorth(),
         ];
       } else {
+        bbox = undefined;
         console.warn('no bounds found. not fetching available dates');
       }
 
-      if (!options?.layerChanged && peviousBbox.length > 0) {
+      if (!options?.layerChanged && previousBbox?.length > 0) {
         // if the map moved/zoomed in/zoomed out by a very small amount, don't refetch the dates
         if (!hasBboxChanged(previousBbox, bbox)) {
           setPreviousBbox(bbox);
@@ -203,9 +218,9 @@ export default function LayerPanel() {
       }
       setPreviousBbox(bbox);
 
-      if (rasterLayer?.getAvailableDates) {
+      if (rasterLayer?.getAvailableDates && bbox) {
         rasterLayer
-          .getAvailableDates()
+          .getAvailableDates(bbox)
           .then((dates) => {
             // convert all dates to js date object
             const d = dates.map((d) => new Date(d));
@@ -352,7 +367,8 @@ export default function LayerPanel() {
       </div>
       <div className="w-full flex flex-col gap-2.5 mt-4">
         <h4 className="text-base flex gap-3 font-medium tracking-tight">
-          <CalenderIcon /> Available Days
+          <CalenderIcon /> Available Days{' '}
+          {datesLoading && <Spinner size="small" />}
         </h4>
         <Card className="flex items-center justify-center">
           <DayPicker

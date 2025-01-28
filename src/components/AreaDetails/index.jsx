@@ -76,6 +76,7 @@ export default function AreaDetails() {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+        console.log('response is', response);
         return response.json();
       })
       .then((data) => {
