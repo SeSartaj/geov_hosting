@@ -21,28 +21,6 @@ To run this project locally, you'll need the following:
 
 Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard for visualization and analysis.
 
-## Feature Checklist
-
-### Version 1.0 Checklist
-
-- [x] Load markers on the map.
-- [x] Show PAW status, battery level, name, serial number, and crop information in the marker popup.
-- [x] Filter markers based on farm and state.
-- [x] Toggle between map and satellite view.
-- [x] Enable full-screen mode.
-- [x] Add a pie chart on the map showing the percentage of each PAW status.
-- [x] Display plots on the map.
-- [x] Draw a polygon on the map and allow adding plots to it.
-- [x] Persist map settings with the user account or in the local storage.
-- [x] Add a new marker on the map.
-- [x] Show a popup with time-series data when a plot is clicked.
-- [x] Use Highcharts for chart visualization, following the configuration provided by Mr. Zakir.
-- [ ] Explore and integrate ESA Sen-ET (explore documentation).
-- [ ] Implement the Preline U module.
-- [ ] Add translation files using the `i18n` library for multi-language support.
-- [ ] Design the UI using `KendoReact` components with `TailwindCSS`.
-- [ ] Show a loader when NDVI images are loading to indicate system status to the user.
-
 ## Observations
 
 - A marker may belong to a farm, and a farm can have multiple markers.
@@ -54,11 +32,3 @@ Implement a map component with custom layers fetched from a REST API, to be inte
   - Only port 3000 is allowed on the backend.
 - **What is the difference between forecast markers and station markers?**
   - If a marker is associated with a device, it represents a station marker. Forecast markers, on the other hand, are not associated with devices, and their data is fetched from a third-party service.
-
-## Known Issues
-
-- ~~When drawing starts, a popup shows up, but if clicked anywhere else, the popup disappears and doesn’t show up again.~~
-- ~~When a plot is added, the modal and the popup do not close automatically.~~
-- ~~When a marker is drawn on the map, an error is thrown.~~
-- [ ] NDVI images are lost when the map style is changed.
-- [ ] New NDVI images are not downloaded when plot geometry is edited.

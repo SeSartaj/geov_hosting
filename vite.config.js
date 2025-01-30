@@ -12,4 +12,20 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  build: {
+    lib: {
+      entry: './src/App.jsx',
+      name: 'AgvMapReact',
+      fileName: (format) => `agvmapReact.${format}.js`,
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom'], // Externalize React and ReactDOM
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+      },
+    },
+  },
 });

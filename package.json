@@ -1,7 +1,7 @@
 {
-  "name": "geov",
-  "private": true,
-  "version": "0.0.0",
+  "name": "agvmap_react",
+  "description": "a react map component for agviewer",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -32,14 +32,15 @@
     "lucide-react": "^0.469.0",
     "maplibre-gl": "^4.5.0",
     "proj4": "^2.12.0",
-    "react": "^18.3.1",
+    "react": "^17.0.0 || ^18.0.0",
     "react-confirm": "^0.3.0-7",
     "react-day-picker": "^9.3.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "^17.0.0 || ^18.0.0",
     "react-icons": "^5.2.1",
     "react-map-gl": "^7.1.7",
     "react-select": "^5.8.0",
     "recharts": "^2.12.7",
+    "rollup": "^4.32.1",
     "supercluster": "^8.0.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
@@ -47,6 +48,10 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
@@ -56,8 +61,19 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "postcss": "^8.4.41",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
     "tailwindcss": "^3.4.9",
     "vite": "^5.3.4"
   },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "keywords": [
+    "agvmap",
+    "evapotranspiration",
+    "ndvi"
+  ],
+  "author": "Milestone Technologies",
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
