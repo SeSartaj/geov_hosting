@@ -1,4 +1,7 @@
-const base64Credentials = btoa(`demo:demo`);
+const username = import.meta.env.VITE_AGV_API_USERNAME;
+const password = import.meta.env.VITE_AGV_API_PASSWORD;
+
+const base64Credentials = btoa(`${username}:${password}`);
 
 export const fetchWrapper = (url, options = {}) => {
   const headers = {
