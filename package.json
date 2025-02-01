@@ -1,10 +1,22 @@
 {
   "name": "agvmap_react",
-  "description": "a react map component for agviewer",
-  "version": "0.0.3",
+  "version": "0.0.11",
   "type": "module",
+  "main": "dist/agvmap-react.es.js",
+  "module": "dist/agvmap-react.umd.js",
+  "exports": {
+    "import": "./dist/agvmap-react.es.js",
+    "require": "./dist/agvmap-react.umd.js",
+    "styles": "./dist/style.css"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "dist/style.css"
+  ],
   "scripts": {
     "dev": "vite",
+    "prepublish": "rm -rf ./dist && npm run build",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
