@@ -43,7 +43,7 @@ export default function PAWStatusPieChart() {
   console.log('sum', totalCount);
 
   return viewMode === 'PICKER' || !showMarkers || !data.length > 0 ? null : (
-    <Card className="paw-pie-chart bg-white dark:bg-gray-900 p-0">
+    <div className="paw-pie-chart ">
       <PieChart width={115} height={115}>
         <Pie
           data={data}
@@ -60,21 +60,6 @@ export default function PAWStatusPieChart() {
         </Pie>
         <Tooltip />
       </PieChart>
-      <div className="flex flex-col gap-2">
-        {data?.map((entry, index) => (
-          <div key={index} className="flex items-center gap-1 justify-between">
-            <span className="text-[8px] font-semibold">{entry.name}</span>
-            <span
-              className="text-[8px] font-semibold text-center w-10 bg-gray-200 dark:bg-gray-700 rounded-md"
-              style={{
-                color: entry.color,
-              }}
-            >
-              {(entry?.value / Number(totalCount)) * 100}%
-            </span>
-          </div>
-        ))}
-      </div>
-    </Card>
+    </div>
   );
 }

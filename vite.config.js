@@ -18,13 +18,11 @@ export default defineConfig({
     lib: {
       entry: 'src/index.js',
       name: 'agvmap-react',
-      formats: ['es', 'umd'],
-      fileName: (format) => `agvmap-react.${format}.js`,
+      fileName: 'agvmap-react',
     },
     rollupOptions: {
       external: ['react', 'react-dom'],
       output: {
-        exports: 'named',
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',

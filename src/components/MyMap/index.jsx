@@ -19,19 +19,16 @@ import { DrawPolygonControl } from '../DrawPolygonControl';
 import Spinner from '@/ui-components/Spinner';
 import StatusBar from '../StatusBar';
 import NDVILayer from '../NDVILayer';
-import PickerControl from '../PickerControl';
 import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import ColorLegend from '../ColorLegend';
 import { AccessTokenProvider } from '@/contexts/AccessTokenProvider';
 import MapControl from './map-control';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { FaExclamation } from 'react-icons/fa6';
-import { Button } from '../ui/button';
 import { EditPlotGeometryControl } from '../EditPlotGeometryControl';
 import { AddPlotControl } from '../AddPlotControl';
 import { AddStationControl } from '../AddStationControl';
 
-export default function MyMap() {
+export default function MyMap({ style }) {
   const { mapStyle, mapRef } = useContext(MapContext);
   const initialViewState = useInitialView();
   const viewMode = useMapStore((state) => state.viewMode);
@@ -52,7 +49,7 @@ export default function MyMap() {
           id="myMap"
           ref={mapRef}
           initialViewState={initialViewState}
-          style={{ width: '100%', height: '80vh' }}
+          style={{ width: '100%', height: '80vh', ...style }}
           mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}
           attributionControl={false}
           reuseMaps
@@ -84,7 +81,7 @@ export default function MyMap() {
           {viewMode == VIEW_MODES.ADD_PLOT && <AddPlotControl />}
           {viewMode == VIEW_MODES.ADD_MARKER && <AddStationControl />}
 
-          {/* <PAWStatusPieChart /> */}
+          <PAWStatusPieChart />
           <Markers />
           <MarkerPopup />
           <Plots />

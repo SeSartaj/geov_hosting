@@ -11,7 +11,7 @@ import ConfirmContextProvider from './contexts/ConfirmContextProvider';
 import DeleteDialog from './ui-components/DeleteDialog';
 import { ThemeProvider } from './contexts/ShadcnThemeProvider';
 
-function App() {
+function App({ style }) {
   return (
     <ThemeProvider defaultTheme="system">
       <TooltipPrimitive.Provider delayDuration={200}>
@@ -21,15 +21,10 @@ function App() {
               <RasterLayerProvider>
                 <PlotProvider>
                   <MarkersProvider>
-                    <div>
-                      <h1>AGVMap Dashboard</h1>
-                    </div>
-                    <div style={{ padding: 30, marginTop: 20 }}>
-                      <ErrorBoundary>
-                        <MyMap />
-                        <DeleteDialog />
-                      </ErrorBoundary>
-                    </div>
+                    <ErrorBoundary>
+                      <MyMap style={style} />
+                      <DeleteDialog />
+                    </ErrorBoundary>
                   </MarkersProvider>
                 </PlotProvider>
               </RasterLayerProvider>
