@@ -10,6 +10,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import ConfirmContextProvider from './contexts/ConfirmContextProvider';
 import DeleteDialog from './ui-components/DeleteDialog';
 import { ThemeProvider } from './contexts/ShadcnThemeProvider';
+import './App.css';
 
 function App({ style }) {
   return (
