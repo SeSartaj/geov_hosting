@@ -12,7 +12,7 @@ import DeleteDialog from './ui-components/DeleteDialog';
 import { ThemeProvider } from './contexts/ShadcnThemeProvider';
 import './App.css';
 
-function App({ style }) {
+function App({ style, requestHeaders }) {
   return (
     <ThemeProvider defaultTheme="system">
       <TooltipPrimitive.Provider delayDuration={200}>
@@ -23,7 +23,7 @@ function App({ style }) {
                 <PlotProvider>
                   <MarkersProvider>
                     <ErrorBoundary>
-                      <MyMap style={style} />
+                      <MyMap style={style} requestHeaders={requestHeaders} />
                       <DeleteDialog />
                     </ErrorBoundary>
                   </MarkersProvider>

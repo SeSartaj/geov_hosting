@@ -218,9 +218,19 @@ export default function LayerPanel() {
           .getAvailableDates(bbox)
           .then((dates) => {
             // convert all dates to js date object
-            const d = dates.map((d) => new Date(d));
-            setPassDates(d);
-            handleLayerDatesChange(d);
+            const ddates = dates.map((d) => {
+              const localDate = new Date(d);
+              return new Date(
+                Date.UTC(
+                  localDate.getUTCFullYear(),
+                  localDate.getUTCMonth(),
+                  localDate.getUTCDate()
+                )
+              );
+            });
+            console.log('ddates', ddates);
+            setPassDates(ddates);
+            handleLayerDatesChange(ddates);
           })
           .finally(() => {
             setDatesLoading(false);

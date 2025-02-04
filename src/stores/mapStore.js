@@ -25,6 +25,10 @@ const MAP_CURSORS = {
 };
 
 const useMapStore = create((set) => ({
+  requestHeaders: undefined,
+  setRequestHeaders: (requestHeaders) =>
+    set({ requestHeaders: requestHeaders }),
+  setAccessToken: (accessToken) => set({ accessToken: accessToken }),
   sidebarExpanded: true,
   setSidebarExpanded: (expanded) => set({ sidebarExpanded: expanded }),
   hoveredValue: null,

@@ -1,12 +1,10 @@
-const username = import.meta.env.VITE_AGV_API_USERNAME;
-const password = import.meta.env.VITE_AGV_API_PASSWORD;
-
-
-const base64Credentials = btoa(`${username}:${password}`);
+import useMapStore from '@/stores/mapStore';
 
 export const fetchWrapper = (url, options = {}) => {
+  const requestHeaders = useMapStore.getState().requestHeaders;
+
   const headers = {
-    Authorization: `Basic ${base64Credentials}`,
+    ...requestHeaders,
     ...options?.headers,
   };
   return fetch(url, { ...options, headers }).then((response) => {

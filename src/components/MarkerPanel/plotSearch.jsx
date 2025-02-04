@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState, useEffect } from 'react';
 import { MarkersContext } from '../../contexts/markersContext';
 import './styles.css';
 import { MapContext } from '../../contexts/MapContext';
@@ -17,29 +17,47 @@ import { SproutIcon } from '@/icons/sprout';
 import Input from '@/ui-components/Input';
 import { PlotContext } from '@/contexts/PlotContext';
 import { EditPlotModal } from '../PlotPopup/edit';
+import debounce from '@/utils/debounce';
 
 export default function PlotSearch() {
-  const [searchPlot, setSearchPlot] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const { mapRef } = useContext(MapContext);
   const [plotVisible, setPlotVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { plots, loading, handleDeletePlot, handleFlyToPlot, handleEditPlot } =
     useContext(PlotContext);
 
-  console.log('plots', plots);
   const { isConfirmed } = useConfirm();
-  const allPlots = useMemo(() => {
-    return plots.map((m) => transformMarker(m));
+
+  const [debouncedSearch, setDebouncedSearch] = useState(searchKeyword);
+
+  const [allPlots, setAllPlots] = useState([]);
+  const [matchingPlots, setMatchingPlots] = useState([]);
+
+  useEffect(() => {
+    setMatchingPlots(plots.map((m) => transformMarker(m)));
+    setAllPlots(plots.map((m) => transformMarker(m)));
   }, [plots]);
 
-  console.log('plots', plots);
+  // throttle the filtering to only once in 250 seconds
+  useEffect(() => {
+    setIsLoading(true);
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchKeyword);
+      setIsLoading(false);
+    }, 250);
 
-  const foundPlots = useMemo(() => {
-    return allPlots?.filter((plot) =>
-      searchPlot
-        ? plot?.name?.toLowerCase()?.includes(searchPlot?.toLowerCase())
+    return () => clearTimeout(handler); // Cleanup on unmount or when searchKeyword changes
+  }, [searchKeyword]);
+
+  const handleFiltering = (keyword) => {
+    const ps = allPlots?.filter((plot) =>
+      keyword
+        ? plot?.name?.toLowerCase()?.includes(keyword.toLowerCase())
         : true
     );
-  }, [allPlots, searchPlot]);
+    setMatchingPlots(ps);
+  };
 
   const handleMarkerClick = (e) => {
     if (!mapRef?.current) return;
@@ -64,9 +82,14 @@ export default function PlotSearch() {
     setPlotVisible((prev) => !prev);
   }, []);
 
-  const _onSearchPlot = useCallback((e) => {
-    setSearchPlot(e.target.value);
-  }, []);
+  const _onSearchPlot = (e) => {
+    setSearchKeyword(e.target.value);
+  };
+
+  const handleKeywordChange = (e) => {
+    setSearchKeyword(e.target.value);
+    debounce(handleFiltering(e.target.value), 50);
+  };
 
   return (
     <div className="flex items-center w-full">
@@ -96,16 +119,17 @@ export default function PlotSearch() {
                 <Input
                   className="w-[210px] mr-8"
                   placeholder="Search Station"
-                  onChange={_onSearchPlot}
+                  value={searchKeyword}
+                  onChange={handleKeywordChange}
                 />
               </div>
             }
             className="border-none"
           >
-            {loading ? (
+            {loading || isLoading ? (
               <Spinner />
-            ) : foundPlots?.length > 0 ? (
-              foundPlots?.map((marker) => (
+            ) : matchingPlots?.length > 0 ? (
+              matchingPlots?.map((marker) => (
                 <div key={marker.id} className="marker-item">
                   <div className="marker-item-info p-2">
                     <div className="flex justify-between items-center">
@@ -149,7 +173,9 @@ export default function PlotSearch() {
               ))
             ) : (
               <div className="flex items-center justify-center h-20 p-4">
-                <h5 className="text-gray-500">No Plots Found</h5>
+                <h5 className="text-gray-500">
+                  No Plots Found for keyword: {searchKeyword}
+                </h5>
               </div>
             )}
           </Card>

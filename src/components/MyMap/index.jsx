@@ -2,7 +2,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './mapbox-draw-style.css';
 
 import Map from 'react-map-gl/maplibre';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { FullscreenControl } from 'react-map-gl/maplibre';
 
 import { MapContext } from '../../contexts/MapContext';
@@ -28,11 +28,16 @@ import { EditPlotGeometryControl } from '../EditPlotGeometryControl';
 import { AddPlotControl } from '../AddPlotControl';
 import { AddStationControl } from '../AddStationControl';
 
-export default function MyMap({ style }) {
+export default function MyMap({ style, requestHeaders }) {
   const { mapStyle, mapRef } = useContext(MapContext);
   const initialViewState = useInitialView();
   const viewMode = useMapStore((state) => state.viewMode);
   const cursor = useMapStore((state) => state.cursor);
+  const setRequestHeaders = useMapStore((state) => state.setRequestHeaders);
+
+  useEffect(() => {
+    setRequestHeaders(requestHeaders);
+  }, [requestHeaders]);
 
   if (!initialViewState) {
     return <Spinner />;
