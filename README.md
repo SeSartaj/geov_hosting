@@ -28,6 +28,24 @@ VITE_AGV_API_PASSWORD=your_password
 4. run `yarn dev` to start the development server
 5. goto `localhost:3000` and you shall see the app running.
 
+### USage example
+
+```
+<AgvMap
+  configs={{
+    VITE_MAPTILER_ACCESS_KEY: your-value,
+    VITE_SENTINAL_HUB_CLIENT_ID:  your-value,
+    VITE_SENTINAL_HUB_CLIENT_SECRET:  your-value,
+    VITE_SENTINAL_HUB_WMTS_ID:  your-value,
+  }}
+
+  requestHeaders={{
+    Authentication: your-value
+  }}
+
+>
+```
+
 ## Project Goal
 
 Implement a map component with custom layers fetched from a REST API, to be integrated into a dashboard for visualization and analysis.

@@ -8,12 +8,12 @@ import getBottomMostLayer from '@/utils/getBottomMostLayer';
 import { useMap } from 'react-map-gl/maplibre';
 import { layerOptions } from '@/constants';
 
-const WMTS_ID =
-  localStorage.getItem('VITE_SENTINAL_HUB_WMTS_ID') ||
-  import.meta.env.VITE_SENTINAL_HUB_WMTS_ID;
-export const BASE_URL = `https://services.sentinel-hub.com/ogc/wmts/${WMTS_ID}?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}&FORMAT=image/png`;
+const WMTS_ID = useMapStore.getState().configs?.VITE_SENTINAL_HUB_WMTS_ID;
 
 function getLayerURL({ layer, dateRange }) {
+  const WMTS_ID = useMapStore.getState().configs?.VITE_SENTINAL_HUB_WMTS_ID;
+  const BASE_URL = `https://services.sentinel-hub.com/ogc/wmts/${WMTS_ID}?TILEMATRIXSET=PopularWebMercator256&Service=WMTS&Request=GetTile&RESOLUTION=10&MAXCC=20&TileMatrix={z}&TileCol={x}&TileRow={y}&FORMAT=image/png`;
+
   console.log('dateRange', dateRange);
   if (!layer || !dateRange || !dateRange?.start) {
     return null;

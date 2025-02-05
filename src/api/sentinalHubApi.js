@@ -43,8 +43,11 @@ const evalscript = `
   }
   `;
 
+import useMapStore from '@/stores/mapStore';
+
 // gets client id and secret from the environment
 export async function getAccessToken() {
+  console.log('access Token', useMapStore.getState().configs);
   const tokenUrl = 'https://services.sentinel-hub.com/oauth/token';
 
   const response = await fetch(tokenUrl, {
@@ -55,9 +58,11 @@ export async function getAccessToken() {
     body: new URLSearchParams({
       grant_type: 'client_credentials',
       client_id:
+        useMapStore.getState().configs?.VITE_SENTINAL_HUB_CLIENT_ID ||
         localStorage.getItem('VITE_SENTINAL_HUB_CLIENT_ID') ||
         import.meta.env.VITE_SENTINAL_HUB_CLIENT_ID,
       client_secret:
+        useMapStore.getState().configs?.VITE_SENTINAL_HUB_CLIENT_SECRET ||
         localStorage.getItem('VITE_SENTINAL_HUB_CLIENT_SECRET') ||
         import.meta.env.VITE_SENTINAL_HUB_CLIENT_SECRET,
     }),
@@ -75,8 +80,11 @@ export async function fetchAccessToken(clientId, clientSecret) {
   const url = 'https://services.sentinel-hub.com/oauth/token';
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
-    client_id: clientId,
-    client_secret: clientSecret,
+    client_id:
+      useMapStore.getState().configs?.VITE_SENTINAL_HUB_CLIENT_ID || clientId,
+    client_secret:
+      useMapStore.getState().configs?.VITE_SENTINAL_HUB_CLIENT_SECRET ||
+      clientSecret,
   });
 
   const response = await fetch(url, {
@@ -266,7 +274,8 @@ export async function getSatellitePassDates({
   endDate,
   accessToken,
 }) {
-  console.log('accessToken', accessToken);
+  console.log('accessToken', accessToken, useMapStore.getState().configs);
+
   if (!accessToken) {
     throw new Error('Access token is required');
   }

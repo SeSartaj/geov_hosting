@@ -1,6 +1,6 @@
 {
-  "name": "agvmap_react",
-  "version": "0.0.20",
+  "name": "agvmap-react",
+  "version": "0.0.21",
   "type": "module",
   "main": "dist/agvmap-react.umd.cjs",
   "module": "dist/agvmap-react.js",
@@ -44,8 +44,10 @@
     "lucide-react": "^0.469.0",
     "maplibre-gl": "^4.5.0",
     "proj4": "^2.12.0",
-    "react-confirm": "^0.1",
+    "react": "^18.3.1",
+    "react-confirm": "^0.3",
     "react-day-picker": "^9.3.0",
+    "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
     "react-map-gl": "^7.1.7",
     "react-select": "^5.8.0",
@@ -54,9 +56,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "yarn": "^1.22.22",
-    "zustand": "^4.5.5",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.0.4",
@@ -67,19 +67,15 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
-    "rollup": "^4.32.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "postcss": "^8.4.41",
+    "rollup": "^4.32.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "tailwindcss": "^3.4.9",
     "vite": "^5.3.4"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
   },
   "keywords": [
     "agvmap",

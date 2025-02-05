@@ -4,7 +4,6 @@ import { useControl } from 'react-map-gl/maplibre';
 import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import { useMap } from 'react-map-gl/maplibre';
 import { SettingsContext } from '@/contexts/SettingsContext';
-import { BASEMAP_OPTIONS } from '@/constants';
 import { Button } from '../ui/button';
 import { FaExclamation, FaSatellite, FaSatelliteDish } from 'react-icons/fa6';
 import {

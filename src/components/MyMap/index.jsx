@@ -28,16 +28,21 @@ import { EditPlotGeometryControl } from '../EditPlotGeometryControl';
 import { AddPlotControl } from '../AddPlotControl';
 import { AddStationControl } from '../AddStationControl';
 
-export default function MyMap({ style, requestHeaders }) {
+export default function MyMap({ style, requestHeaders, configs }) {
   const { mapStyle, mapRef } = useContext(MapContext);
   const initialViewState = useInitialView();
   const viewMode = useMapStore((state) => state.viewMode);
   const cursor = useMapStore((state) => state.cursor);
   const setRequestHeaders = useMapStore((state) => state.setRequestHeaders);
+  const setConfigs = useMapStore((state) => state.setConfigs);
 
   useEffect(() => {
     setRequestHeaders(requestHeaders);
   }, [requestHeaders]);
+
+  useEffect(() => {
+    setConfigs(configs);
+  }, []);
 
   if (!initialViewState) {
     return <Spinner />;

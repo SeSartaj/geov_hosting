@@ -1,16 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <React.StrictMode>
     <App
       requestHeaders={{
         Authorization:
-          'Bearer  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4Njg1NDgyLCJqdGkiOiJmY2NjNzViYmU1Mjc0NTU1YWU0YTEyN2MyOWY5ZGIzYSIsInVzZXJfaWQiOjgzOTN9.wwjGDFVGpjCSr79UnP38z2nJTQr2Hge6LxzkB9dW_78',
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NzUyMDk3LCJqdGkiOiJlNjc4MmM5Yjc5ZTc0NDY2YTZmNmU2ZDM1N2E2ODllMSIsInVzZXJfaWQiOjgzOTN9.dFNZ2-zgwUZx-QhmTwLsBLUrIDmHvP-d_sPneZw3W-s',
+      }}
+      configs={{
+        VITE_MAPTILER_ACCESS_KEY: 'nffTPMlX5bMIm8VR0LFb',
+        VITE_SENTINAL_HUB_CLIENT_ID: '9188261d-b9c9-48a3-b1b4-b4653da6a8f0',
+        VITE_SENTINAL_HUB_CLIENT_SECRET: 'sln8tqts90EhECu4t1YhnfpEaCSr88ax',
+        VITE_SENTINAL_HUB_WMTS_ID: 'cb6893e1-7405-4a11-baaf-6e1fb92585e9',
       }}
     />
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );

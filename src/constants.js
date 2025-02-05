@@ -1,19 +1,17 @@
-const accessKey =
-  localStorage.getItem('VITE_MAPTILER_ACCESS_KEY') ||
-  import.meta.env.VITE_MAPTILER_ACCESS_KEY;
+import useMapStore from './stores/mapStore';
 
-export const DEFAULT_BASEMAP = `https://api.maptiler.com/maps/satellite/style.json?key=${accessKey}`;
+console.log('configs are ', useMapStore.getState().configs);
 
 export const BASEMAP_OPTIONS = [
   {
     id: 'satellite',
     name: 'Satellite',
-    url: `https://api.maptiler.com/maps/satellite/style.json?key=${accessKey}`,
+    url: `https://api.maptiler.com/maps/satellite/style.json`,
   },
   {
     id: 'basic',
     name: 'Basic',
-    url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${accessKey}`,
+    url: `https://api.maptiler.com/maps/basic-v2/style.json`,
   },
 ];
 

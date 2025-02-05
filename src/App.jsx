@@ -12,18 +12,22 @@ import DeleteDialog from './ui-components/DeleteDialog';
 import { ThemeProvider } from './contexts/ShadcnThemeProvider';
 import './App.css';
 
-function App({ style, requestHeaders }) {
+function App({ style, requestHeaders, configs }) {
   return (
     <ThemeProvider defaultTheme="system">
       <TooltipPrimitive.Provider delayDuration={200}>
         <SettingsProvider>
           <ConfirmContextProvider>
-            <MapProvider>
+            <MapProvider configs={configs}>
               <RasterLayerProvider>
                 <PlotProvider>
                   <MarkersProvider>
                     <ErrorBoundary>
-                      <MyMap style={style} requestHeaders={requestHeaders} />
+                      <MyMap
+                        style={style}
+                        requestHeaders={requestHeaders}
+                        configs={configs}
+                      />
                       <DeleteDialog />
                     </ErrorBoundary>
                   </MarkersProvider>

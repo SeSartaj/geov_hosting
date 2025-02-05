@@ -25,6 +25,8 @@ const MAP_CURSORS = {
 };
 
 const useMapStore = create((set) => ({
+  configs: {},
+  setConfigs: (configs) => set({ configs: configs }),
   requestHeaders: undefined,
   setRequestHeaders: (requestHeaders) =>
     set({ requestHeaders: requestHeaders }),
@@ -70,7 +72,7 @@ const useMapStore = create((set) => ({
 
   cursorCords: [0, 0],
   setCursorCords: (cords) => set({ cursorCords: cords }),
-  rasterLayer: layerOptions[0],
+  rasterLayer: { value: '3_NDVI', label: 'NDVI' },
   setRasterLayer: (layer) => set({ rasterLayer: layer }),
   rasterOpacity: 100,
   setRasterOpacity: (opacity) => set({ rasterOpacity: opacity }),

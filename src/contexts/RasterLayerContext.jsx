@@ -7,7 +7,7 @@ export const RasterLayerContext = createContext(null);
 export function RasterLayerProvider({ children }) {
   const { mapInstance } = useContext(MapContext);
   const [layer, setLayer] = useState(layerOptions[0]);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [opacity, setOpacity] = useState(100);
   const [isDetailActive, setIsDetailActive] = useState(false);
   const [datesLoading, setDatesLoading] = useState(false);

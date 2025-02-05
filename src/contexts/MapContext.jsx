@@ -20,18 +20,24 @@ const MAP_MODES = {
   ADD_PLOT: 'add_plot',
 };
 
-const MapProvider = ({ children }) => {
+const MapProvider = ({ children, configs }) => {
   const { settings } = useContext(SettingsContext);
   const [mode, setMode] = useState(MAP_MODES.VIEW);
   const [status, setStatus] = useState('idle');
   const [showDrawActionPopup, setShowDrawActionPopup] = useState(false);
   const [mapStyle, setMapStyle] = useState(
-    BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url
+    `${BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url}?key=${
+      configs?.VITE_MAPTILER_ACCESS_KEY
+    }`
   );
   const [isDetailActive, setIsDetailActive] = useState(false);
 
   useEffect(() => {
-    setMapStyle(BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url);
+    setMapStyle(
+      `${BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url}?key=${
+        configs?.VITE_MAPTILER_ACCESS_KEY
+      }`
+    );
   }, [settings]);
 
   const [sources, setSources] = useState({});
