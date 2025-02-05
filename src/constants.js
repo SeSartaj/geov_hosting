@@ -1,21 +1,19 @@
-export const DEFAULT_BASEMAP = `https://api.maptiler.com/maps/satellite/style.json?key=${
-  import.meta.env.VITE_MAPTILER_ACCESS_KEY
-}`;
+const accessKey =
+  localStorage.getItem('VITE_MAPTILER_ACCESS_KEY') ||
+  import.meta.env.VITE_MAPTILER_ACCESS_KEY;
+
+export const DEFAULT_BASEMAP = `https://api.maptiler.com/maps/satellite/style.json?key=${accessKey}`;
 
 export const BASEMAP_OPTIONS = [
   {
     id: 'satellite',
     name: 'Satellite',
-    url: `https://api.maptiler.com/maps/satellite/style.json?key=${
-      import.meta.env.VITE_MAPTILER_ACCESS_KEY
-    }`,
+    url: `https://api.maptiler.com/maps/satellite/style.json?key=${accessKey}`,
   },
   {
     id: 'basic',
     name: 'Basic',
-    url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${
-      import.meta.env.VITE_MAPTILER_ACCESS_KEY
-    }`,
+    url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${accessKey}`,
   },
 ];
 

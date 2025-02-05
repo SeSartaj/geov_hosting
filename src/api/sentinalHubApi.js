@@ -54,8 +54,12 @@ export async function getAccessToken() {
     },
     body: new URLSearchParams({
       grant_type: 'client_credentials',
-      client_id: import.meta.env.VITE_SENTINAL_HUB_CLIENT_ID,
-      client_secret: import.meta.env.VITE_SENTINAL_HUB_CLIENT_SECRET,
+      client_id:
+        localStorage.getItem('VITE_SENTINAL_HUB_CLIENT_ID') ||
+        import.meta.env.VITE_SENTINAL_HUB_CLIENT_ID,
+      client_secret:
+        localStorage.getItem('VITE_SENTINAL_HUB_CLIENT_SECRET') ||
+        import.meta.env.VITE_SENTINAL_HUB_CLIENT_SECRET,
     }),
   });
 

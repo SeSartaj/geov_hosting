@@ -1,8 +1,12 @@
 import { createContext, useState, useEffect } from 'react';
 import { fetchAccessToken } from '@/api/sentinalHubApi';
 
-const clientId = import.meta.env.VITE_SENTINAL_HUB_CLIENT_ID;
-const clientSecret = import.meta.env.VITE_SENTINAL_HUB_CLIENT_SECRET;
+const clientId =
+  localStorage.getItem('VITE_SENTINAL_HUB_CLIENT_ID') ||
+  import.meta.env.VITE_SENTINAL_HUB_CLIENT_ID;
+const clientSecret =
+  localStorage.getItem('VITE_SENTINAL_HUB_CLIENT_SECRET') ||
+  import.meta.env.VITE_SENTINAL_HUB_CLIENT_SECRET;
 
 export const AccessTokenContext = createContext(null);
 
