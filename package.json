@@ -1,6 +1,6 @@
 {
   "name": "agvmap-react",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "type": "module",
   "main": "dist/agvmap-react.umd.cjs",
   "module": "dist/agvmap-react.js",
