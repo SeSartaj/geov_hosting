@@ -1,7 +1,17 @@
 import useMapStore from '@/stores/mapStore';
 
 export const fetchWrapper = (url, options = {}) => {
-  const requestHeaders = useMapStore.getState().requestHeaders;
+  let requestHeaders = useMapStore.getState().requestHeaders || {};
+  if (!requestHeaders?.Authorization) {
+    // Get username and password from Vite environment variables
+    const username = import.meta.env.VITE_AGV_API_USERNAME;
+    const password = import.meta.env.VITE_AGV_API_PASSWORD;
+
+    if (username && password) {
+      const encodedCredentials = btoa(`${username}:${password}`);
+      requestHeaders.Authorization = `Basic ${encodedCredentials}`;
+    }
+  }
 
   const headers = {
     ...requestHeaders,

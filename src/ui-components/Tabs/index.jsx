@@ -31,7 +31,7 @@ export const MyTabs = ({
   defaultId,
   ariaLabel = 'tabs',
   renderTrigger = (tab) => (
-    <TabTrigger 
+    <TabTrigger
       key={tab.id}
       value={tab.id}
       tooltipText={tab.tooltipText || tab.title}

@@ -94,7 +94,7 @@ export default function MyModal({
 MyModal.propTypes = {
   trigger: PropTypes.node,
   title: PropTypes.string,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   children: PropTypes.node.isRequired,
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,

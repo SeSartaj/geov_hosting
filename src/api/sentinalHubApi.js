@@ -274,10 +274,9 @@ export async function getSatellitePassDates({
   endDate,
   accessToken,
 }) {
-  console.log('accessToken', accessToken, useMapStore.getState().configs);
-
   if (!accessToken) {
-    throw new Error('Access token is required');
+    console.warn('Access token is required');
+    return [];
   }
   // if start and end dates are not provided, use the last 6 months
   if (!startDate || !endDate) {
@@ -294,6 +293,11 @@ export async function getSatellitePassDates({
     Authorization: `Bearer ${accessToken}`,
     'Content-Type': 'application/json',
   };
+
+  if (!aoi) {
+    console.warn('aoi is not provided to getSatellitePassDates ');
+    return [];
+  }
 
   const body = {
     bbox: aoi,

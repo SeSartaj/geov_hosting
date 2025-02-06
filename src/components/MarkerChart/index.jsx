@@ -208,9 +208,7 @@ const HumidityChart = ({ marker }) => {
       text: null, // No title
     },
     xAxis: {
-      categories: transformedData.map((d) =>
-        new Date(d.time).toLocaleDateString()
-      ),
+      categories: pawData.map((d) => new Date(d.time).toLocaleDateString()),
       tickLength: 0, // Hide ticks
       labels: {
         enabled: false, // Hide labels
@@ -259,7 +257,7 @@ const HumidityChart = ({ marker }) => {
     series: [
       {
         name: 'Humidity',
-        data: transformedData.map((d) => d.humidity),
+        data: pawData.map((d) => d.humidity),
         color: '#333',
         lineWidth: 1,
         marker: {
@@ -280,7 +278,7 @@ const HumidityChart = ({ marker }) => {
       setLoading(true);
       try {
         // this is temporary for testing, user marker.id instead
-        const data = await getPawData(8386);
+        const data = await getPawData(marker?.id);
         setPawData(transformData(data));
       } catch (error) {
         console.log('error fetching paw data');
@@ -290,7 +288,7 @@ const HumidityChart = ({ marker }) => {
     };
 
     fetchdata();
-  }, []);
+  }, [marker]);
 
   if (loading) return <Spinner />;
 

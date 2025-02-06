@@ -206,7 +206,7 @@ function PickerControl() {
       variant="outline"
       size="icon"
       title="Activate picker mode"
-      ariaLabel="Activate picker mode"
+      aria-label="Activate picker mode"
       onClick={handleClick}
       className={` ${
         viewMode === VIEW_MODES.PICKER ? ' bg-gray-200 dark:bg-gray-600' : ''
