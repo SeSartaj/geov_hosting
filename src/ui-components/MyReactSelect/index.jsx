@@ -1,5 +1,6 @@
 import { SettingsContext, useDarkMode } from '@/contexts/SettingsContext';
 import { usePrefersDarkMode } from '@/hooks/usePrefersDarkMode';
+import { typeOf } from 'maplibre-gl';
 import { forwardRef, useContext } from 'react';
 import Select from 'react-select';
 
@@ -10,7 +11,7 @@ const sizeClasses = {
 };
 
 const MyReactSelect = forwardRef(function MyReactSelect(
-  { size = 'sm', name, formRef, ...props },
+  { size = 'sm', name, formRef, value, options, ...props },
   ref
 ) {
   const isDarkMode = useDarkMode();
@@ -121,6 +122,14 @@ const MyReactSelect = forwardRef(function MyReactSelect(
       className={`border rounded ${sizeClasses[size]}`}
       hideSelectedOptions={true}
       onKeyDown={handleTabChange}
+      value={
+        value == null
+          ? null
+          : value?.label
+          ? value
+          : options?.find((o) => o?.value == value)
+      }
+      options={options}
       {...props}
     />
   );

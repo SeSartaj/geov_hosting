@@ -1,27 +1,28 @@
 import Label from '../Label';
 
-function FormGroup({ label,error, children }) {
+function FormGroup({ label, error, children, className }) {
   return (
     <>
-    <div className='flex items-center w-full mb-1'>
-      <Label className='w-1/4'>{label}</Label>
-      <div className='flex-grow'>{children}</div>
-    </div>
-    <FormErrorMessage error={error}/>
-
+      <div className={`flex items-center w-full mb-1 ${className}`}>
+        <Label className="w-1/4">{label}</Label>
+        <div className="flex-grow">{children}</div>
+      </div>
+      <FormErrorMessage error={error} />
     </>
   );
 }
 
-
-export function FormErrorMessage({error}){
+export function FormErrorMessage({ error }) {
   return (
-    <div className='flex items-center w-full mb-1'>
-    <Label className='w-1/4'></Label>
-    {error && <small className='flex-grow text-red-500 '>{error?.message || error}</small>}
-  </div>
-  )
+    <div className="flex items-center w-full mb-1">
+      <Label className="w-1/4"></Label>
+      {error && (
+        <small className="flex-grow text-red-500 ">
+          {error?.message || error}
+        </small>
+      )}
+    </div>
+  );
 }
-
 
 export default FormGroup;
