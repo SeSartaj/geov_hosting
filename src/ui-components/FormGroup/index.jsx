@@ -7,7 +7,7 @@ function FormGroup({ label, error, children, className }) {
         <Label className="w-1/4">{label}</Label>
         <div className="flex-grow">{children}</div>
       </div>
-      <FormErrorMessage error={error} />
+      {error && <FormErrorMessage error={error} />}
     </>
   );
 }
