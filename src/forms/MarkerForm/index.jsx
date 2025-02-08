@@ -1,6 +1,6 @@
 import { getFarmOptions } from '@/api/farmApi';
 import { getAllGraphOptions, getPawGraphOptions } from '@/api/graphsApi';
-import { getStationOptions } from '@/api/stationApi';
+import { getStationOptions, TurnOffSatET, TurnOnSatET } from '@/api/stationApi';
 import { Button } from '@/components/ui/button';
 import { SettingsContext } from '@/contexts/SettingsContext';
 import useAsync from '@/hooks/useAsync';
@@ -10,6 +10,7 @@ import MyButton from '@/ui-components/MyButton';
 import MyReactSelect from '@/ui-components/MyReactSelect';
 import Spinner from '@/ui-components/Spinner';
 import ToggleButton from '@/ui-components/toggleButton';
+import { fetchWrapper } from '@/utils/fetchWrapper';
 import getSelectedValues from '@/utils/getSelectedValues';
 import { useContext, useRef, useState } from 'react';
 
@@ -71,6 +72,7 @@ export default function MarkerForm({
       location_name: formData.name,
       farm: formData?.farm?.id,
       use_custom_location: true,
+      enable_satellite_et: formData?.isSatEtOn,
     };
 
     if (formData?.id) data.id = formData.id;
@@ -110,6 +112,7 @@ export default function MarkerForm({
   console.log('deserializedValue', deserializedData);
   // if user doesn't include all values in initialValues, emptyValues will be used
   const [formData, setFormData] = useState({ ...deserializedData });
+  const [etLoading, setEtLoading] = useState(false);
 
   const handleCustomCoordsToggling = (isCustomLocation) => {
     if (isCustomLocation) {
@@ -134,6 +137,22 @@ export default function MarkerForm({
         setFormError(error);
       })
       .finally(() => setSubmitting(false));
+  };
+
+  const handleStationSatEtChange = (isOn) => {
+    console.log('formData', formData);
+    setEtLoading(true);
+    if (isOn) {
+      TurnOnSatET(formData.station?.serial).finally(() => {
+        setFormData({ ...formData, isSatEtOn: isOn });
+        setEtLoading(false);
+      });
+    } else {
+      TurnOffSatET(formData.station?.serial).finally(() => {
+        setFormData({ ...formData, isSatEtOn: isOn });
+        setEtLoading(false);
+      });
+    }
   };
 
   return (
@@ -240,6 +259,15 @@ export default function MarkerForm({
             onToggle={handleCustomCoordsToggling}
             onTooltip="click to use marker's coordinates"
             offTooltip="click to use custom coordinates"
+          />
+        </FormGroup>
+        <FormGroup label="Enable Sat-ET">
+          <ToggleButton
+            value={formData?.isSatEtOn}
+            onChange={handleStationSatEtChange}
+            isLoading={etLoading}
+            onTooltip="turn on Sat-ET for this station"
+            offTooltip="turn off Sat-Et for this station"
           />
         </FormGroup>
       </div>

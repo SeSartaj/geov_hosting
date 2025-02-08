@@ -1,21 +1,31 @@
-import React from 'react'; // Add this line to import the 'React' module
+import React, { useEffect } from 'react'; // Add this line to import the 'React' module
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import Tooltip from '@/ui-components/Tooltip';
+import Spinner from '../Spinner';
 
 const ToggleButton = React.memo(function Togglebutton({
-  initialState = false,
+  value = false,
   onToggle,
+  onChange,
   onTooltip,
   offTooltip,
+  isLoading = false,
   size = 'sm', // Default size is 'md'
 }) {
-  const [isOn, setIsOn] = useState(initialState);
+  const [isOn, setIsOn] = useState(value);
+
+  useEffect(() => {
+    setIsOn(value);
+  }, [value]);
 
   const handleToggle = () => {
     setIsOn(!isOn);
     if (onToggle) {
       onToggle(!isOn);
+    }
+    if (onChange) {
+      onChange(!isOn);
     }
   };
 
@@ -41,17 +51,21 @@ const ToggleButton = React.memo(function Togglebutton({
   return (
     <Tooltip text={isOn ? onTooltip : offTooltip}>
       <button
-        type='button'
+        type="button"
         onClick={handleToggle}
         className={`relative  inline-flex items-center rounded-full transition-colors duration-300 focus:outline-none  focus:outline focus:outline-2 focus:outline-offset-1 ${
           isOn ? 'bg-blue-700' : 'bg-gray-300'
         } ${sizeClasses[size].button}`}
       >
-        <span
-          className={`inline-block transform rounded-full bg-white transition-transform duration-300 ${
-            isOn ? sizeClasses[size].translate : 'translate-x-1'
-          } ${sizeClasses[size].circle}`}
-        />
+        {isLoading ? (
+          <Spinner size="small" />
+        ) : (
+          <span
+            className={`inline-block transform rounded-full bg-white transition-transform duration-300 ${
+              isOn ? sizeClasses[size].translate : 'translate-x-1'
+            } ${sizeClasses[size].circle}`}
+          />
+        )}
       </button>
     </Tooltip>
   );

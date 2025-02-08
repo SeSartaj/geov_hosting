@@ -120,6 +120,8 @@ export const getPlots = async () => {
   // return DUMMY_PLOTS;
 };
 
+
+
 export const createPlot = async (data) => {
   const response = await fetchWrapper(`${API_URL}plot/`, {
     method: 'POST',
