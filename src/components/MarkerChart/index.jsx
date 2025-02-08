@@ -1,16 +1,7 @@
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useState } from 'react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ReferenceArea,
-} from 'recharts';
+
 import { getPawData } from '../../api/markerApi';
 import { BiLoader } from 'react-icons/bi';
 import Spinner from '@/ui-components/Spinner';
@@ -192,8 +183,6 @@ const transformData = (data) => {
     humidity,
   }));
 };
-
-const transformedData = transformData(SAMPLE_DATA);
 
 const HumidityChart = ({ marker }) => {
   const [pawData, setPawData] = useState([]);

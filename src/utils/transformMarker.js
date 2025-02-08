@@ -1,12 +1,9 @@
 export function transformMarker(marker) {
-  // console.log('mmk', marker);
-  // if no device is connected to it, it is a forecast marker
   if (typeOfMarker(marker) === 'forecast') {
     return transformForecastMarker(marker);
-  } else if (typeOfMarker(marker) === 'station') {
+  } else {
     return transformStationMarker(marker);
   }
-  throw new Error('Could not identify type of the marker', marker);
 }
 
 function typeOfMarker(marker) {
@@ -27,10 +24,10 @@ function typeOfMarker(marker) {
 function transformStationMarker(marker) {
   return {
     type: 'station',
-    title: `${marker.device.name} [${marker.device.serial}] ${marker?.location_name}`,
+    title: `${marker?.device?.name} [${marker?.device?.serial}] ${marker?.location_name}`,
     location: marker.use_custom_location
       ? { lng: marker.lng, lat: marker.lat }
-      : marker.device.details.location,
+      : marker?.device?.details?.location,
     longitude: marker.use_custom_location
       ? marker.lng
       : marker.device.details.location.lng,
