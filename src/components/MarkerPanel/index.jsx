@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { MarkersContext } from '../../contexts/markersContext';
 import './styles.css';
 import Label from '@/ui-components/Label';
@@ -8,6 +8,8 @@ import MyReactSelect from '@/ui-components/MyReactSelect';
 import MarkerPlots from './plots';
 import { PlotContext } from '@/contexts/PlotContext';
 import PlotSearch from './plotSearch';
+import FormGroup from '@/ui-components/FormGroup';
+import { getFarmOptions } from '@/api/farmApi';
 
 const markerOptions = [
   {
@@ -53,9 +55,9 @@ export default function MarkerPanel() {
   const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
 
   const _onSelectMarker = useCallback(
-    (e) => {
-      console.log('on select marker', e);
-      setMarkerFilters({ ...markerFilters, paw_status: e?.target?.value });
+    (o) => {
+      console.log('on select marker', o);
+      setMarkerFilters({ ...markerFilters, paw_status: o?.value });
     },
     [markerFilters, setMarkerFilters]
   );
@@ -66,6 +68,22 @@ export default function MarkerPanel() {
     },
     [markerFilters, setMarkerFilters]
   );
+
+  const [farmsLoading, setFarmsLoading] = useState(false);
+  const [farmOptions, setFarmOptions] = useState([]);
+
+  useEffect(() => {
+    setFarmsLoading(true);
+
+    getFarmOptions()
+      .then((options) => {
+        console.log('farm', options);
+        setFarmOptions(options);
+      })
+      .finally(() => {
+        setFarmsLoading(false);
+      });
+  }, []);
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -101,19 +119,17 @@ export default function MarkerPanel() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-2 justify-between">
-          <select
-            onChange={_onSelectMarker}
-            value={markerFilters.paw_status}
-            className="w-full py-2 px-3 dark:bg-gray-700 border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md"
-          >
-            {markerOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <select
+        <div className="flex items-center gap-0 justify-between">
+          <FormGroup label="PAW Status" className="w-full items-between">
+            <MyReactSelect
+              onChange={_onSelectMarker}
+              value={markerFilters.paw_status}
+              options={markerOptions}
+              isClearable={true}
+            />
+          </FormGroup>
+
+          {/* <select
             value={markerFilters.farm_id}
             className="w-full py-2 px-3 dark:bg-gray-700 border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md"
             onChange={(e) =>
@@ -125,7 +141,21 @@ export default function MarkerPanel() {
                 {option.label}
               </option>
             ))}
-          </select>
+          </select> */}
+          <FormGroup label="Farm" className="w-full items-between">
+            <MyReactSelect
+              value={markerFilters.farm_id}
+              options={farmOptions}
+              onChange={(op) =>
+                setMarkerFilters({
+                  ...markerFilters,
+                  farm_id: op?.value || null,
+                })
+              }
+              isLoading={farmsLoading}
+              isClearable={true}
+            />
+          </FormGroup>
         </div>
         <MarkerPlots />
       </div>
