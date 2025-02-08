@@ -9,6 +9,7 @@ export const VIEW_MODES = {
   ADD_PLOT: 'ADD_PLOT',
   ADD_MARKER: 'ADD_MARKER',
   EDIT_MARKER: 'EDIT_MARKER',
+  ADD_NEW_FARM: 'ADD_NEW_FARM',
 };
 
 const MAP_CURSORS = {

@@ -15,6 +15,7 @@ const EMPTY_FILTERS = {
 export const useMarkers = () => {
   const [markers, setMarkers] = useState([]);
   const [showMarkers, setShowMarkers] = useState(true);
+  const [clickedMarker, setClickedMarker] = useState(null);
 
   const [unfilteredMarkers, setUnfilteredMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -49,11 +50,20 @@ export const useMarkers = () => {
     return updateMarker(data).then((updatedMarker) => {
       if (!updatedMarker) return;
       // update the markers list
+      let transformedMarker = transformMarker(updatedMarker);
       const updatedMarkers = markers.map((marker) =>
-        marker.id === updatedMarker.id ? updatedMarker : marker
+        marker.id === updatedMarker.id ? transformedMarker : marker
       );
+      console.log('data updatedMarker', updatedMarker);
+      console.log('data new markers list', updatedMarkers);
       setMarkers(updatedMarkers);
+      setClickedMarker(transformedMarker);
     });
+  };
+
+  const handleShowMarkerChange = (value) => {
+    setClickedMarker(null);
+    setShowMarkers(value);
   };
 
   const handleDeleteMarker = (markerId) => {
@@ -117,6 +127,9 @@ export const useMarkers = () => {
     markerFilters,
     setMarkerFilters: handleFilterChange,
     resetFilters,
+    clickedMarker,
+    setClickedMarker,
+    handleShowMarkerChange,
     handleMarkerUpdate,
     handleDeleteMarker,
   };

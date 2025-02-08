@@ -70,7 +70,7 @@ export default function MarkerForm({
       lng: formData.longitude,
       lat: formData.latitude,
       location_name: formData.name,
-      farm: formData?.farm?.id,
+      farm: formData?.farm?.value,
       use_custom_location: true,
       enable_satellite_et: formData?.isSatEtOn,
     };
@@ -97,7 +97,7 @@ export default function MarkerForm({
       name: data.location_name,
       longitude: data.lng,
       latitude: data.lat,
-      farm: data.farm,
+      farm: data.farm?.id,
       station: data.device,
       paw_graphs: data.paw_graphs,
       graphs: data.graphs,

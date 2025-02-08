@@ -6,12 +6,13 @@ import { useMarkers } from '../hooks/useMarkers';
 const MarkersContext = createContext();
 
 const MarkersProvider = ({ children }) => {
-  const [clickedMarker, setClickedMarker] = useState(null);
   const {
     markers,
     setMarkers,
     showMarkers,
-    setShowMarkers,
+    clickedMarker,
+    setClickedMarker,
+    handleShowMarkerChange,
     addNewMarker,
     loading,
     markerFilters,
@@ -20,11 +21,6 @@ const MarkersProvider = ({ children }) => {
     handleMarkerUpdate,
     handleDeleteMarker,
   } = useMarkers();
-
-  const handleShowMarkerChange = (value) => {
-    setClickedMarker(null);
-    setShowMarkers(value);
-  };
 
   return (
     <MarkersContext.Provider
@@ -37,11 +33,11 @@ const MarkersProvider = ({ children }) => {
         addNewMarker,
         markerFilters,
         setMarkerFilters,
-        clickedMarker,
-        setClickedMarker,
         resetFilters,
         showMarkers,
         setShowMarkers: handleShowMarkerChange,
+        clickedMarker,
+        setClickedMarker,
         handleMarkerUpdate,
         handleDeleteMarker,
       }}

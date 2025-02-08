@@ -27,6 +27,8 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { EditPlotGeometryControl } from '../EditPlotGeometryControl';
 import { AddPlotControl } from '../AddPlotControl';
 import { AddStationControl } from '../AddStationControl';
+import AddPlotModal from '../AddPlotModal';
+import AddFarmModal from '../AddFarmModal';
 
 export default function MyMap({ style, requestHeaders, configs }) {
   const { mapStyle, mapRef } = useContext(MapContext);
@@ -90,6 +92,7 @@ export default function MyMap({ style, requestHeaders, configs }) {
           {viewMode == VIEW_MODES.EDIT_PLOT && <EditPlotGeometryControl />}
           {viewMode == VIEW_MODES.ADD_PLOT && <AddPlotControl />}
           {viewMode == VIEW_MODES.ADD_MARKER && <AddStationControl />}
+          {viewMode == VIEW_MODES.ADD_NEW_FARM && <AddFarmModal />}
 
           <PAWStatusPieChart />
           <Markers />

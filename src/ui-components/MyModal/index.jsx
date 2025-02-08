@@ -18,6 +18,7 @@ export default function MyModal({
   setOpen,
   headerClassName,
   onClose,
+  onChange,
 }) {
   const [portalContainer, setPortalContainer] = useState(document.body);
 
@@ -49,8 +50,16 @@ export default function MyModal({
   }, []);
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+    <Dialog.Root
+      open={open}
+      onOpenChange={() => {
+        setOpen();
+        if (onChange) {
+          onChange();
+        }
+      }}
+    >
+      {trigger && <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>}
       <Dialog.Portal container={portalContainer}>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content
@@ -73,7 +82,7 @@ export default function MyModal({
                 </Dialog.Description>
               )}
             </div>
-            {children}
+            <div>{children}</div>
             <Dialog.Close asChild>
               <Button
                 variant="ghost"

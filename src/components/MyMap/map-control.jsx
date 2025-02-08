@@ -17,6 +17,9 @@ import {
   Satellite,
   SatelliteDish,
   SatelliteDishIcon,
+  Sprout,
+  Tractor,
+  Wheat,
 } from 'lucide-react';
 import PickerControl from '../PickerControl';
 
@@ -144,6 +147,20 @@ function MapControl() {
           onClick={() => setViewMode(VIEW_MODES.ADD_MARKER)}
         >
           <Pin />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          title="add new farm"
+          onClick={() =>
+            setViewMode(
+              viewMode === VIEW_MODES.ADD_NEW_FARM
+                ? VIEW_MODES.NORMAL
+                : VIEW_MODES.ADD_NEW_FARM
+            )
+          }
+        >
+          <Tractor />
         </Button>
       </div>
     </>
