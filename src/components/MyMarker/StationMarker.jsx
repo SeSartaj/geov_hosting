@@ -22,8 +22,8 @@ const GPSColors = (paw_status) => {
       };
     case 'EXCESS_WATER':
       return {
-        mainColor: '#00BFFF',
-        secondaryColor: '#87CEFA',
+        mainColor: '#3682D4',
+        secondaryColor: '#5EACFF',
       };
   }
 };
@@ -52,7 +52,7 @@ const StationMarker = React.memo(function StationMarker({
       color={marker?.color}
       onClick={handleClick}
     >
-      {pawStatus === 'EXCESS_WATER' ? (
+      {pawStatus === 'WEATHER_STATION' ? (
         <GPSBlueIcon />
       ) : (
         <GPSIcon colors={GPSColors(pawStatus)} />

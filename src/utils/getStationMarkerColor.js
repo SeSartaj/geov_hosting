@@ -1,12 +1,12 @@
 export function getStationMarkerColor(paw_status) {
   switch (paw_status) {
     case 'SEVERE_STRESS':
-      return '#FE5351';
+      return '#ef6666';
     case 'STRESS_START':
-      return '#F5A905';
+      return '#efef66';
     case 'OPTIMAL':
-      return '#00C48C';
+      return '#5dae5d';
     case 'EXCESS_WATER':
-      return '#01A6F3';
+      return '#00bfff';
   }
 }
