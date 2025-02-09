@@ -68,6 +68,7 @@ export default function MarkerPopup() {
             onClick={_onDeleteMarker}
             data-marker-id={clickedMarker?.id}
             tabIndex={-1}
+            disabled={true}
           >
             <BiTrash className="w-5 h-5 action-icon text-red-500 " />
           </Button>
@@ -150,7 +151,6 @@ function StationPopupContent({ marker, closePopup }) {
 }
 
 function ForeCastPopupContent({ marker }) {
-  console.log('forecast marker', marker);
   return (
     <div>
       <div className="popup-header">
