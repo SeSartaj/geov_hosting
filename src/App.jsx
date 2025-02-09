@@ -10,6 +10,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import ConfirmContextProvider from './contexts/ConfirmContextProvider';
 import DeleteDialog from './ui-components/DeleteDialog';
 import { ThemeProvider } from './contexts/ShadcnThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
 import './App.css';
 
 function App({ style, requestHeaders, configs }) {
@@ -28,6 +29,7 @@ function App({ style, requestHeaders, configs }) {
                         requestHeaders={requestHeaders}
                         configs={configs}
                       />
+                      <Toaster />
                       <DeleteDialog />
                     </ErrorBoundary>
                   </MarkersProvider>
