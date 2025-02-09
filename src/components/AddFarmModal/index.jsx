@@ -11,6 +11,7 @@ import { Button } from '../ui/button';
 import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import { MarkersContext } from '@/contexts/markersContext';
 import getSelectedValues from '@/utils/getSelectedValues';
+import { toast } from 'sonner';
 
 const AddFarmModal = () => {
   const [open, setOpen] = useState(true);
@@ -26,6 +27,9 @@ const AddFarmModal = () => {
   const handleFarmCreation = (formValues) => {
     createFarm(formValues.name, formValues.marker_set).then((res) => {
       console.log('farm created successfully');
+      toast('Farm Has been created', {
+        description: `name: ${formValues.name}`,
+      });
     });
     handleClose();
   };
