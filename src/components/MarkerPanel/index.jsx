@@ -10,6 +10,8 @@ import { PlotContext } from '@/contexts/PlotContext';
 import PlotSearch from './plotSearch';
 import FormGroup from '@/ui-components/FormGroup';
 import { getFarmOptions } from '@/api/farmApi';
+import useMapStore from '@/stores/mapStore';
+import { MapContext } from '@/contexts/MapContext';
 
 const markerOptions = [
   {
@@ -50,8 +52,15 @@ const farmOptions = [
 ];
 
 export default function MarkerPanel() {
-  const { markerFilters, setMarkerFilters, showMarkers, setShowMarkers } =
-    useContext(MarkersContext);
+  const { mapRef } = useContext(MapContext);
+
+  const {
+    markers,
+    markerFilters,
+    setMarkerFilters,
+    showMarkers,
+    setShowMarkers,
+  } = useContext(MarkersContext);
   const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
 
   const _onSelectMarker = useCallback(
@@ -146,12 +155,40 @@ export default function MarkerPanel() {
             <MyReactSelect
               value={markerFilters.farm_id}
               options={farmOptions}
-              onChange={(op) =>
+              onChange={(op) => {
                 setMarkerFilters({
                   ...markerFilters,
                   farm_id: op?.value || null,
-                })
-              }
+                });
+
+                // if filter cleared, don't try to fly
+                if (op === null) {
+                  return;
+                }
+                console.log('markers', markers);
+                console.log('markers op', op);
+
+                // Find the first marker whose farm_id matches the selected value
+                const selectedMarker = markers.find(
+                  (marker) => marker?.farm?.id === op?.value
+                );
+
+                console.log('selectedMarker', selectedMarker);
+
+                // If a matching marker is found, fly to its location
+                if (
+                  selectedMarker &&
+                  selectedMarker?.lat &&
+                  selectedMarker?.lng
+                ) {
+                  const map = mapRef.current.getMap();
+                  map.flyTo({
+                    center: [selectedMarker?.lng, selectedMarker?.lat], // Assuming `location` is [longitude, latitude]
+                    essential: true, // This ensures the flyTo animation happens even if other interactions are occurring
+                    zoom: 12, // Set the zoom level according to your preference
+                  });
+                }
+              }}
               isLoading={farmsLoading}
               isClearable={true}
             />
