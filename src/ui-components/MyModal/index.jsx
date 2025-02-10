@@ -64,7 +64,7 @@ export default function MyModal({
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content
           className="DialogContent overflow-y-auto  m-0 p-0"
-          disableFocusLock
+          disablefocuslock="true"
           asChild
         >
           <Card>
@@ -105,8 +105,8 @@ MyModal.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   children: PropTypes.node.isRequired,
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
   headerClassName: PropTypes.string,
   // portalContainer: PropTypes.element,
 };
