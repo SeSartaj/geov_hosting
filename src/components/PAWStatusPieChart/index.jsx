@@ -25,31 +25,45 @@ export default function PAWStatusPieChart() {
     }
     return acc;
   }, {});
-  
+
   // for now delete WEATHER_STATIONS count maybe we use it later
-  delete statusCounts['WEATHER_STATION']
+  delete statusCounts['WEATHER_STATION'];
 
   // Convert the grouped data into an array for the PieChart
   const data = Object.keys(statusCounts).map((status) => {
     return {
-    name: markerObj?.[status],
-    value: statusCounts[status],
-    color: getStationMarkerColor(status),
-  }
-});
+      name: markerObj?.[status],
+      value: statusCounts[status],
+      color: getStationMarkerColor(status),
+    };
+  });
 
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+  }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
 
   const totalCount = useMemo(() => {
     return data?.reduce(
@@ -63,21 +77,28 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="custom-tooltip" style={{boxShadow: `0 0 0 1px ${payload[0]?.payload?.color}`, backgroundColor: 'rgba(0,0,0,0.59)', padding: '4px', borderRadius: '6px'}}>
+        <div
+          className="custom-tooltip"
+          style={{
+            boxShadow: `0 0 0 1px ${payload[0]?.payload?.color}`,
+            backgroundColor: 'rgba(0,0,0,0.59)',
+            padding: '4px',
+            borderRadius: '6px',
+          }}
+        >
           <p className="label text-white">{`${payload[0]?.name} : ${payload[0]?.value}`}</p>
         </div>
       );
     }
-  
+
     return null;
   };
-
 
   return viewMode === 'PICKER' || !showMarkers || !data.length > 0 ? null : (
     <div className="paw-pie-chart ">
       <PieChart width={115} height={115}>
         <Pie
-          labelLine={false} 
+          labelLine={false}
           label={renderCustomizedLabel}
           data={data}
           dataKey="value"
@@ -91,7 +112,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        <Tooltip content={<CustomTooltip />}/>
+        <Tooltip content={<CustomTooltip />} />
       </PieChart>
     </div>
   );

@@ -9,10 +9,9 @@ export function transformMarker(marker) {
 }
 
 function typeOfMarker(marker) {
-  if (!marker?.device || !marker.device?.length === 0) {
+  if (!marker?.device || marker.device?.length === 0) {
     return 'forecast';
-  }
-  else return 'station' 
+  } else return 'station';
 }
 
 function transformStationMarker(marker) {
@@ -59,11 +58,11 @@ function transformForecastMarker(marker) {
 }
 
 const getPAWStation = (paw) => {
-  if (paw){
+  if (paw) {
     if (paw <= 30) return 'SEVERE_STRESS';
     if (paw <= 70) return 'STRESS_START';
     if (paw <= 100) return 'OPTIMAL';
     return 'EXCESS_WATER';
   }
-  return 'WEATHER_STATION'
+  return 'WEATHER_STATION';
 };

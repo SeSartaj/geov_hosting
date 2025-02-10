@@ -77,15 +77,7 @@ export default function MyMap({ style, requestHeaders, configs }) {
           </div>
           {/* 
 
-          {
-            viewMode == VIEW_MODES.ADD_MARKER && 
-            <AddMarkerControl />
-          }
 
-          {
-            viewMode == VIEW_MODES.EDIT_MARKER &&
-            <EditMarkerControl />
-          } */}
 
           {/* DrawPolygonControl is a canvas and should always be present. any drawing will be painted on this */}
           <DrawPolygonControl />

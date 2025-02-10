@@ -1,6 +1,6 @@
 import { getFarmOptions } from '@/api/farmApi';
 import { getAllGraphOptions, getPawGraphOptions } from '@/api/graphsApi';
-import { getStationOptions, TurnOffSatET, TurnOnSatET } from '@/api/stationApi';
+import { getStationOptions } from '@/api/stationApi';
 import { Button } from '@/components/ui/button';
 import { SettingsContext } from '@/contexts/SettingsContext';
 import useAsync from '@/hooks/useAsync';
@@ -91,6 +91,7 @@ export default function MarkerForm({
   };
 
   const deserializeData = (data) => {
+    console.log('marker to the form', data);
     return {
       ...emptyValues,
       id: data.id,
@@ -101,6 +102,7 @@ export default function MarkerForm({
       station: data.device,
       paw_graphs: data.paw_graphs,
       graphs: data.graphs,
+      isSatEtOn: data.device?.enable_sat_et,
       ...initialValues,
     };
   };
@@ -112,7 +114,6 @@ export default function MarkerForm({
   console.log('deserializedValue', deserializedData);
   // if user doesn't include all values in initialValues, emptyValues will be used
   const [formData, setFormData] = useState({ ...deserializedData });
-  const [etLoading, setEtLoading] = useState(false);
 
   const handleCustomCoordsToggling = (isCustomLocation) => {
     if (isCustomLocation) {
@@ -137,22 +138,6 @@ export default function MarkerForm({
         setFormError(error);
       })
       .finally(() => setSubmitting(false));
-  };
-
-  const handleStationSatEtChange = (isOn) => {
-    console.log('formData', formData);
-    setEtLoading(true);
-    if (isOn) {
-      TurnOnSatET(formData.station?.serial).finally(() => {
-        setFormData({ ...formData, isSatEtOn: isOn });
-        setEtLoading(false);
-      });
-    } else {
-      TurnOffSatET(formData.station?.serial).finally(() => {
-        setFormData({ ...formData, isSatEtOn: isOn });
-        setEtLoading(false);
-      });
-    }
   };
 
   return (
@@ -259,15 +244,6 @@ export default function MarkerForm({
             onToggle={handleCustomCoordsToggling}
             onTooltip="click to use marker's coordinates"
             offTooltip="click to use custom coordinates"
-          />
-        </FormGroup>
-        <FormGroup label="Enable Sat-ET">
-          <ToggleButton
-            value={formData?.isSatEtOn}
-            onChange={handleStationSatEtChange}
-            isLoading={etLoading}
-            onTooltip="turn on Sat-ET for this station"
-            offTooltip="turn off Sat-Et for this station"
           />
         </FormGroup>
       </div>

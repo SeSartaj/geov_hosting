@@ -1,4 +1,4 @@
-import { API_URL } from '@/constants';
+import { API_URL, API_URL2 } from '@/constants';
 import { fetchWrapper } from '../utils/fetchWrapper';
 
 const DUMMY_PLOTS = [
@@ -120,8 +120,6 @@ export const getPlots = async () => {
   // return DUMMY_PLOTS;
 };
 
-
-
 export const createPlot = async (data) => {
   const response = await fetchWrapper(`${API_URL}plot/`, {
     method: 'POST',
@@ -170,4 +168,42 @@ export const getPawData = async (markerId) => {
 export const getStations = async () => {
   const response = await fetchWrapper(`${API_URL}station/`);
   return response.json();
+};
+
+export const TurnOnSatET = (plotId) => {
+  console.log('Turning on sat-et for plot', plotId);
+
+  return fetchWrapper(`${API_URL2}/dashboard/plot/${plotId}/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ enable_satellite_et: true }),
+  })
+    .then((res) => {
+      console.log('Response:', res);
+      return res.json();
+    })
+    .catch((err) => {
+      console.error('Error:', err);
+    });
+};
+
+export const TurnOffSatET = (plotId) => {
+  console.log('Turning off sat-et for station', plotId);
+
+  return fetchWrapper(`${API_URL2}/dashboard/plot/${plotId}/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ enable_satellite_et: false }),
+  })
+    .then((res) => {
+      console.log('Response:', res);
+      return res.json();
+    })
+    .catch((err) => {
+      console.error('Error:', err);
+    });
 };

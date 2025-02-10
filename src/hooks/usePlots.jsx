@@ -131,7 +131,6 @@ export const usePlots = () => {
 
   const resetFilters = () => {
     setPlotFilters(EMPTY_FILTERS);
-    ``;
   };
 
   const filterPlots = (unfilteredPlots) => {

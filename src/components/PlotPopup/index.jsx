@@ -19,6 +19,8 @@ export default function PlotPopup({ popupInfo, onClose }) {
     useContext(PlotContext);
   const { isConfirmed } = useConfirm();
   const { plot } = popupInfo;
+  console.log('clickedPlot', clickedPlot);
+  console.log('clickedPlot popupInfo', popupInfo);
   const [deletingPlot, setDeletingPlot] = useState(false);
 
   const findPlot = useMemo(() => {
@@ -26,7 +28,7 @@ export default function PlotPopup({ popupInfo, onClose }) {
   }, [plot?.properties?.id, plots]);
 
   const _onDeletePlot = useCallback(async () => {
-    const confirmed = await isConfirmed('Do you want to delete this marker?');
+    const confirmed = await isConfirmed('Do you want to delete this plot?');
     if (!confirmed) return;
     setDeletingPlot(true);
     handleDeletePlot(findPlot)
@@ -92,11 +94,11 @@ export default function PlotPopup({ popupInfo, onClose }) {
           </div>
           <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
             <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-              Crop
+              SAT-ET
             </h4>
             <div className="flex items-center space-x-2">
               <span className="text-xs text-gray-700 dark:text-gray-200">
-                Potato
+                {findPlot?.enable_satellite_et ? 'enabled' : 'disabled'}
               </span>
             </div>
           </div>

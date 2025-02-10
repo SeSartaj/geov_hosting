@@ -8,6 +8,7 @@ import MyModal from '@/ui-components/MyModal';
 import PlotForm from '@/forms/plot';
 import { Button } from '../ui/button';
 import useMapStore from '@/stores/mapStore';
+import { toast } from 'sonner';
 
 export const EditPlotModal = ({ plot }) => {
   const [open, setOpen] = useState(false);
@@ -29,8 +30,10 @@ export const EditPlotModal = ({ plot }) => {
   };
 
   const plotUpdateHandler = (data) => {
+    toast('saving changes');
     return handlePlotUpdate(data).then(() => {
       setClickedPlot(null);
+      toast.success('changes saved successfully');
     });
   };
 

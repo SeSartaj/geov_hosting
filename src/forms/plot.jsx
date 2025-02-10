@@ -7,6 +7,10 @@ import { useEffect, useRef, useState } from 'react';
 import { getFarmOptions } from '@/api/farmApi';
 import getSelectedValues from '@/utils/getSelectedValues';
 import { BiGlobeAlt } from 'react-icons/bi';
+import { TurnOffSatET, TurnOnSatET } from '@/api/plotApi';
+import ToggleButton from '@/ui-components/toggleButton';
+import { getStationOptions } from '@/api/stationApi';
+import useAsync from '@/hooks/useAsync';
 
 const emptyValues = {
   name: '',
@@ -25,6 +29,12 @@ export default function PlotForm({
   const [farm, setFarm] = useState(plot.farm);
   const [farmOptions, setFarmOptions] = useState([]);
   const [farmsLoading, setFarmsLoading] = useState(false);
+  const [etLoading, setEtLoading] = useState(false);
+  const {
+    data: stationOptions,
+    status: stationStatus,
+    error: stationError,
+  } = useAsync(getStationOptions, { data: [] });
 
   const formRef = useRef();
 
@@ -33,6 +43,9 @@ export default function PlotForm({
     const data = {
       name: formData.name,
       farm: formData?.farm?.value || formData.farm?.id || formData?.farm,
+      device:
+        formData?.device?.value || formData?.device?.id || formData?.device,
+      enable_satellite_et: formData?.isSatEtOn,
     };
 
     if (formData?.id) data.id = formData.id;
@@ -49,6 +62,8 @@ export default function PlotForm({
       id: data.id,
       name: data.name,
       farm: data.farm,
+      device: data.device,
+      isSatEtOn: data.enable_satellite_et,
       ...initialValues,
     };
   };
@@ -84,6 +99,17 @@ export default function PlotForm({
       });
   }, []);
 
+  const handleStationSatEtChange = (isOn) => {
+    if (!formData.id) {
+      console.log('no plot id found. assuming form is being created ');
+    }
+    if (isOn) {
+      setFormData({ ...formData, isSatEtOn: isOn });
+    } else {
+      setFormData({ ...formData, isSatEtOn: isOn });
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="p-4" ref={formRef}>
       <FormGroup label="Name:">
@@ -104,6 +130,29 @@ export default function PlotForm({
           isClearable={true}
           formRef={formRef}
           // isLoading={farmsLoading}
+        />
+      </FormGroup>
+      <FormGroup label="Associated Station (device)" error={stationError}>
+        <MyReactSelect
+          formRef={formRef}
+          tabIndex={0}
+          className="w-full"
+          name="station"
+          value={getSelectedValues(formData.device, stationOptions)}
+          options={stationOptions}
+          onChange={(s) => setFormData({ ...formData, device: s })}
+          isClearable={true}
+          isSearchable={true}
+          isLoading={stationStatus === 'pending'}
+        />
+      </FormGroup>
+      <FormGroup label="Enable Sat-ET">
+        <ToggleButton
+          value={formData?.isSatEtOn}
+          onChange={handleStationSatEtChange}
+          isLoading={etLoading}
+          onTooltip="turn on Sat-ET for this plot"
+          offTooltip="turn off Sat-Et for this plot"
         />
       </FormGroup>
 

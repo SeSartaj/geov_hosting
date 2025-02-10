@@ -13,7 +13,6 @@ export default function PlotNdvi() {
     },
   };
 
-  // Add this in your render method or component
   return (
     <>
       {plots.map((plot, index) => {
@@ -21,7 +20,7 @@ export default function PlotNdvi() {
           <Source
             id={`ndvi-${index}`}
             key={plot.id}
-            type='raster'
+            type="raster"
             tiles={[plot.ndviUrl]}
             tileSize={512}
           >

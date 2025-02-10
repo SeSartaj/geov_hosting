@@ -29,7 +29,7 @@ function App({ style, requestHeaders, configs }) {
                         requestHeaders={requestHeaders}
                         configs={configs}
                       />
-                      <Toaster />
+                      <Toaster richColors />
                       <DeleteDialog />
                     </ErrorBoundary>
                   </MarkersProvider>
