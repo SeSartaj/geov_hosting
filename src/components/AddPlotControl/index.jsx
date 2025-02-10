@@ -88,8 +88,8 @@ export function AddPlotControl() {
 
   const handleTrashClick = () => {
     const selectedFeatures = draw.getSelectedIds();
-
-    draw.trash();
+    if (selectedFeatures.length > 0)
+      draw.trash();
   };
 
   useEffect(() => {

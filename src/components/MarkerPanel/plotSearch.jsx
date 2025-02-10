@@ -14,6 +14,7 @@ import MyModal from '@/ui-components/MyModal';
 import { ArrowUpRightIcon } from '@/icons/arrow-up-right';
 import Card from '@/ui-components/Card';
 import { SproutIcon } from '@/icons/sprout';
+import PlotIcon from '@/icons/plot-icon';
 import Input from '@/ui-components/Input';
 import { PlotContext } from '@/contexts/PlotContext';
 import { EditPlotModal } from '../PlotPopup/edit';
@@ -109,15 +110,15 @@ export default function PlotSearch() {
         >
           <Card
             header={
-              <div className="flex items-center gap-2 justify-between">
+              <div className="flex items-center gap-2 justify-between mt-2">
                 <div className="flex items-center gap-2">
-                  <SproutIcon />
+                  <PlotIcon />
                   <h4 className="text-base dark:text-gray-100 tracking-tight">
                     Plots
                   </h4>
                 </div>
                 <Input
-                  className="w-[210px] mr-8"
+                  className="w-[210px] mr-14"
                   placeholder="Search Station"
                   value={searchKeyword}
                   onChange={handleKeywordChange}
@@ -126,58 +127,60 @@ export default function PlotSearch() {
             }
             className="border-none"
           >
-            {loading || isLoading ? (
-              <Spinner />
-            ) : matchingPlots?.length > 0 ? (
-              matchingPlots?.map((marker) => (
-                <div key={marker.id} className="marker-item">
-                  <div className="marker-item-info p-2">
-                    <div className="flex justify-between items-center">
-                      <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
-                        {marker?.name}
-                      </h5>
-                      <span className="flex items-center gap-1">
-                        <Tooltip text="click to fly the marker">
-                          <MyButton
-                            variant="icon"
-                            className="rounded-full"
-                            onClick={(e) => {
-                              setPlotVisible(false);
-                              handleFlyToPlot(
-                                marker?.options?.geometry?.coordinates
-                              );
-                            }}
-                            data-plot-id={marker.id}
-                          >
-                            <ArrowUpRightIcon />
-                          </MyButton>
-                        </Tooltip>
-                        <Tooltip text="click to delete the marker">
-                          <MyButton
-                            variant="icon"
-                            className="rounded-full"
-                            onClick={handleDeletePlot}
-                            data-plot-id={marker.id}
-                          >
-                            <BiTrash className="w-5 h-5 action-icon text-red-500 " />
-                          </MyButton>
-                        </Tooltip>
+            <div className='overflow-y-auto h-[400px]'>
+              {loading || isLoading ? (
+                <Spinner />
+              ) : matchingPlots?.length > 0 ? (
+                matchingPlots?.map((marker) => (
+                  <div key={marker.id} className="marker-item rounded-md hover:bg-gray-50">
+                    <div className="marker-item-info p-2">
+                      <div className="flex justify-between items-center">
+                        <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
+                          {marker?.name}
+                        </h5>
+                        <span className="flex items-center gap-1">
+                          <Tooltip text="click to fly the marker">
+                            <MyButton
+                              variant="icon"
+                              className="rounded-full"
+                              onClick={(e) => {
+                                setPlotVisible(false);
+                                handleFlyToPlot(
+                                  marker?.options?.geometry?.coordinates
+                                );
+                              }}
+                              data-plot-id={marker.id}
+                            >
+                              <ArrowUpRightIcon />
+                            </MyButton>
+                          </Tooltip>
+                          <Tooltip text="click to delete the marker">
+                            <MyButton
+                              variant="icon"
+                              className="rounded-full"
+                              onClick={handleDeletePlot}
+                              data-plot-id={marker.id}
+                            >
+                              <BiTrash className="w-5 h-5 action-icon text-red-500 " />
+                            </MyButton>
+                          </Tooltip>
 
-                        <EditPlotModal
-                          plot={plots.find((m) => m.id === marker.id)}
-                        />
-                      </span>
+                          <EditPlotModal
+                            plot={plots.find((m) => m.id === marker.id)}
+                          />
+                        </span>
+                      </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="flex items-center justify-center h-20 p-4">
+                  <h5 className="text-gray-500">
+                    No Plots Found for keyword: {searchKeyword}
+                  </h5>
                 </div>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-20 p-4">
-                <h5 className="text-gray-500">
-                  No Plots Found for keyword: {searchKeyword}
-                </h5>
-              </div>
-            )}
+              )}
+            </div>
           </Card>
         </MyModal>
       </ErrorBoundary>

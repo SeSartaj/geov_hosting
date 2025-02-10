@@ -78,12 +78,12 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
           : document.body
       }
     >
-      <Card>
-        <form onSubmit={handlePlotCreation} className="p-4">
+      <Card className='h-[400px]'>
+        <form onSubmit={handlePlotCreation} className="sm:p-4 p-0">
           <FormGroup label="Name:">
             <Input type="text" name="name" className="w-full" />
           </FormGroup>
-          <FormGroup label="Farm">
+          <FormGroup label="Farm:">
             <MyReactSelect
               className="w-full"
               value={farm}
@@ -92,7 +92,7 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
               isLoading={farmsLoading}
             />
           </FormGroup>
-          <FormGroup label="description">
+          <FormGroup label="Description:">
             <Input type="text" name="description" className="w-full" />
           </FormGroup>
           <br />

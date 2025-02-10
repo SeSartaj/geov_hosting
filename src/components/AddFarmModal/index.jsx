@@ -36,7 +36,7 @@ const AddFarmModal = () => {
 
   return (
     <MyModal
-      title="Add New Farm "
+      title="Add New Farm"
       headerClassName="m-4"
       open={open}
       setOpen={setOpen}
@@ -47,7 +47,9 @@ const AddFarmModal = () => {
           : document.body
       }
     >
-      <FarmForm onClose={handleClose} onSubmit={handleFarmCreation} />
+      <div className='h-[400px] overflow-y-auto'>
+        <FarmForm onClose={handleClose} onSubmit={handleFarmCreation} />
+      </div>
     </MyModal>
   );
 };
@@ -82,15 +84,15 @@ function FarmForm({ onClose, onSubmit }) {
   return (
     <form
       onSubmit={handleFormSubmit}
-      className="p-4  flex flex-col "
-      style={{ height: '100%' }}
+      className="p-4 flex flex-col h-full"
       ref={formRef}
     >
+
       <FormGroup label="Name:">
         <Input
           type="text"
           name="name"
-          className="w-full"
+          className="w-full sm:max-w-[483px] max-w-[227px]"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -98,7 +100,7 @@ function FarmForm({ onClose, onSubmit }) {
       <FormGroup label="Markers:">
         <MyReactSelect
           formRef={formRef}
-          className="w-full"
+          className="w-full sm:max-w-[483px] max-w-[227px]"
           name="marker_set"
           value={selectedMarkersValue}
           onChange={setFarmMarkers}
@@ -117,7 +119,7 @@ function FarmForm({ onClose, onSubmit }) {
           onClick={!isLoading && onClose}
           disabled={isLoading}
         >
-          cancel
+          Cancel
         </Button>
         <Button type="submit" color="primary">
           Add Farm
