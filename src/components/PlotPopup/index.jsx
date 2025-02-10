@@ -13,6 +13,7 @@ import { EditPlotModal } from './edit';
 import { XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import Spinner from '@/ui-components/Spinner';
+import { toast } from 'sonner';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { showPlots, plots, clickedPlot, handleDeletePlot } =
@@ -31,13 +32,9 @@ export default function PlotPopup({ popupInfo, onClose }) {
     const confirmed = await isConfirmed('Do you want to delete this plot?');
     if (!confirmed) return;
     setDeletingPlot(true);
-    handleDeletePlot(findPlot)
-      .then(() => {
-        console.log('plot deleted successfully');
-      })
-      .finally(() => {
-        setDeletingPlot(false);
-      });
+    handleDeletePlot(findPlot).finally(() => {
+      setDeletingPlot(false);
+    });
   }, [findPlot, isConfirmed]);
 
   return !showPlots || !clickedPlot ? null : (

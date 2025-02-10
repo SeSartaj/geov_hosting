@@ -3,6 +3,7 @@ import { getNDVILayerUrl } from '@/utils/getNDVILayerUrl';
 import isEmptyObject from '@/utils/isEmptyObject';
 import { bbox } from '@turf/turf';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 const EMPTY_FILTERS = {};
 
 const DUMMY_PLOTS = [
@@ -141,7 +142,9 @@ export const usePlots = () => {
     console.log('inside addNewPlot');
     // newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
     return createPlot(newPlot).then((createdPlot) => {
-      if (!createdPlot) return;
+      if (!createdPlot) {
+        toast.error('could not create the plot');
+      }
 
       setPlots((prev) => [...prev, createdPlot]);
     });
@@ -152,11 +155,8 @@ export const usePlots = () => {
     setLoading(true);
     return deletePlot(plot.id)
       .then(() => {
-        console.log('count before deletion', plots.length);
         // remove the plot from plots
         const newPlotsList = [...plots];
-        console.log('count after deletion', newPlotsList.length, newPlotsList);
-
         setPlots(newPlotsList.filter((p) => p.id !== plot.id));
       })
       .catch((error) => {
