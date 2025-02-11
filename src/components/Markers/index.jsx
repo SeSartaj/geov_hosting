@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { Marker } from 'react-map-gl/maplibre';
 import supercluster from 'supercluster';
-import './styles.css';
 import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
 import MyMarker from '../MyMarker';
