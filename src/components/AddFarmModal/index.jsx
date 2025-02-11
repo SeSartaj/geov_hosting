@@ -47,7 +47,7 @@ const AddFarmModal = () => {
           : document.body
       }
     >
-      <div className='h-[400px] overflow-y-auto'>
+      <div className="h-[400px] overflow-y-auto">
         <FarmForm onClose={handleClose} onSubmit={handleFarmCreation} />
       </div>
     </MyModal>
@@ -87,7 +87,6 @@ function FarmForm({ onClose, onSubmit }) {
       className="p-4 flex flex-col h-full"
       ref={formRef}
     >
-
       <FormGroup label="Name:">
         <Input
           type="text"
@@ -112,7 +111,7 @@ function FarmForm({ onClose, onSubmit }) {
           closeMenuOnSelect={false}
         />
       </FormGroup>
-      <div className="mt-5 flex gap-2 self-end">
+      <div className="mt-5 flex gap-2  mt-auto self-end">
         <Button
           type="cancel"
           variant="outline"

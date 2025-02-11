@@ -6,5 +6,8 @@ export const getStationOptions = async () => {
   const response = await fetchWrapper(`${API_URL}station`);
   const data = await response.json();
   console.log('response', data);
-  return data.map((f) => ({ value: f.serial, label: f.name })) || [];
+  return (
+    data.map((f) => ({ value: f.serial, label: f.name + `(${f.serial})` })) ||
+    []
+  );
 };

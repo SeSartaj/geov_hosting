@@ -173,6 +173,8 @@ export default function Plots() {
 
       if (features.length > 0) {
         const clickedPlot = features[0];
+        console.log('clickedPlot', clickedPlot);
+
         setClickedPlot({
           lngLat: event.lngLat,
           plot: clickedPlot, // Assuming the plot name is in the 'name' property

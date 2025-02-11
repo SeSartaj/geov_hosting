@@ -36,21 +36,6 @@ const markerOptions = [
   },
 ];
 
-const farmOptions = [
-  {
-    value: '',
-    label: 'All',
-  },
-  {
-    value: '345',
-    label: 'Farm 1',
-  },
-  {
-    value: '346',
-    label: 'Farm 2',
-  },
-];
-
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
 
