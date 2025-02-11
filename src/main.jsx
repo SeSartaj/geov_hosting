@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -15,7 +17,7 @@ root.render(
         VITE_MAPTILER_ACCESS_KEY: 'nffTPMlX5bMIm8VR0LFb',
         VITE_SENTINAL_HUB_CLIENT_ID: '9188261d-b9c9-48a3-b1b4-b4653da6a8f0',
         VITE_SENTINAL_HUB_CLIENT_SECRET: 'sln8tqts90EhECu4t1YhnfpEaCSr88ax',
-        VITE_SENTINAL_HUB_WMTS_ID: 'cb6893e1-7405-4a11-baaf-6e1fb92585e9',
+        VITE_SENTINAL_HUB_WMTS_ID: '5d381ab5-75f9-4fa0-8324-4635bfdbb664',
       }}
     />
   </React.StrictMode>

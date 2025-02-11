@@ -4,7 +4,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import MyButton from '../MyButton';
 import PropTypes from 'prop-types';
 import { BiX } from 'react-icons/bi';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { XIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -49,16 +49,16 @@ export default function MyModal({
     };
   }, []);
 
+  const handleOpenChange = () => {
+    console.log('clicked on handleOpenChange');
+    setOpen(!open);
+    if (onChange) {
+      onChange();
+    }
+  };
+
   return (
-    <Dialog.Root
-      open={open}
-      onOpenChange={() => {
-        setOpen();
-        if (onChange) {
-          onChange();
-        }
-      }}
-    >
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       {trigger && <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>}
       <Dialog.Portal container={portalContainer}>
         <Dialog.Overlay className="DialogOverlay" />

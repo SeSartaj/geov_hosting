@@ -16,13 +16,14 @@ export default function Markers() {
   const transformedMarker = markersData.map((m) => transformMarker(m));
 
   const formatNumber = (num) =>
-    num >= 1_000_000 ? (num / 1_000_000).toFixed(1) + 'M' :
-      num >= 1_000 ? (num / 1_000).toFixed(1) + 'K' :
-        num;
+    num >= 1_000_000
+      ? (num / 1_000_000).toFixed(1) + 'M'
+      : num >= 1_000
+      ? (num / 1_000).toFixed(1) + 'K'
+      : num;
 
   const handleMarkerClick = (e, marker) => {
     console.log('marker clicked');
-    e.originalEvent.stopPropagation();
     setClickedMarker(marker);
   };
 
