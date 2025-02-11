@@ -45,7 +45,7 @@ const StationMarker = React.memo(function StationMarker({
 
   return (
     <Marker
-      className="map-marker"
+      className="cursor-pointer"
       key={marker?.id}
       longitude={longitude}
       latitude={latitude}

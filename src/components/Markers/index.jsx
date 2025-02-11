@@ -16,6 +16,11 @@ export default function Markers() {
   const zoomThreshold = 5;
   const transformedMarker = markersData.map((m) => transformMarker(m));
 
+  const formatNumber = (num) =>
+    num >= 1_000_000 ? (num / 1_000_000).toFixed(1) + 'M' :
+      num >= 1_000 ? (num / 1_000).toFixed(1) + 'K' :
+        num;
+
   const handleMarkerClick = (e, marker) => {
     console.log('marker clicked');
     e.originalEvent.stopPropagation();
@@ -111,9 +116,10 @@ export default function Markers() {
                     zoom: expansionZoom,
                   });
                 }}
-                className="cluster-marker"
               >
-                <div className="cluster-marker-inner">{pointCount}</div>
+                <div className="cursor-pointer rounded-full bg-green-700/80 ring-4 ring-green-400 h-[40px] w-[40px] min-w-[40px] flex items-center justify-center text-white text-[14px] px-1 overflow-hidden">
+                  {formatNumber(pointCount)}
+                </div>
               </Marker>
             );
           }
