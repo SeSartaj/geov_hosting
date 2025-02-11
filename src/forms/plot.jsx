@@ -173,7 +173,7 @@ export default function PlotForm({
             Cancel
           </Button>
           <Button type="submit" disabled={submitting}>
-            {submitting ? 'saving ...' : submitButtonText}
+            {submitting ? 'submitting ...' : submitButtonText}
           </Button>
         </div>
       </div>
