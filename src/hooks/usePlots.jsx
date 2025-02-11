@@ -119,13 +119,19 @@ const DUMMY_PLOTS = [
   },
 ];
 
+const transformPlot = (plot) => {
+  const transformedPlot = { ...plot };
+  if (isEmptyObject(plot?.options)) return null;
+  transformedPlot.options.properties.id = plot?.options?.id;
+  transformedPlot.options.properties.name = plot?.name;
+  transformedPlot.options.properties.device = plot?.device;
+  transformedPlot.options.properties.enable_satellite_et =
+    plot?.enable_satellite_et;
+  return transformedPlot;
+};
+
 export const usePlots = () => {
-  const [plots, setPlots] = useState(
-    DUMMY_PLOTS.forEach((p) => {
-      p.properties.bbox = bbox(p);
-      p.properties.ndviUrl = getNDVILayerUrl(p);
-    })
-  );
+  const [plots, setPlots] = useState([]);
   const [unfilteredPlots, setUnfilteredPlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [plotFilters, setPlotFilters] = useState(EMPTY_FILTERS);
@@ -139,14 +145,15 @@ export const usePlots = () => {
   };
 
   const addNewPlot = (newPlot) => {
-    console.log('inside addNewPlot');
+    console.log('inside addNewPlot', newPlot, plots);
     // newPlot.properties.ndviUrl = getNDVILayerUrl(newPlot);
     return createPlot(newPlot).then((createdPlot) => {
       if (!createdPlot) {
         toast.error('could not create the plot');
       }
 
-      setPlots((prev) => [...prev, createdPlot]);
+      console.log('created plot', createPlot);
+      setPlots([...plots, transformPlot(createdPlot)]);
     });
   };
 
@@ -170,14 +177,7 @@ export const usePlots = () => {
     getPlots()
       .then((p) => {
         setPlots(
-          p
-            .map((plot) => {
-              if (isEmptyObject(plot?.options)) return null;
-              plot.options.properties.id = plot?.options?.id;
-              plot.options.properties.name = plot?.name;
-              return plot;
-            })
-            .filter((p) => p !== null)
+          p.map((plot) => transformPlot(plot)).filter((p) => p !== null)
         );
       })
       .finally(() => {

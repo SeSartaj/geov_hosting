@@ -50,14 +50,14 @@ export default function PlotPopup({ popupInfo, onClose }) {
     >
       <div className="flex flex-col gap-1 items-center dark:text-gray-100 font-black text-[14px]">
         <div className="w-full flex justify-between items-center dark:text-gray-100 font-black text-[14px]">
-          <h3 className="text-wrap">{plot.properties.name}</h3>
+          <h3 className="text-wrap">{findPlot.name}</h3>
           <span className="flex items-center gap-1">
             {/* <Tooltip text="click to delete the marker"> */}
             <Button
               variant="outline"
               size="icon"
               onClick={_onDeletePlot}
-              data-marker-id={plot?.id}
+              data-marker-id={findPlot?.id}
             >
               {deletingPlot ? (
                 <Spinner size="small" />

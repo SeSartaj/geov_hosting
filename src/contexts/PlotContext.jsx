@@ -12,6 +12,7 @@ import { LngLatBounds } from 'maplibre-gl';
 import { deletePlot } from '@/api/plotApi';
 import useMapStore from '@/stores/mapStore';
 import { VIEW_MODES } from '@/stores/mapStore';
+import { toast } from 'sonner';
 
 // Create a new context for the map
 const PlotContext = createContext();
@@ -33,6 +34,15 @@ const PlotProvider = ({ children }) => {
   const handleShowPlots = (value) => {
     setClickedPlot(null);
     setShowPlots(value);
+  };
+
+  const handlePlotDelete = (plot) => {
+    return handleDeletePlot(plot).then(() => {
+      console.log('plot deleted successfully');
+      toast.success('the plot deleted successfully');
+      // set clicked plot to null
+      setClickedPlot(null);
+    });
   };
 
   const toggleNDVILayersVisibility = (visibility) => {
@@ -142,7 +152,7 @@ const PlotProvider = ({ children }) => {
         setNDVILayersVisibility,
         toggleNDVILayersVisibility,
         changeNdviLayerOpacity,
-        handleDeletePlot,
+        handleDeletePlot: handlePlotDelete,
       }}
     >
       {children}

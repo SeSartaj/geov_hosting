@@ -18,10 +18,6 @@ export const EditPlotModal = ({ plot }) => {
   const { handlePlotUpdate, handleEditPlot, setClickedPlot } =
     useContext(PlotContext);
 
-  const _onChangeVisibility = useCallback(() => {
-    setOpen((prev) => !prev);
-  }, []);
-
   const handleGeometryEdit = (e) => {
     setOpen(false);
     setClickedPlot(null);
@@ -50,13 +46,13 @@ export const EditPlotModal = ({ plot }) => {
       open={open}
       setOpen={setOpen}
       headerClassName="m-4"
-      onClose={_onChangeVisibility}
+      onClose={() => setOpen(false)}
     >
       <Card>
         <PlotForm
           plot={plot}
           onSubmit={plotUpdateHandler}
-          onCancel={_onChangeVisibility}
+          onCancel={() => setOpen(false)}
           onGeometryChange={handleGeometryEdit}
           submitButtonText="Save Changes"
         />

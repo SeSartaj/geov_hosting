@@ -38,7 +38,6 @@ function transformStationMarker(marker) {
 }
 
 function transformForecastMarker(marker) {
-  console.log('marker in transformForecastMarker', marker);
   return {
     type: 'forecast',
     title: `${marker?.device?.name || ''}${

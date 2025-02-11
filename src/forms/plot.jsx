@@ -24,9 +24,10 @@ export default function PlotForm({
   plot,
   submitButtonText = 'Edit Plot',
 }) {
+  console.log('plot editing', plot);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState();
-  const [farm, setFarm] = useState(plot.farm);
+  const [farm, setFarm] = useState(plot?.farm);
   const [farmOptions, setFarmOptions] = useState([]);
   const [farmsLoading, setFarmsLoading] = useState(false);
   const [etLoading, setEtLoading] = useState(false);
@@ -46,6 +47,7 @@ export default function PlotForm({
       device:
         formData?.device?.value || formData?.device?.id || formData?.device,
       enable_satellite_et: formData?.isSatEtOn,
+      options: formData?.options,
     };
 
     if (formData?.id) data.id = formData.id;
@@ -68,12 +70,12 @@ export default function PlotForm({
     };
   };
 
-  const deserializedData = plot ? deserializeData(plot) : {};
+  const deserializedData = plot
+    ? deserializeData(plot)
+    : { ...emptyValues, ...initialValues };
   console.log('deserializedData', deserializedData);
   // if user doesn't include all values in initialValues, emptyValues will be used
   const [formData, setFormData] = useState({ ...deserializedData });
-
-  console.log('formData', formData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -159,10 +161,12 @@ export default function PlotForm({
       <FormErrorMessage error={formError} />
       <div className="flex justify-between">
         <div>
-          <Button variant="outline" onClick={onGeometryChange}>
-            <BiGlobeAlt />
-            Change Shape
-          </Button>
+          {plot && (
+            <Button variant="outline" onClick={onGeometryChange}>
+              <BiGlobeAlt />
+              Change Shape
+            </Button>
+          )}
         </div>
         <div className="flex justify-end gap-3">
           <Button onClick={onCancel} variant="outline">

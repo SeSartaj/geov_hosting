@@ -9,6 +9,8 @@ import MyReactSelect from '@/ui-components/MyReactSelect';
 import { getFarmOptions } from '@/api/farmApi';
 import Card from '@/ui-components/Card';
 import { Button } from '../ui/button';
+import PlotForm from '@/forms/plot';
+import { toast } from 'sonner';
 
 const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
   const [open, setOpen] = useState(false);
@@ -24,34 +26,23 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
     deleteFeature();
   };
 
-  const handlePlotCreation = async (e) => {
-    e.preventDefault();
+  const handlePlotCreation = (formData) => {
+    console.log('handlePlotCreation data', formData);
     setLoading(true);
 
-    try {
-      // Create a new FormData object
-      const formData = new FormData(e.target);
-
-      // Get all form valuess
-      const name = formData.get('name');
-      const description = formData.get('description');
-
-      polygon.properties = {
-        name,
-        description,
-      };
-
-      const newPlot = {
-        name: name,
-        options: polygon,
-      };
-
-      await addNewPlot(newPlot);
-    } finally {
-      setLoading(false);
-      deleteFeature();
-      handleClose();
-    }
+    // Get all form valuess
+    addNewPlot(formData)
+      .then(() => {
+        deleteFeature();
+        toast.success('Plot created successfully');
+      })
+      .catch((e) => {
+        toast.error('Could not create the plot');
+      })
+      .finally(() => {
+        setLoading(false);
+        handleClose();
+      });
   };
 
   useEffect(() => {
@@ -68,7 +59,7 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
   return (
     <MyModal
       trigger={trigger || <Button color="primary">Add New Plot</Button>}
-      title="Add New Plot "
+      title="Add New Plot"
       headerClassName="m-4"
       open={open}
       setOpen={setOpen}
@@ -79,37 +70,12 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
       }
     >
       <Card>
-        <form onSubmit={handlePlotCreation} className="p-4">
-          <FormGroup label="Name:">
-            <Input type="text" name="name" className="w-full" />
-          </FormGroup>
-          <FormGroup label="Farm">
-            <MyReactSelect
-              className="w-full"
-              value={farm}
-              options={farmOptions}
-              onChange={(f) => setFarm(f)}
-              isLoading={farmsLoading}
-            />
-          </FormGroup>
-          <FormGroup label="description">
-            <Input type="text" name="description" className="w-full" />
-          </FormGroup>
-          <br />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <Button
-              type="cancel"
-              variant="outline"
-              onClick={!loading && handleClose}
-              disabled={loading}
-            >
-              cancel
-            </Button>
-            <Button type="submit" loading={loading} color="primary">
-              Add Plot
-            </Button>
-          </div>
-        </form>
+        <PlotForm
+          initialValues={{ options: polygon }}
+          onSubmit={handlePlotCreation}
+          className="p-4"
+          submitButtonText="Create Plot"
+        />
       </Card>
     </MyModal>
   );
