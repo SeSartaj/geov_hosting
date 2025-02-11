@@ -78,8 +78,8 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
           : document.body
       }
     >
-      <Card className='h-[400px]'>
-        <form onSubmit={handlePlotCreation} className="sm:p-4 p-0">
+      <div className='h-[400px] overflow-y-auto'>
+        <form onSubmit={handlePlotCreation} className="sm:p-4 p-0 h-full">
           <FormGroup label="Name:">
             <Input type="text" name="name" className="w-full" />
           </FormGroup>
@@ -110,7 +110,7 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
             </Button>
           </div>
         </form>
-      </Card>
+      </div>
     </MyModal>
   );
 };
