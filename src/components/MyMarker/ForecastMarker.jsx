@@ -17,7 +17,7 @@ const ForecastMarker = React.memo(function ForecastMarker({
 
   return (
     <Marker
-      className="map-marker"
+      className="cursor-pointer"
       key={marker.id}
       longitude={longitude}
       latitude={latitude}
