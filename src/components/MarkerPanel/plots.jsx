@@ -13,7 +13,7 @@ import MyButton from '@/ui-components/MyButton';
 import MyModal from '@/ui-components/MyModal';
 import { ArrowUpRightIcon } from '@/icons/arrow-up-right';
 import Card from '@/ui-components/Card';
-import { SproutIcon } from '@/icons/sprout';
+import WeatherStation from '@/icons/weather-station';
 import Input from '@/ui-components/Input';
 import { PlotContext } from '@/contexts/PlotContext';
 
@@ -88,15 +88,15 @@ export default function MarkerPlots() {
         >
           <Card
             header={
-              <div className="flex items-center gap-2 justify-between">
+              <div className="flex items-center gap-2 justify-between mt-2">
                 <div className="flex items-center gap-2">
-                  <SproutIcon />
+                  <WeatherStation />
                   <h4 className="text-base dark:text-gray-100 tracking-tight">
                     Stations
                   </h4>
                 </div>
                 <Input
-                  className="w-[210px] mr-8"
+                  className="w-[210px] mr-14"
                   placeholder="Search Station"
                   onChange={_onSearchPlot}
                 />
@@ -104,51 +104,56 @@ export default function MarkerPlots() {
             }
             className="border-none"
           >
-            {loading ? (
-              <Spinner />
-            ) : markers?.length > 0 ? (
-              markers?.map((marker) => (
-                <div key={marker.id} className="marker-item">
-                  <div className="marker-item-info p-2">
-                    <div className="flex justify-between items-center">
-                      <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
-                        {marker?.title}
-                      </h5>
-                      <span className="flex items-center gap-1">
-                        <Tooltip text="click to fly the marker">
-                          <MyButton
-                            variant="icon"
-                            className="rounded-full"
-                            onClick={handleMarkerClick}
-                            data-marker-id={marker.id}
-                          >
-                            <ArrowUpRightIcon />
-                          </MyButton>
-                        </Tooltip>
-                        <Tooltip text="click to delete the marker">
-                          <MyButton
-                            variant="icon"
-                            className="rounded-full"
-                            onClick={_onDeleteMarker}
-                            data-marker-id={marker.id}
-                          >
-                            <BiTrash className="w-5 h-5 action-icon text-red-500 " />
-                          </MyButton>
-                        </Tooltip>
+            <div className='overflow-y-auto h-[400px]'>
+              {loading ? (
+                <Spinner />
+              ) : markers?.length > 0 ? (
+                markers?.map((marker) => (
+                  <div key={marker.id} className="marker-item rounded-md hover:bg-gray-50">
+                    <div className="marker-item-info p-2">
+                      <div className="flex justify-between items-center">
+                        <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
+                          {marker?.title}
+                        </h5>
+                        <span className="flex items-center gap-1">
+                          <Tooltip text="click to fly the marker">
+                            <MyButton
+                              variant="icon"
+                              className="rounded-full"
+                              onClick={(e) => {
+                                setPlotVisible(false);
+                                handleMarkerClick(e);
+                              }}
+                              data-marker-id={marker.id}
+                            >
+                              <ArrowUpRightIcon />
+                            </MyButton>
+                          </Tooltip>
+                          <Tooltip text="click to delete the marker">
+                            <MyButton
+                              variant="icon"
+                              className="rounded-full"
+                              onClick={_onDeleteMarker}
+                              data-marker-id={marker.id}
+                            >
+                              <BiTrash className="w-5 h-5 action-icon text-red-500 " />
+                            </MyButton>
+                          </Tooltip>
 
-                        <EditMarkerModal
-                          marker={markersData.find((m) => m.id === marker.id)}
-                        />
-                      </span>
+                          <EditMarkerModal
+                            marker={markersData.find((m) => m.id === marker.id)}
+                          />
+                        </span>
+                      </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="flex items-center justify-center h-20 p-4">
+                  <h5 className="text-gray-500">No Station Found</h5>
                 </div>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-20 p-4">
-                <h5 className="text-gray-500">No Station Found</h5>
-              </div>
-            )}
+              )}
+            </div>
           </Card>
         </MyModal>
       </ErrorBoundary>
