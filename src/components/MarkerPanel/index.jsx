@@ -45,8 +45,9 @@ export default function MarkerPanel() {
     setMarkerFilters,
     showMarkers,
     setShowMarkers,
+    unfilteredMarkers,
   } = useContext(MarkersContext);
-  const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
+  const { showPlots, setShowPlots } = useContext(PlotContext);
 
   const _onSelectMarker = useCallback(
     (o) => {
@@ -108,8 +109,8 @@ export default function MarkerPanel() {
             <ToggleButton
               onTooltip="hide markers"
               offTooltip="show markers"
-              initialState={showMarkers}
-              onToggle={setShowMarkers}
+              value={showMarkers}
+              onChange={setShowMarkers}
             />
           </div>
         </div>
@@ -150,15 +151,13 @@ export default function MarkerPanel() {
                 if (op === null) {
                   return;
                 }
-                console.log('markers', markers);
-                console.log('markers op', op);
+                console.log('markers farm', unfilteredMarkers);
+                console.log('markers farm op', op);
 
                 // Find the first marker whose farm_id matches the selected value
-                const selectedMarker = markers.find(
-                  (marker) => marker?.farm?.id === op?.value
+                const selectedMarker = unfilteredMarkers.find(
+                  (marker) => marker?.farm?.id == op?.value
                 );
-
-                console.log('selectedMarker', selectedMarker);
 
                 // If a matching marker is found, fly to its location
                 if (
@@ -187,8 +186,8 @@ export default function MarkerPanel() {
           <ToggleButton
             onTooltip="hide plots"
             offTooltip="show plots"
-            initialState={!showNdviLayer}
-            onToggle={toggleNDVILayersVisibility}
+            value={showPlots}
+            onChange={setShowPlots}
           />
         </div>
         <PlotSearch />

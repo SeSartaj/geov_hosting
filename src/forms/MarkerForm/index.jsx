@@ -241,7 +241,8 @@ export default function MarkerForm({
         </FormGroup>
         <FormGroup label="use different coordinates">
           <ToggleButton
-            onToggle={handleCustomCoordsToggling}
+            value={formData?.customLocation}
+            onChange={handleCustomCoordsToggling}
             onTooltip="click to use marker's coordinates"
             offTooltip="click to use custom coordinates"
           />

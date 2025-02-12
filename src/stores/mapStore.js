@@ -79,6 +79,8 @@ const useMapStore = create((set) => ({
   setRasterOpacity: (opacity) => set({ rasterOpacity: opacity }),
   clickedMarker: null,
   setClickedMarker: (m) => set({ clickedMarker: m }),
+  setShowCroppedImages: (m) => set({ showCroppedImages: m }),
+  showCroppedImages: false,
 }));
 
 export default useMapStore;

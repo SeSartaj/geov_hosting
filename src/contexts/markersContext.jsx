@@ -20,6 +20,7 @@ const MarkersProvider = ({ children }) => {
     resetFilters,
     handleMarkerUpdate,
     handleDeleteMarker,
+    unfilteredMarkers,
   } = useMarkers();
 
   return (
@@ -40,6 +41,7 @@ const MarkersProvider = ({ children }) => {
         setClickedMarker,
         handleMarkerUpdate,
         handleDeleteMarker,
+        unfilteredMarkers,
       }}
     >
       {children}

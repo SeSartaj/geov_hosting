@@ -157,4 +157,197 @@ async function fetchNDVIFromProcessingAPI(
   }
 }
 
+async function fetchNDVIFromGeoServer(plot) {
+  const bboxCoords = bbox(plot);
+  if (!bboxCoords) {
+    throw new Error('Invalid BBOX');
+  }
+
+  const bboxStr = bboxCoords.join(',');
+
+  const geoserverUrl =
+    `https://d27s6pvwcjpmsu.cloudfront.net/geoserver/ne/wms?` +
+    new URLSearchParams({
+      service: 'WMS',
+      version: '1.1.0',
+      request: 'GetMap',
+      layers: 'ne:et_data',
+      styles: '',
+      bbox: bboxStr,
+      width: 512,
+      height: 512,
+      srs: 'EPSG:4326',
+      format: 'image/png',
+      transparent: 'true',
+    });
+
+  try {
+    const response = await fetch(geoserverUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch NDVI data from GeoServer');
+    }
+    console.log('data returned from the geoserver');
+    const blob = await response.blob();
+    if (!blob) {
+      return null;
+    }
+    console.log('geoserver', URL.createObjectURL(blob));
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error('Error fetching NDVI from GeoServer:', error);
+    return null;
+  }
+}
+
+async function fetchCroppedETFromGeoServer(plot, dateRange) {
+  console.log('downloading cropped et', dateRange);
+  const TIME = `${dateRange.start}/${dateRange.end}`;
+  const bboxCoords = bbox(plot);
+  if (!bboxCoords) {
+    throw new Error('Invalid BBOX');
+  }
+
+  const bboxStr = bboxCoords.join(',');
+
+  const geoserverUrl =
+    `https://d27s6pvwcjpmsu.cloudfront.net/geoserver/ne/wms?` +
+    new URLSearchParams({
+      service: 'WMS',
+      version: '1.1.0',
+      request: 'GetMap',
+      layers: 'ne:et_data',
+      styles: '',
+      bbox: bboxStr,
+      width: 512,
+      height: 512,
+      srs: 'EPSG:4326',
+      format: 'image/png',
+      transparent: 'true',
+      TIME: TIME,
+    });
+
+  try {
+    const response = await fetch(geoserverUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch cropped NDVI from GeoServer');
+    }
+    const blob = await response.blob();
+    if (!blob) {
+      return null;
+    }
+
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error('Error fetching cropped NDVI:', error);
+    return null;
+  }
+}
+
+async function fetchCroppedImage(plot) {
+  console.log('downloading cropped et');
+  const bboxCoords = bbox(plot);
+  if (!bboxCoords) {
+    throw new Error('Invalid BBOX');
+  }
+
+  const bboxStr = bboxCoords.join(',');
+
+  // Encode the plot's geometry as WKT for filtering
+  const wktPolygon = `POLYGON((${plot.geometry.coordinates[0]
+    .map(([lon, lat]) => `${lon} ${lat}`)
+    .join(',')}))`;
+
+  const geoserverUrl =
+    `https://d27s6pvwcjpmsu.cloudfront.net/geoserver/ne/wms?` +
+    new URLSearchParams({
+      service: 'WMS',
+      version: '1.1.0',
+      request: 'GetMap',
+      layers: 'ne:et_data',
+      styles: '',
+      bbox: bboxStr,
+      width: 512,
+      height: 512,
+      srs: 'EPSG:4326',
+      format: 'image/png',
+      transparent: 'true',
+    });
+
+  try {
+    const response = await fetch(geoserverUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch cropped NDVI from GeoServer');
+    }
+    const blob = await response.blob();
+    if (!blob) {
+      return null;
+    }
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error('Error fetching cropped NDVI:', error);
+    return null;
+  }
+}
+
+export async function cropRasterToPolygon(imageUrl, plot) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    // img.crossOrigin = 'Anonymous'; // Avoid CORS issues
+    img.onload = function () {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      // Draw the image first
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+
+      // Convert polygon to image pixel coordinates
+      const polygonPixels = plot.geometry.coordinates[0].map(([lon, lat]) => {
+        return geoToPixel(lon, lat, bbox(plot), img.width, img.height);
+      });
+
+      // Create a mask
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.beginPath();
+      polygonPixels.forEach(([x, y], i) => {
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.fill();
+
+      // Get final cropped image
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.src = imageUrl;
+  });
+}
+
+// Convert GeoJSON coordinates to pixel coordinates in the image
+function geoToPixel(lon, lat, bbox, width, height) {
+  const [minLon, minLat, maxLon, maxLat] = bbox;
+  const x = ((lon - minLon) / (maxLon - minLon)) * width;
+  const y = height - ((lat - minLat) / (maxLat - minLat)) * height;
+  return [x, y];
+}
+
+export async function getCroppedRaster(
+  plot,
+  { rasterLayer, dateRange, accessToken, map }
+) {
+  console.log('getCroppedRaster rasterLayer', rasterLayer);
+  if (rasterLayer === 'ET' || rasterLayer?.value === 'ET') {
+    const imageUrl = await fetchCroppedETFromGeoServer(plot, dateRange);
+    if (!imageUrl) return null;
+
+    const croppedImageUrl = await cropRasterToPolygon(imageUrl, plot);
+    console.log('croppedImageURl', croppedImageUrl);
+    if (!croppedImageUrl) return null;
+    console.log('crop getCroppedRaster crop image URL', imageUrl);
+    return croppedImageUrl;
+  }
+}
+
 export default fetchNDVIFromProcessingAPI;

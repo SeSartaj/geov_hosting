@@ -57,6 +57,7 @@ export const useMarkers = () => {
       console.log('data updatedMarker', updatedMarker);
       console.log('data new markers list', updatedMarkers);
       setMarkers(updatedMarkers);
+      console.log('setting marker,', transformMarker);
       setClickedMarker(transformedMarker);
     });
   };
@@ -125,6 +126,7 @@ export const useMarkers = () => {
     addNewMarker,
     loading,
     markerFilters,
+    unfilteredMarkers, 
     setMarkerFilters: handleFilterChange,
     resetFilters,
     clickedMarker,

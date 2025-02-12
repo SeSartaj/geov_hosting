@@ -13,19 +13,9 @@ const ToggleButton = React.memo(function Togglebutton({
   isLoading = false,
   size = 'sm', // Default size is 'md'
 }) {
-  const [isOn, setIsOn] = useState(value);
-
-  useEffect(() => {
-    setIsOn(value);
-  }, [value]);
-
   const handleToggle = () => {
-    setIsOn(!isOn);
-    if (onToggle) {
-      onToggle(!isOn);
-    }
     if (onChange) {
-      onChange(!isOn);
+      onChange(!value);
     }
   };
 
@@ -49,12 +39,12 @@ const ToggleButton = React.memo(function Togglebutton({
   };
 
   return (
-    <Tooltip text={isOn ? onTooltip : offTooltip}>
+    <Tooltip text={value ? onTooltip : offTooltip}>
       <button
         type="button"
         onClick={handleToggle}
         className={`relative  inline-flex items-center rounded-full transition-colors duration-300 focus:outline-none  focus:outline focus:outline-2 focus:outline-offset-1 ${
-          isOn ? 'bg-blue-700' : 'bg-gray-300'
+          value ? 'bg-blue-700' : 'bg-gray-300'
         } ${sizeClasses[size].button}`}
       >
         {isLoading ? (
@@ -62,7 +52,7 @@ const ToggleButton = React.memo(function Togglebutton({
         ) : (
           <span
             className={`inline-block transform rounded-full bg-white transition-transform duration-300 ${
-              isOn ? sizeClasses[size].translate : 'translate-x-1'
+              value ? sizeClasses[size].translate : 'translate-x-1'
             } ${sizeClasses[size].circle}`}
           />
         )}

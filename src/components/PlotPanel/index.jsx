@@ -19,8 +19,6 @@ export default function PlotPanel() {
     setShowPlots,
     handleFlyToPlot,
     handleEditPlot,
-    showNdviLayer,
-    toggleNDVILayersVisibility,
   } = useContext(PlotContext);
 
   const { isConfirmed } = useConfirm();
@@ -39,8 +37,8 @@ export default function PlotPanel() {
         <ToggleButton
           onTooltip="hide plots"
           offTooltip="show plots"
-          initialState={showPlots}
-          onToggle={setShowPlots}
+          value={showPlots}
+          onChange={setShowPlots}
         />
       </div>
 
@@ -52,12 +50,12 @@ export default function PlotPanel() {
             label: 'Plot NDVI Layers',
             value: <NdviLayerPanel />,
             labelEnd: (
-              <ToggleButton
-                onTooltip={'hide NDVI layer'}
-                offTooltip={'show NDVI layer'}
-                initialState={showNdviLayer}
-                onToggle={toggleNDVILayersVisibility}
-              />
+              // <ToggleButton
+              //   onTooltip={'hide NDVI layer'}
+              //   offTooltip={'show NDVI layer'}
+              //   value={showNdviLayer}
+              //   onChange={toggleNDVILayersVisibility}
+              // />
             ),
           },
         ]}

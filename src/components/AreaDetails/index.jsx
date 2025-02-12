@@ -24,6 +24,7 @@ export default function AreaDetails() {
   const [pointEtValue, setPointEtValue] = useState(null);
   const { dateRange } = useContext(RasterLayerContext);
   const [loading, setLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(null);
 
   function getValueAtPointWCS(e) {
     setLoading(true);
@@ -86,16 +87,14 @@ export default function AreaDetails() {
           console.log(data?.features[0]?.properties?.GRAY_INDEX);
           setPointEtValue(data?.features[0]?.properties?.GRAY_INDEX);
         }
-        // TODO: Implement or use a library to read the TIFF and get the exact value at the point.
-
-        // For now, we return a placeholder:
-        return 'Data processing not implemented. Received binary data.';
       })
       .catch((error) => {
         console.error(
           'There was a problem with the fetch operation:',
           error.message
         );
+        setPointEtValue('could not fetch data');
+        setLoadingError('could not load ET value at point');
         return null; // Or handle the error as needed
       })
       .finally(() => {
@@ -153,6 +152,8 @@ export default function AreaDetails() {
             )}
             {loading ? (
               <Spinner />
+            ) : loadingError ? (
+              <div className="text-red ">Could not load ET value</div>
             ) : (
               pointEtValue && (
                 <div className="flex items-center  justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2 ">

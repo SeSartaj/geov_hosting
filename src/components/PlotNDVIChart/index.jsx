@@ -83,21 +83,19 @@ const NdviChart = ({ plot, point }) => {
         tooltip: {
           valueDecimals: 2,
           pointFormatter: function () {
-            let description = '';
-            if (this.y < 0) {
-              description = 'Water bodies, clouds, snow';
-            } else if (this.y >= 0 && this.y < 0.1) {
-              description = 'Bare soil, sand, rock';
-            } else if (this.y >= 0.2 && this.y < 0.5) {
-              description = 'Shrubs, grasslands, sparse vegetation';
-            } else if (this.y >= 0.6 && this.y < 0.9) {
-              description = 'Dense vegetation, forests, crops';
-            } else if (this.y >= 0.9 && this.y <= 1) {
-              description = 'well-irrigated and healthy crops';
-            }
-            return `<b>${this.series.name}</b>: ${this.y.toFixed(
-              2
-            )}<br/>${description}`;
+            // let description = '';
+            // if (this.y < 0) {
+            //   description = 'Water bodies, clouds, snow';
+            // } else if (this.y >= 0 && this.y < 0.1) {
+            //   description = 'Bare soil, sand, rock';
+            // } else if (this.y >= 0.2 && this.y < 0.5) {
+            //   description = 'Shrubs, grasslands, sparse vegetation';
+            // } else if (this.y >= 0.6 && this.y < 0.9) {
+            //   description = 'Dense vegetation, forests, crops';
+            // } else if (this.y >= 0.9 && this.y <= 1) {
+            //   description = 'well-irrigated and healthy crops';
+            // }
+            return `<b>${this.series.name}</b>: ${this.y.toFixed(2)}<br/>`;
           },
         },
         color: '#333',

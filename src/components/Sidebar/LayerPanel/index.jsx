@@ -91,7 +91,6 @@ export default function LayerPanel() {
   const [datesLoading, setDatesLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState();
 
-  const { showNdviLayer, toggleNDVILayersVisibility } = useContext(PlotContext);
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
   const viewMode = useMapStore((state) => state.viewMode);
@@ -107,6 +106,8 @@ export default function LayerPanel() {
   const [passDates, setPassDates] = useState([]);
   const accessToken = useContext(AccessTokenContext);
   const [previousBbox, setPreviousBbox] = useState([]);
+  const showCroppedImages = useMapStore((s) => s.showCroppedImages);
+  const setShowCroppedImages = useMapStore((s) => s.setShowCroppedImages);
 
   // Function to disable all days except those in the availableDays array
   const isDayDisabled = (date) => {
@@ -178,7 +179,7 @@ export default function LayerPanel() {
 
       setDatesLoading(true);
       // too much zoom out? don't bother fetching available dates
-      if (!isVisible || mapInstance?.getZoom() < 9) {
+      if (mapInstance?.getZoom() < 9) {
         console.log('layer is not visible or zoom is smaller than 9');
         setPassDates([]);
       }
@@ -294,13 +295,13 @@ export default function LayerPanel() {
   const _onSelectSentinel = useCallback(
     (value) => {
       if (value === 'plot') {
-        toggleNDVILayersVisibility(true);
+        setShowCroppedImages(true);
       }
       if (value === 'map') {
-        toggleNDVILayersVisibility(false);
+        setShowCroppedImages(false);
       }
     },
-    [toggleNDVILayersVisibility]
+    [setShowCroppedImages]
   );
 
   return (
@@ -312,7 +313,7 @@ export default function LayerPanel() {
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup
-              defaultValue={showNdviLayer ? 'plot' : 'map'}
+              defaultValue={showCroppedImages ? 'plot' : 'map'}
               className="flex items-center"
               onValueChange={_onSelectSentinel}
             >
@@ -328,8 +329,8 @@ export default function LayerPanel() {
             <ToggleButton
               onTooltip="hide layer"
               offTooltip="show layer"
-              initialState={isVisible}
-              onToggle={setIsVisible}
+              value={isVisible}
+              onChange={setIsVisible}
             />
           </div>
         </div>

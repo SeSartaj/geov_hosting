@@ -1,16 +1,17 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { PlotContext } from '../../contexts/PlotContext';
 import { Source, Layer } from 'react-map-gl/maplibre';
 import { MapContext } from '../../contexts/MapContext';
 import { useMap } from 'react-map-gl/maplibre';
 import PlotPopup from '../PlotPopup';
 
-import fetchNDVIImage from '@/utils/fetchNDVIFromProcessingAPI';
+import { getCroppedRaster } from '@/utils/fetchNDVIFromProcessingAPI';
 import { bbox } from '@turf/turf';
 import debounce from '@/utils/debounce';
 import isEmptyObject from '@/utils/isEmptyObject';
 import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
+import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 
 export default function Plots() {
   const {
@@ -22,6 +23,13 @@ export default function Plots() {
     showNdviLayer,
   } = useContext(PlotContext);
 
+  const showCroppedImages = useMapStore((s) => s.showCroppedImages);
+
+  // the selected layer from options
+  const rasterLayer = useMapStore((state) => state.rasterLayer);
+
+  const { isVisible, setIsVisible, dateRange } = useContext(RasterLayerContext);
+
   const setCursor = useMapStore((state) => state.setCursor);
   const resetCursor = useMapStore((state) => state.resetCursor);
   const { drawRef, mapRef } = useContext(MapContext);
@@ -32,13 +40,18 @@ export default function Plots() {
   const removeLoadingNDVIImage = useMapStore(
     (state) => state.removeLoadingNDVIImage
   );
-  const isNDVIImageLoading = useMapStore((state) => state.isNDVIImageLoading);
 
-  const addNDVIImageToMap = useCallback(
+  // rename this later to isCroppedImageLoading
+  const isNDVIImageLoading = useMapStore((state) => state.isNDVIImageLoading);
+  const setShowCroppedImages = useMapStore((s) => s.setShowCroppedImages);
+
+  const addCroppedRasterLayerToMap = useCallback(
     (imageUrl, plot, { map }) => {
+      console.log('crop adding image to map', imageUrl, plot, map);
       if (!map) throw new Error('map is not defined');
       // if layer is toggled off, don't add image to map
-      if (!showNdviLayer) return null;
+      if (!showCroppedImages) return null;
+
       console.log('plotss', plot);
       if (!plot || !plot.geometry || plot.geometry.type !== 'Polygon')
         return null;
@@ -56,8 +69,8 @@ export default function Plots() {
         [minX, minY], // bottom-left corner
       ];
       // Check if the source and layer with the same id already exist
-      const sourceId = `ndviImageSource-${plot.properties.id}`;
-      const layerId = `ndviImageLayer-${plot.properties.id}`;
+      const sourceId = `croppedImageSource-${plot.properties.id}`;
+      const layerId = `croppedImageLayer-${plot.properties.id}`;
 
       if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
@@ -83,16 +96,32 @@ export default function Plots() {
         },
       });
     },
-    [showNdviLayer]
+    [showCroppedImages]
   );
 
-  const handleNDVIImageDownload = useCallback(
-    async (plot, { accessToken, map, timeTravel }) => {
+  const handleCroppedImageDownload = useCallback(
+    async (
+      plot,
+      { accessToken, map, timeTravel, dateRange, isVisible, showCroppedImages }
+    ) => {
+      console.log('handleCroppedImageDownload started');
       // clone the plot object to avoid mutating the original object
+      console.log('crop download plot', plot);
       if (!map) throw new Error('map is not defined');
 
-      // Check if the ndvi layer for this plot is already added to the map
-      const layerId = `ndviImageLayer-${plot.properties.id}`;
+      // Check if the  layer for this plot is already added to the map
+      const layerId = `croppedImageLayer-${plot.properties.id}`;
+      console.log('crop visible, showCropped', isVisible, showCroppedImages);
+      if (!isVisible || !showCroppedImages) {
+        console.log(
+          'crop either isVisible or not plot mode selected, deleting layer and returning'
+        );
+
+        if (map.getLayer(layerId)) {
+          map.removeLayer(layerId);
+        }
+        return;
+      }
 
       if (map.getLayer(layerId)) {
         if (timeTravel) {
@@ -107,8 +136,17 @@ export default function Plots() {
         // if the plot is already loading, return
         if (isNDVIImageLoading(plot.properties.id)) return;
         addLoadingNDVIImage(plot.properties.id);
-        const ndviDataUrl = await fetchNDVIImage(plot, {
-          weeksBefore: weeksBefore,
+
+        // when daterange is js Date, convert it to string
+        if (dateRange.start instanceof Date) {
+          dateRange.start = dateRange.start.toISOString().split('T')[0];
+        }
+        if (dateRange.end instanceof Date) {
+          dateRange.end = dateRange.end.toISOString().split('T')[0];
+        }
+        const ndviDataUrl = await getCroppedRaster(plot, {
+          rasterLayer: rasterLayer,
+          dateRange: dateRange,
           accessToken: accessToken,
         });
 
@@ -116,7 +154,8 @@ export default function Plots() {
         console.log('mapp', map);
 
         if (ndviDataUrl) {
-          addNDVIImageToMap(ndviDataUrl, plot, { map });
+          console.log();
+          addCroppedRasterLayerToMap(ndviDataUrl, plot, { map });
         }
       } catch (error) {
         console.log('error in loading ndvi layer');
@@ -126,10 +165,10 @@ export default function Plots() {
       // Add the image to the map
     },
     [
-      weeksBefore,
-      addNDVIImageToMap,
+      rasterLayer,
       isNDVIImageLoading,
       addLoadingNDVIImage,
+      addCroppedRasterLayerToMap,
       removeLoadingNDVIImage,
     ]
   );
@@ -209,59 +248,59 @@ export default function Plots() {
 
   const handleViewportChange = useCallback(
     ({ timeTravel = false }) => {
-      if (!map) return;
-      // if layer is not turned on, don't fetch the images
-      if (!showNdviLayer) return;
-      // if not normal mode, don't downlaod image
-      if (viewMode !== 'NORMAL') return;
-      // Get the current zoom level
-      const zoom = map.getZoom();
+      console.log('handleViewportChange start');
 
-      // Check if the zoom level is within the desired range
-      const zoomLevelThreshold = 10;
-      if (zoom >= zoomLevelThreshold) {
-        const bounds = map.getBounds();
-
-        // Check for each plot if it's visible in the current map view
-        plots.forEach((plot) => {
-          // if plot has no geomtry, don't try to download NDVI image
-          if (isEmptyObject(plot.options)) return null;
-          const plotBounds = bbox(plot?.options); // Get bounding box of the plot
-
-          // Check if the plot's bounding box intersects with the map's bounds
-          if (isBoundingBoxIntersecting(plotBounds, bounds)) {
-            // Call the function to download and add NDVI image
-            handleNDVIImageDownload(plot?.options, {
-              accessToken,
-              map,
-              timeTravel,
-            });
-          }
-        });
+      if (!map || viewMode !== 'NORMAL') {
+        return;
       }
+
+      const zoom = map.getZoom();
+      if (zoom < 10) return; // Early exit if zoom is too low
+
+      const bounds = map.getBounds();
+
+      plots.forEach((plot) => {
+        if (isEmptyObject(plot.options)) return; // Skip plots without geometry
+
+        const plotBounds = bbox(plot.options);
+        if (isBoundingBoxIntersecting(plotBounds, bounds)) {
+          handleCroppedImageDownload(plot.options, {
+            dateRange,
+            accessToken,
+            map,
+            timeTravel,
+            isVisible,
+            showCroppedImages,
+          });
+        }
+      });
+
+      console.log('handleViewportChange end');
     },
     [
       map,
       plots,
       accessToken,
-      handleNDVIImageDownload,
+      dateRange,
       isBoundingBoxIntersecting,
-      showNdviLayer,
       viewMode,
+      isVisible,
+      showCroppedImages,
+      rasterLayer,
     ]
   );
 
-  const handleTimeTravel = useCallback(() => {
-    handleViewportChange({ timeTravel: true });
-  }, [handleViewportChange]);
+  // Use useMemo to prevent unnecessary re-creations
+  const debouncedHandleViewportChange = useMemo(
+    () => debounce(handleViewportChange, 500),
+    [handleViewportChange]
+  );
 
+  // run the code when date changes or the visibily changes
   useEffect(() => {
-    const debouncedHandleViewportChange = debounce(handleTimeTravel, 500);
-    debouncedHandleViewportChange();
-    return () => {
-      debouncedHandleViewportChange.cancel();
-    };
-  }, [weeksBefore, handleTimeTravel]);
+    console.log('dateRnage changed, crop');
+    handleViewportChange({ timeTravel: true });
+  }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer]);
 
   // when clicked on plot, show popup
   useEffect(() => {
@@ -275,30 +314,22 @@ export default function Plots() {
     };
   }, [handleMapClick, viewMode, showPlots, map]);
 
-  // if plot within view, download the ndvi image from processing API
   useEffect(() => {
-    console.log('runnign useEffect inside plots');
-    if (map && viewMode === 'NORMAL' && showNdviLayer && showPlots) {
-      console.log('adding viewPortchange event to map');
-      map.on('moveend', handleViewportChange);
-      map.on('zoomend', handleViewportChange);
-    }
+    console.log('running useEffect inside plots');
+
+    if (!map || viewMode !== 'NORMAL' || !showNdviLayer || !showPlots) return;
+
+    console.log('adding viewport change event to map');
+    map.on('moveend', debouncedHandleViewportChange);
+    map.on('zoomend', debouncedHandleViewportChange);
 
     return () => {
-      console.log('adding removing viewPortchange event from map');
-      if (map) {
-        map.off('moveend', handleViewportChange);
-        map.off('zoomend', handleViewportChange);
-      }
+      console.log('removing viewport change event from map');
+      debouncedHandleViewportChange.cancel();
+      map.off('moveend', debouncedHandleViewportChange);
+      map.off('zoomend', debouncedHandleViewportChange);
     };
-  }, [
-    map,
-    showPlots,
-    viewMode,
-    handleMapClick,
-    handleViewportChange,
-    showNdviLayer,
-  ]);
+  }, [map, showPlots, viewMode, showNdviLayer, debouncedHandleViewportChange]);
 
   // when hovered on a plot, change cursor to pointer
   useEffect(() => {

@@ -42,6 +42,7 @@ function getLayerURL({ layer, dateRange }) {
 
 const NDVILayer = () => {
   const { dateRange, isVisible } = useContext(RasterLayerContext);
+  const showCroppedImages = useMapStore((s) => s.showCroppedImages);
 
   // the selected layer from options
   const rasterLayer = useMapStore((state) => state.rasterLayer);
@@ -112,6 +113,7 @@ const NDVILayer = () => {
   if (!isVisible || !url) {
     return null;
   }
+  if (showCroppedImages) return null;
 
   return (
     <>

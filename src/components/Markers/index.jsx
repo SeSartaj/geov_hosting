@@ -5,11 +5,14 @@ import { MapContext } from '../../contexts/MapContext';
 import { MarkersContext } from '../../contexts/markersContext';
 import MyMarker from '../MyMarker';
 import { transformMarker } from '@/utils/transformMarker';
+import useMapStore from '@/stores/mapStore';
 
 export default function Markers() {
   const { mapRef } = useContext(MapContext);
-  const { markersData, setClickedMarker, showMarkers } =
-    useContext(MarkersContext);
+  const { markersData, showMarkers } = useContext(MarkersContext);
+
+  const setClickedMarker = useMapStore((state) => state.setClickedMarker);
+
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [clusters, setClusters] = useState([]);
   const zoomThreshold = 5;
@@ -23,7 +26,7 @@ export default function Markers() {
       : num;
 
   const handleMarkerClick = (e, marker) => {
-    console.log('marker clicked');
+    console.log('marker clicked', marker);
     setClickedMarker(marker);
   };
 

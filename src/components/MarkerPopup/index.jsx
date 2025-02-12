@@ -15,10 +15,13 @@ import { MapContext } from '@/contexts/MapContext';
 import useConfirm from '@/hooks/useConfirm';
 import { CrossIcon, XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
+import useMapStore from '@/stores/mapStore';
 
 export default function MarkerPopup() {
-  const { clickedMarker, setClickedMarker, showMarkers } =
-    useContext(MarkersContext);
+  const { showMarkers } = useContext(MarkersContext);
+
+  const clickedMarker = useMapStore((state) => state.clickedMarker);
+  const setClickedMarker = useMapStore((state) => state.setClickedMarker);
 
   const { mapRef } = useContext(MapContext);
 
@@ -42,12 +45,14 @@ export default function MarkerPopup() {
   );
 
   const closePopup = () => {
+    console.log('setClickedMarker closePopup');
     setClickedMarker(null);
   };
 
-  console.log('clicked marker', clickedMarker);
+  console.log('marker popup exists', clickedMarker);
 
   if (!clickedMarker || !showMarkers) return null;
+  console.log('marker popup exists', clickedMarker);
 
   return (
     <Popup
@@ -55,7 +60,8 @@ export default function MarkerPopup() {
       longitude={Number(clickedMarker.location.lng)}
       latitude={clickedMarker.location.lat}
       closeButton={false}
-      onClose={() => setClickedMarker(null)}
+      closeOnClick={false}
+      onClose={closePopup}
       className="!max-w-[240px] sm:!max-w-[270px] lg:!max-w-[320px]"
     >
       <div className="flex gap-2 items-center dark:text-gray-100 font-black text-[14px]">
@@ -88,12 +94,19 @@ export default function MarkerPopup() {
       {clickedMarker.type === 'station' ? (
         <StationPopupContent
           marker={clickedMarker}
-          closePopup={() => setClickedMarker(null)}
+          closePopup={() => {
+            console.log('setClickedMarker StationPopupContent');
+
+            setClickedMarker(null);
+          }}
         />
       ) : (
         <ForeCastPopupContent
           marker={clickedMarker}
-          closePopup={() => setClickedMarker(null)}
+          closePopup={() => {
+            console.log('setClickedMarker ForeCastPopupContent');
+            setClickedMarker(null);
+          }}
         />
       )}
     </Popup>
