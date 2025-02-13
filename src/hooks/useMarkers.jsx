@@ -12,7 +12,7 @@ const EMPTY_FILTERS = {
   farm_id: '',
   batteryLevel: null,
 };
-export const useMarkers = () => {
+export const useMarkers = ({ providedMarkers }) => {
   const [markers, setMarkers] = useState([]);
   const [showMarkers, setShowMarkers] = useState(true);
   const [clickedMarker, setClickedMarker] = useState(null);
@@ -93,10 +93,17 @@ export const useMarkers = () => {
 
   useEffect(() => {
     if (!showMarkers) return;
+    console.log('provided markeers', providedMarkers);
     const fetchData = async () => {
       setLoading(true);
       try {
-        const data = await getMarkers();
+        let data;
+        if (providedMarkers) {
+          console.log('markers are provided, not fetching it');
+          data = providedMarkers;
+        } else {
+          data = await getMarkers();
+        }
 
         console.log('data in getMarkers', data);
         // modify the markers
@@ -116,7 +123,7 @@ export const useMarkers = () => {
     };
 
     fetchData();
-  }, [showMarkers]);
+  }, [showMarkers, providedMarkers]);
 
   return {
     markers,
@@ -126,7 +133,7 @@ export const useMarkers = () => {
     addNewMarker,
     loading,
     markerFilters,
-    unfilteredMarkers, 
+    unfilteredMarkers,
     setMarkerFilters: handleFilterChange,
     resetFilters,
     clickedMarker,

@@ -1554,6 +1554,7 @@ const DUMMY_RESPONSE = [
 ];
 
 export const getMarkers = async () => {
+  console.log('fetching markers');
   const response = await fetchWrapper(`${API_URL}marker/primary/`);
   return response.json();
   // return DUMMY_RESPONSE;

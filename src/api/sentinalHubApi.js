@@ -170,6 +170,7 @@ export async function fetchMeanNDVI(plot, { accessToken, startDate, endDate }) {
     });
 
     if (!response.ok) {
+      console.error(response);
       throw new Error('Failed to fetch NDVI statistics');
     }
 

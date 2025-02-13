@@ -5,7 +5,7 @@ import { useMarkers } from '../hooks/useMarkers';
 // Create a new context for the map
 const MarkersContext = createContext();
 
-const MarkersProvider = ({ children }) => {
+const MarkersProvider = ({ children, providedMarkers }) => {
   const {
     markers,
     setMarkers,
@@ -21,7 +21,7 @@ const MarkersProvider = ({ children }) => {
     handleMarkerUpdate,
     handleDeleteMarker,
     unfilteredMarkers,
-  } = useMarkers();
+  } = useMarkers({ providedMarkers });
 
   return (
     <MarkersContext.Provider

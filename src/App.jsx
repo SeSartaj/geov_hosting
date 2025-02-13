@@ -13,7 +13,7 @@ import { ThemeProvider } from './contexts/ShadcnThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import './App.css';
 
-function App({ style, requestHeaders, configs }) {
+function App({ style, requestHeaders, configs, markers }) {
   return (
     <ThemeProvider defaultTheme="system">
       <TooltipPrimitive.Provider delayDuration={200}>
@@ -22,7 +22,7 @@ function App({ style, requestHeaders, configs }) {
             <MapProvider configs={configs}>
               <RasterLayerProvider>
                 <PlotProvider>
-                  <MarkersProvider>
+                  <MarkersProvider providedMarkers={markers}>
                     <ErrorBoundary>
                       <MyMap
                         style={style}
