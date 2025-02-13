@@ -137,13 +137,6 @@ export default function Plots() {
         if (isNDVIImageLoading(plot.properties.id)) return;
         addLoadingNDVIImage(plot.properties.id);
 
-        // when daterange is js Date, convert it to string
-        if (dateRange.start instanceof Date) {
-          dateRange.start = dateRange.start.toISOString().split('T')[0];
-        }
-        if (dateRange.end instanceof Date) {
-          dateRange.end = dateRange.end.toISOString().split('T')[0];
-        }
         const ndviDataUrl = await getCroppedRaster(plot, {
           rasterLayer: rasterLayer,
           dateRange: dateRange,
