@@ -130,11 +130,10 @@ export async function fetchMeanNDVI(plot, { accessToken, startDate, endDate }) {
       bounds: {
         geometry: {
           type: 'Polygon',
-          coordinates: plot.geometry.coordinates, // Ensure this is correctly structured
+          coordinates: plot.geometry.coordinates,
         },
         properties: {
           crs: 'http://www.opengis.net/def/crs/EPSG/0/4326',
-          // crs: 'http://www.opengis.net/def/crs/EPSG/0/32633',
         },
       },
       data: [
@@ -152,7 +151,7 @@ export async function fetchMeanNDVI(plot, { accessToken, startDate, endDate }) {
         to: END_DATE,
       },
       aggregationInterval: {
-        of: 'P30D',
+        of: 'P7D',
       },
       evalscript: evalscript,
       resx: 10,
