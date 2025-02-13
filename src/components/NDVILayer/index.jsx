@@ -111,29 +111,30 @@ const NDVILayer = () => {
     };
   }, [mapInstance]);
 
-  if (!isVisible || !url) {
+  if (!url) {
     return null;
   }
-  if (showCroppedImages) return null;
 
   return (
     <>
-      <Source
-        id="raster-source"
-        type="raster"
-        tiles={[url]}
-        tileSize={256}
-        minzoom={10}
-        maxzoom={21}
-      >
-        <Layer
-          id="raster-layer"
+      {isVisible && !showCroppedImages && (
+        <Source
+          id="raster-source"
           type="raster"
-          source="raster-source"
-          paint={{ 'raster-opacity': rasterOpacity / 100 }}
-          beforeId={beforeId || undefined} // Only apply if beforeId exists
-        />
-      </Source>
+          tiles={[url]}
+          tileSize={256}
+          minzoom={10}
+          maxzoom={21}
+        >
+          <Layer
+            id="raster-layer"
+            type="raster"
+            source="raster-source"
+            paint={{ 'raster-opacity': rasterOpacity / 100 }}
+            beforeId={beforeId || undefined} // Only apply if beforeId exists
+          />
+        </Source>
+      )}
       <AreaDetails />
     </>
   );

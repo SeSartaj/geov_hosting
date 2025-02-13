@@ -26,6 +26,7 @@ export default function AreaDetails() {
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
 
+  console.log('inside area details picker');
   function getValueAtPointWCS(e) {
     setLoading(true);
     setPointEtValue(null);

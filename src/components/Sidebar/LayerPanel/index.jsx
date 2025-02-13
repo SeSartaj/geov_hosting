@@ -109,6 +109,10 @@ export default function LayerPanel() {
   const showCroppedImages = useMapStore((s) => s.showCroppedImages);
   const setShowCroppedImages = useMapStore((s) => s.setShowCroppedImages);
 
+  const handleRasterLayerChange = (value) => {
+    setRasterLayer(value);
+  };
+
   // Function to disable all days except those in the availableDays array
   const isDayDisabled = (date) => {
     return !passDates.some(
@@ -145,6 +149,8 @@ export default function LayerPanel() {
         console.log(
           'currently selected date is included in new available dates, itll stay the same'
         );
+        setSelectedDate(selectedDate);
+        setSelectedDate({ start: dates[0], end: dates[0] });
       } else {
         console.log(
           'dates doesnt include selected date. choosing most recent date'
@@ -366,7 +372,7 @@ export default function LayerPanel() {
             value={rasterLayer}
             options={layerOptions}
             placeholder="Select Data"
-            onChange={setRasterLayer}
+            onChange={handleRasterLayerChange}
             isClearable={false}
           />
         </div>
