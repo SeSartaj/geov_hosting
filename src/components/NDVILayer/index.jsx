@@ -72,8 +72,10 @@ const NDVILayer = () => {
       mapInstance?.loaded() &&
       mapInstance.getLayer('plots-line-layer')
     ) {
+      console.log('order setting before id to plots-line-layer');
       setBeforeId('plots-line-layer');
     } else {
+      console.log('order setting before id to plots-line-layer');
       setBeforeId(null); // No 'beforeId' if plots-layer doesn't exist
     }
   }, [mapInstance]);
@@ -85,6 +87,7 @@ const NDVILayer = () => {
         const layers = map.getLayersOrder();
 
         // if plots-line-layer was below raster-layer
+        // prevents infinite looad
         if (
           layers.indexOf('plots-line-layer') < layers.indexOf('raster-layer')
         ) {

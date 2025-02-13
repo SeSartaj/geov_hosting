@@ -89,14 +89,17 @@ export default function Plots() {
         coordinates: bounds,
       });
 
-      map.addLayer({
-        id: layerId,
-        type: 'raster',
-        source: sourceId,
-        paint: {
-          'raster-opacity': 1,
+      map.addLayer(
+        {
+          id: layerId,
+          type: 'raster',
+          source: sourceId,
+          paint: {
+            'raster-opacity': 1,
+          },
         },
-      });
+        'plots-line-layer'
+      );
     },
     [showCroppedImages]
   );
@@ -153,7 +156,7 @@ export default function Plots() {
           addCroppedRasterLayerToMap(ndviDataUrl, plot, { map });
         }
       } catch (error) {
-        console.log('error in loading ndvi layer');
+        console.log('error in loading ndvi layer', error);
       } finally {
         removeLoadingNDVIImage(plot.properties.id);
       }
