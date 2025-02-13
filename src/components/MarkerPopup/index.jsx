@@ -60,7 +60,7 @@ export default function MarkerPopup() {
       longitude={Number(clickedMarker.location.lng)}
       latitude={clickedMarker.location.lat}
       closeButton={false}
-      closeOnClick={false}
+      closeOnClick={true}
       onClose={closePopup}
       className="!max-w-[240px] sm:!max-w-[270px] lg:!max-w-[320px]"
     >

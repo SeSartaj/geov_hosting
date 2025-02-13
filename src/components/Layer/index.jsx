@@ -75,8 +75,8 @@ function Layer({
   };
 
   return (
-    <div className='layer-container'>
-      <div className='layer-header'>
+    <div className="layer-container">
+      <div className="layer-header">
         <span
           style={{
             display: 'flex',
@@ -84,27 +84,27 @@ function Layer({
             alignContent: 'center',
           }}
         >
-          <Tooltip text='move layer above'>
+          <Tooltip text="move layer above">
             <BiCaretUp onClick={moveLayerUp} />
           </Tooltip>
-          <Tooltip text='move layer below'>
+          <Tooltip text="move layer below">
             <BiCaretDown onClick={moveLayerDown} />
           </Tooltip>
         </span>
         <label onClick={toggleLayerVisibility}>
           {!layer?.layout?.visibility ||
           layer?.layout?.visibility === 'visible' ? (
-            <Tooltip text='Hide Layer'>
-              <BiShow className='action-icon' data-layer-id={layer.id} />
+            <Tooltip text="Hide Layer">
+              <BiShow className="action-icon" data-layer-id={layer.id} />
             </Tooltip>
           ) : (
-            <Tooltip text='Show Layer'>
-              <BiHide className='action-icon' data-layer-id={layer.id} />
+            <Tooltip text="Show Layer">
+              <BiHide className="action-icon" data-layer-id={layer.id} />
             </Tooltip>
           )}
         </label>
       </div>
-      <div className='layer-body'>
+      <div className="layer-body">
         <p onClick={flyToLayer}>{layer?.id}</p>
         {isExpanded && (
           <div>
@@ -117,19 +117,19 @@ function Layer({
           </div>
         )}
       </div>
-      <div className='layer-footer'>
+      <div className="layer-footer">
         <span>
-          <Tooltip text='delete layer'>
+          <Tooltip text="delete layer">
             <BiTrash
-              className='action-icon'
+              className="action-icon"
               data-layer-id={layer.id}
               onClick={handleDeleteLayer}
             />
           </Tooltip>
           {isExpanded ? (
-            <BiCaretUp className='action-icon' onClick={handleExpand} />
+            <BiCaretUp className="action-icon" onClick={handleExpand} />
           ) : (
-            <BiCaretDown className='action-icon' onClick={handleExpand} />
+            <BiCaretDown className="action-icon" onClick={handleExpand} />
           )}
         </span>
       </div>

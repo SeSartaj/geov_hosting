@@ -67,8 +67,6 @@ const NDVILayer = () => {
 
   // Set beforeId based on the presence of plots-layer
   useEffect(() => {
-    console.log('map is', mapInstance);
-    console.log('map is', mapInstance?.loaded());
     if (
       mapInstance &&
       mapInstance?.loaded() &&

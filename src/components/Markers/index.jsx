@@ -26,6 +26,8 @@ export default function Markers() {
       : num;
 
   const handleMarkerClick = (e, marker) => {
+    e.originalEvent.stopPropagation();
+    // prevent the original event from pro
     console.log('marker clicked', marker);
     setClickedMarker(marker);
   };

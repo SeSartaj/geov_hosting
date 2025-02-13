@@ -12,6 +12,7 @@ import isEmptyObject from '@/utils/isEmptyObject';
 import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
+import { SettingsContext } from '@/contexts/SettingsContext';
 
 export default function Plots() {
   const {
@@ -29,6 +30,7 @@ export default function Plots() {
   const rasterLayer = useMapStore((state) => state.rasterLayer);
 
   const { isVisible, setIsVisible, dateRange } = useContext(RasterLayerContext);
+  const { settings } = useContext(SettingsContext);
 
   const setCursor = useMapStore((state) => state.setCursor);
   const resetCursor = useMapStore((state) => state.resetCursor);
@@ -293,7 +295,7 @@ export default function Plots() {
   useEffect(() => {
     console.log('dateRnage changed, crop');
     handleViewportChange({ timeTravel: true });
-  }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer]);
+  }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer, settings]);
 
   // when clicked on plot, show popup
   useEffect(() => {
@@ -310,7 +312,8 @@ export default function Plots() {
   useEffect(() => {
     console.log('running useEffect inside plots');
 
-    if (!map || viewMode !== 'NORMAL' || !showNdviLayer || !showPlots) return;
+    if (!map || viewMode !== 'NORMAL' || !showPlots || !showCroppedImages)
+      return;
 
     console.log('adding viewport change event to map');
     map.on('moveend', debouncedHandleViewportChange);
@@ -322,7 +325,13 @@ export default function Plots() {
       map.off('moveend', debouncedHandleViewportChange);
       map.off('zoomend', debouncedHandleViewportChange);
     };
-  }, [map, showPlots, viewMode, showNdviLayer, debouncedHandleViewportChange]);
+  }, [
+    map,
+    showPlots,
+    viewMode,
+    debouncedHandleViewportChange,
+    showCroppedImages,
+  ]);
 
   // when hovered on a plot, change cursor to pointer
   useEffect(() => {

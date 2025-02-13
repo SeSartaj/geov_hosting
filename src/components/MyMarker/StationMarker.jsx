@@ -35,7 +35,6 @@ const StationMarker = React.memo(function StationMarker({
   onClick,
 }) {
   const handleClick = (event) => {
-    // event.preventDefault();
     if (onClick) {
       onClick(event);
     }
