@@ -248,7 +248,7 @@ export default function Plots() {
     ({ timeTravel = false }) => {
       console.log('handleViewportChange start');
 
-      if (!map || viewMode !== 'NORMAL') {
+      if (!map) {
         return;
       }
 

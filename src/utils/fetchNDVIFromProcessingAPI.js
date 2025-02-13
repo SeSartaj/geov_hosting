@@ -66,6 +66,7 @@ async function fetchNDVIFromProcessingAPI(
   }
 
   if (dateRange) {
+    console.log('dateRange is ndvi', dateRange);
     // Ensure dateRange.start is at the beginning of the day
     if (dateRange.start instanceof Date) {
       dateRange.start.setHours(0, 0, 0, 0);
@@ -80,15 +81,7 @@ async function fetchNDVIFromProcessingAPI(
   }
 
   if (!dateRange) {
-    // the range should be 2 weeks before the from date
-    dateRange = {
-      start: new Date(
-        new Date().setDate(new Date().getDate() - weeksBefore * 7 - 14)
-      ).toISOString(),
-      end: new Date(
-        new Date().setDate(new Date().getDate() - weeksBefore * 7)
-      ).toISOString(),
-    };
+    console.warning('no date range specified', dateRange);
   }
 
   const cacheKey = `${plot.properties.id}-${dateRange.start}`;
@@ -363,7 +356,7 @@ export async function getCroppedRaster(
   plot,
   { rasterLayer, dateRange, accessToken, map }
 ) {
-  console.log('getCroppedRaster rasterLayer', rasterLayer);
+  console.log('getCroppedRaster rasterLayer', rasterLayer, dateRange);
   if (rasterLayer === 'ET' || rasterLayer?.value === 'ET') {
     const imageUrl = await fetchCroppedETFromGeoServer(plot, dateRange);
     if (!imageUrl) return null;

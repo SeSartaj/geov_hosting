@@ -1,4 +1,11 @@
-import { useState, useContext, useEffect, useCallback, useMemo } from 'react';
+import {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { MapContext } from '../../../contexts/MapContext';
 import MyReactSelect from '@/ui-components/MyReactSelect';
 import ToggleButton from '@/ui-components/toggleButton';
@@ -108,10 +115,7 @@ export default function LayerPanel() {
   const [previousBbox, setPreviousBbox] = useState([]);
   const showCroppedImages = useMapStore((s) => s.showCroppedImages);
   const setShowCroppedImages = useMapStore((s) => s.setShowCroppedImages);
-
-  const handleRasterLayerChange = (value) => {
-    setRasterLayer(value);
-  };
+  const abortControllerRef = useRef(null);
 
   // Function to disable all days except those in the availableDays array
   const isDayDisabled = (date) => {
@@ -149,12 +153,14 @@ export default function LayerPanel() {
         console.log(
           'currently selected date is included in new available dates, itll stay the same'
         );
-        setSelectedDate(selectedDate);
-        setSelectedDate({ start: dates[0], end: dates[0] });
+        // reset it to trigger downloading of cropped layer
+        setDateRange({ start: dateRange.start, end: dateRange.end });
       } else {
         console.log(
-          'dates doesnt include selected date. choosing most recent date'
+          'ddd dates doesnt include selected date. choosing most recent date'
         );
+        // set the most recent date
+        console.log('ddd', dates[0]);
         setSelectedDate(dates[0]);
         setDateRange({
           start: dates[0],
@@ -176,41 +182,41 @@ export default function LayerPanel() {
   // get bbox from viewport of map and call getSatellitePassDates
   //  and store all dates in a state
   // create a function handlePassDates
+
   const handlePassDates = useCallback(
     (options) => {
       console.log('inside handlePassDates. options', options);
       if (!mapInstance) {
         console.log('no map instance found to load available dates');
+        return;
       }
 
       setDatesLoading(true);
-      // too much zoom out? don't bother fetching available dates
+
       if (mapInstance?.getZoom() < 9) {
         console.log('layer is not visible or zoom is smaller than 9');
         setPassDates([]);
+        setDatesLoading(false);
+        return;
       }
-      const bounds = mapInstance?.getBounds();
 
-      let bbox = [];
-      if (
-        bounds?.getWest() &&
-        bounds?.getSouth() &&
-        bounds?.getEast() &&
-        bounds?.getNorth()
-      ) {
-        bbox = [
-          bounds?.getWest(),
-          bounds?.getSouth(),
-          bounds?.getEast(),
-          bounds?.getNorth(),
-        ];
-      } else {
-        bbox = undefined;
+      const bounds = mapInstance?.getBounds();
+      let bbox = bounds
+        ? [
+            bounds.getWest(),
+            bounds.getSouth(),
+            bounds.getEast(),
+            bounds.getNorth(),
+          ]
+        : undefined;
+
+      if (!bbox) {
         console.warn('no bounds found. not fetching available dates');
+        setDatesLoading(false);
+        return;
       }
 
       if (!options?.layerChanged && previousBbox?.length > 0) {
-        // if the map moved/zoomed in/zoomed out by a very small amount, don't refetch the dates
         if (!hasBboxChanged(previousBbox, bbox)) {
           setPreviousBbox(bbox);
           console.log('bbox has not changed significantly');
@@ -218,44 +224,57 @@ export default function LayerPanel() {
           return;
         }
       }
+
       setPreviousBbox(bbox);
 
-      if (rasterLayer?.getAvailableDates && bbox) {
-        rasterLayer
-          .getAvailableDates(bbox)
-          .then((dates) => {
-            // convert all dates to js date object
-            const ddates = dates.map((d) => {
-              const localDate = new Date(d);
-              return new Date(
-                Date.UTC(
-                  localDate.getUTCFullYear(),
-                  localDate.getUTCMonth(),
-                  localDate.getUTCDate()
-                )
-              );
-            });
-            console.log('ddates', ddates);
-            setPassDates(ddates);
-            handleLayerDatesChange(ddates);
-          })
-          .finally(() => {
-            setDatesLoading(false);
-          });
-      } else {
-        if (!accessToken) {
-          console.warn('No access token found');
-        }
-        getSatellitePassDates({ aoi: bbox, accessToken })
-          .then((dates) => {
-            console.log('dates are: ', dates);
-            setPassDates(dates);
-            handleLayerDatesChange(dates);
-          })
-          .finally(() => {
-            setDatesLoading(false);
-          });
+      // Cancel the previous request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
+
+      // Create a new abort controller for the new request
+      const controller = new AbortController();
+      const { signal } = controller;
+      abortControllerRef.current = controller;
+
+      const fetchDates = rasterLayer?.getAvailableDates
+        ? rasterLayer.getAvailableDates(bbox)
+        : getSatellitePassDates({ aoi: bbox, accessToken });
+
+      fetchDates
+        .then((dates) => {
+          if (signal.aborted) {
+            console.log('Request was aborted, ignoring response');
+            return;
+          }
+
+          const ddates = dates.map((d) => {
+            const localDate = new Date(d);
+            return new Date(
+              Date.UTC(
+                localDate.getUTCFullYear(),
+                localDate.getUTCMonth(),
+                localDate.getUTCDate()
+              )
+            );
+          });
+
+          console.log('ddates', ddates);
+          setPassDates(ddates);
+          handleLayerDatesChange(ddates);
+        })
+        .catch((error) => {
+          if (error.name === 'AbortError') {
+            console.log('Previous request aborted');
+          } else {
+            console.error('Error fetching dates:', error);
+          }
+        })
+        .finally(() => {
+          if (!signal.aborted) {
+            setDatesLoading(false);
+          }
+        });
     },
     [
       selectedDate,
@@ -372,7 +391,7 @@ export default function LayerPanel() {
             value={rasterLayer}
             options={layerOptions}
             placeholder="Select Data"
-            onChange={handleRasterLayerChange}
+            onChange={setRasterLayer}
             isClearable={false}
           />
         </div>

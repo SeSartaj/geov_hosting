@@ -63,7 +63,7 @@ export default function AreaDetails() {
       width: size.width,
       height: size.height,
       srs: 'EPSG:4326',
-      time: dateRange.start.toISOString().split('T')[0],
+      time: dateRange.start.toISOString().split('T')[0] || undefined,
       info_format: 'application/json',
       x: Math.floor(point.x),
       y: Math.floor(point.y),
