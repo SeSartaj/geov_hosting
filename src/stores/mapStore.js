@@ -81,6 +81,8 @@ const useMapStore = create((set) => ({
   setClickedMarker: (m) => set({ clickedMarker: m }),
   setShowCroppedImages: (m) => set({ showCroppedImages: m }),
   showCroppedImages: false,
+  datesLoading: false,
+  setDatesLoading: (v) => set({ datesLoading: v }),
 }));
 
 export default useMapStore;

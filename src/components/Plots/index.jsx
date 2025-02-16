@@ -25,6 +25,7 @@ export default function Plots() {
   } = useContext(PlotContext);
 
   const showCroppedImages = useMapStore((s) => s.showCroppedImages);
+  const datesLoading = useMapStore((s) => s.datesLoading);
 
   // the selected layer from options
   const rasterLayer = useMapStore((state) => state.rasterLayer);
@@ -248,7 +249,9 @@ export default function Plots() {
     ({ timeTravel = false }) => {
       console.log('handleViewportChange start');
 
-      if (!map) {
+      if (!map || datesLoading) {
+        //
+        console.log('ddd either map or dates are loading');
         return;
       }
 

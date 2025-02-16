@@ -95,7 +95,8 @@ const CalenderNavComponent = ({
 export default function LayerPanel() {
   const { dateRange, setDateRange, isVisible, setIsVisible } =
     useContext(RasterLayerContext);
-  const [datesLoading, setDatesLoading] = useState(false);
+  const datesLoading = useMapStore((s) => s.datesLoading);
+  const setDatesLoading = useMapStore((s) => s.setDatesLoading);
   const [selectedDate, setSelectedDate] = useState();
 
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
@@ -127,8 +128,35 @@ export default function LayerPanel() {
     );
   };
 
+  const handleSelectedDateChange = (date) => {
+    console.log('ddd running handleSelectedDateChange');
+    // if date is undefined,
+    if (date === undefined) {
+      setSelectedDate(undefined);
+      setDateRange({ start: undefined, end: undefined });
+    } else {
+      const start = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0,
+        0,
+        0
+      );
+      const end = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        23,
+        59,
+        59
+      );
+      setSelectedDate(date);
+      setDateRange({ start: start, end: end });
+    }
+  };
+
   const handleLayerDatesChange = (dates) => {
-    console.log('dates inside handleLayerDatesChange', dates);
     if (dates.length > 0) {
       let isCurrentDateExist = false;
       // if selectedDates is present in the new dates list, keep it uncahnged
@@ -137,44 +165,25 @@ export default function LayerPanel() {
           .map((d) => d.getTime())
           .includes(selectedDate.getTime());
       }
-      // first sort the dates in reverse cronological ordeer
-      dates.sort((a, b) => b - a);
-      console.log('setting date range', dates[0]);
-      // set daterange start and end to the first most recent date in the dates
-      // if selected date was not in list of dates, set it to the first date
-      // otherwise lave the date untouched
-      console.log(
-        'ddd selectedDate, new dates, isCurrentExist',
-        selectedDate,
-        dates,
-        isCurrentDateExist
-      );
+
       if (isCurrentDateExist) {
+        // do nothing
         console.log(
-          'currently selected date is included in new available dates, itll stay the same'
+          'ddd currently selected date is included in new available dates, itll stay the same'
         );
-        // reset it to trigger downloading of cropped layer
-        setDateRange({ start: dateRange.start, end: dateRange.end });
       } else {
-        console.log(
-          'ddd dates doesnt include selected date. choosing most recent date'
-        );
+        // first sort the dates in reverse cronological ordeer
+        dates.sort((a, b) => b - a);
+
         // set the most recent date
-        console.log('ddd', dates[0]);
-        setSelectedDate(dates[0]);
-        setDateRange({
-          start: dates[0],
-          end: dates[0],
-        });
+        console.log('ddd most recent date', dates[0]);
+        handleSelectedDateChange(dates[0]);
       }
     } else {
       console.log('ddd no available date fetched');
       // set date range to last 10 days
       if (!selectedDate) {
-        setDateRange({
-          start: undefined,
-          end: undefined,
-        });
+        handleSelectedDateChange(undefined);
       }
     }
   };
@@ -216,6 +225,7 @@ export default function LayerPanel() {
         return;
       }
 
+      // if layer and bbox  is not changed, don't fetch dates
       if (!options?.layerChanged && previousBbox?.length > 0) {
         if (!hasBboxChanged(previousBbox, bbox)) {
           setPreviousBbox(bbox);
@@ -289,7 +299,7 @@ export default function LayerPanel() {
   );
 
   const debouncedHandlePassDates = useMemo(
-    () => debounce(handlePassDates, 2000),
+    () => debounce(handlePassDates, 1000),
     [handlePassDates]
   );
 
@@ -313,10 +323,6 @@ export default function LayerPanel() {
     handlePassDates({ layerChanged: true });
   }, [mapInstance, rasterLayer, accessToken]);
 
-  // useEffect(() => {
-  //   handlePassDates({ layerChanged: true });
-  // }, []);
-
   const _onSelectSentinel = useCallback(
     (value) => {
       if (value === 'plot') {
@@ -328,6 +334,35 @@ export default function LayerPanel() {
     },
     [setShowCroppedImages]
   );
+
+  const setCroppedRasterLayersOpacity = useCallback(
+    (op) => {
+      if (!mapInstance) return;
+
+      mapInstance.getStyle().layers.forEach((layer) => {
+        if (layer.id.startsWith('croppedImageLayer-')) {
+          mapInstance.setPaintProperty(
+            layer.id,
+            'raster-opacity',
+            Number(op / 100)
+          );
+        }
+      });
+    },
+    [mapInstance]
+  );
+
+  const debouncedSetCroppedRasterLayersOpacity = debounce(
+    setCroppedRasterLayersOpacity,
+    500
+  );
+
+  const handleRasterOpacityChange = useCallback((e) => {
+    const op = e.target.value;
+    setRasterOpacity(op);
+    debouncedSetCroppedRasterLayersOpacity(op);
+    // Store the opacity in state
+  });
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -379,7 +414,7 @@ export default function LayerPanel() {
                   min="0"
                   max="100"
                   value={rasterOpacity}
-                  onChange={handleOpacityChange}
+                  onChange={handleRasterOpacityChange}
                   className="w-full"
                 />
               </Popover>
@@ -408,17 +443,7 @@ export default function LayerPanel() {
             classNames={{
               months: 'rdp-months justify-center',
             }}
-            onSelect={(date) => {
-              console.log('onDayClick', date);
-              if (date) {
-                // Convert the selected date to UTC by using Date.UTC and set it in state
-                const utcDate = new Date(
-                  Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-                );
-                setSelectedDate(utcDate);
-                setDateRange({ start: utcDate, end: utcDate });
-              }
-            }}
+            onSelect={handleSelectedDateChange}
             modifiers={{
               disabled: isDayDisabled, // Pass the function here
               available: passDates,
