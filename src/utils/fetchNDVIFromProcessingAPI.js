@@ -220,7 +220,7 @@ async function fetchCroppedETFromGeoServer(plot, dateRange) {
 
   // Check if the URL is already in the cache
   if (etCache[cacheKey]) {
-    console.log('NDVI data found in cache');
+    console.log('ET data found in cache');
     return etCache[cacheKey];
   }
 
@@ -252,8 +252,9 @@ async function fetchCroppedETFromGeoServer(plot, dateRange) {
     if (!blob) {
       return null;
     }
-
-    return URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
+    etCache[cacheKey] = url;
+    return url;
   } catch (error) {
     console.error('Error fetching cropped NDVI:', error);
     return null;

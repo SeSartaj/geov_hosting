@@ -82,10 +82,10 @@ const NDVILayer = () => {
 
   const handleLayerOrder = useCallback(
     (e) => {
-      console.log('handleLayerOrder');
+      console.log('croppp handleLayerOrder');
+      const layers = map.getLayersOrder();
+      console.log('layers', layers);
       if (map.getLayer('plots-line-layer') && map.getLayer('raster-layer')) {
-        const layers = map.getLayersOrder();
-
         // if plots-line-layer was below raster-layer
         // prevents infinite looad
         if (
@@ -101,12 +101,12 @@ const NDVILayer = () => {
 
   useEffect(() => {
     if (map) {
-      map.on('styledata', handleLayerOrder);
+      map.on('style.load', handleLayerOrder);
     }
 
     return () => {
       if (map) {
-        map.off('styledata', handleLayerOrder);
+        map.off('style.load', handleLayerOrder);
       }
     };
   }, [mapInstance]);

@@ -50,11 +50,13 @@ export default function Plots() {
 
   const addCroppedRasterLayerToMap = useCallback(
     (imageUrl, plot, { map }) => {
-      console.log('crop adding image to map', imageUrl, plot, map);
+      console.log('eeeeee croppp adding image to map', imageUrl, plot, map);
       if (!map) throw new Error('map is not defined');
       // if layer is toggled off, don't add image to map
-      if (!showCroppedImages) return null;
-
+      if (!showCroppedImages) {
+        console.log('showCroppedImages is off', showCroppedImages);
+        return null;
+      }
       console.log('plotss', plot);
       if (!plot || !plot.geometry || plot.geometry.type !== 'Polygon')
         return null;
@@ -83,12 +85,22 @@ export default function Plots() {
         map.removeSource(sourceId);
       }
 
+      console.log('adding the cropped raster to map');
+
+      console.log('adding source');
+
       // Add the image as a raster layer
       map.addSource(sourceId, {
         type: 'image',
         url: imageUrl,
         coordinates: bounds,
       });
+
+      let beforeId = map.getLayer('plots-line-layer')
+        ? 'plots-line-layer'
+        : undefined;
+      console.log('cropped beforeId', beforeId);
+      console.log('adding layer');
 
       map.addLayer(
         {
@@ -99,8 +111,12 @@ export default function Plots() {
             'raster-opacity': 1,
           },
         },
-        'plots-line-layer'
+        beforeId
       );
+
+      const originalPitch = map.getPitch();
+      map.setPitch(originalPitch + 0.01);
+      console.log('croppp layer order', map.getLayersOrder());
     },
     [showCroppedImages]
   );
@@ -149,6 +165,8 @@ export default function Plots() {
           accessToken: accessToken,
         });
 
+        console.log('ndvi URL', ndviDataUrl);
+
         if (!plot) throw new Error('plot is not defined');
         console.log('mapp', map);
 
@@ -165,6 +183,7 @@ export default function Plots() {
     },
     [
       rasterLayer,
+      accessToken,
       isNDVIImageLoading,
       addLoadingNDVIImage,
       addCroppedRasterLayerToMap,
@@ -303,6 +322,11 @@ export default function Plots() {
     handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
   }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer]);
 
+  useEffect(() => {
+    console.log('settings changed resetting cropped layer');
+    handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+  }, [settings]);
+
   // when clicked on plot, show popup
   useEffect(() => {
     if (map && showPlots && viewMode !== 'PICKER') {
@@ -368,8 +392,8 @@ export default function Plots() {
           features: plots.map((p) => p?.options),
         }}
       >
-        <Layer key="12kkd" {...plotLineStyle} />
         <Layer key="12kmsn" {...plotFillStyle} />
+        <Layer key="12kkd" {...plotLineStyle} />
       </Source>
 
       {clickedPlot && viewMode == VIEW_MODES.NORMAL && (
