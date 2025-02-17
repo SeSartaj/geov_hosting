@@ -55,36 +55,24 @@ function evaluatePixel(samples) {
 }`;
 
 const ndviCache = {};
+const etCache = {};
 
 async function fetchNDVIFromProcessingAPI(
   plot,
   { weeksBefore = 0, accessToken, dateRange }
 ) {
+  console.log('downloading cropped ndvi', dateRange);
+
   if (!accessToken) {
     console.error('No access token provided');
     return null;
   }
 
-  if (dateRange) {
-    console.log('dateRange is ndvi', dateRange);
-    // Ensure dateRange.start is at the beginning of the day
-    if (dateRange.start instanceof Date) {
-      dateRange.start.setHours(0, 0, 0, 0);
-      dateRange.start = dateRange.start.toISOString();
-    }
+  // Ensure dateRange.start is at the beginning of the day and the 'end' end of the day
+  let start = new Date(dateRange.start.setHours(0, 0, 1)).toISOString();
+  let end = new Date(dateRange.end.setHours(23, 59, 59)).toISOString();
 
-    // Ensure dateRange.end is at the end of the day
-    if (dateRange.end instanceof Date) {
-      dateRange.end.setHours(23, 59, 59);
-      dateRange.end = dateRange.end.toISOString();
-    }
-  }
-
-  if (!dateRange) {
-    console.warning('no date range specified', dateRange);
-  }
-
-  const cacheKey = `${plot.properties.id}-${dateRange.start}`;
+  const cacheKey = `${plot.properties.id}-${start}`;
 
   console.log('crop cacheKey', cacheKey);
 
@@ -119,8 +107,8 @@ async function fetchNDVIFromProcessingAPI(
           type: 'sentinel-2-l2a',
           dataFilter: {
             timeRange: {
-              from: dateRange.start,
-              to: dateRange.end,
+              from: start,
+              to: end,
             },
           },
         },
@@ -213,17 +201,27 @@ async function fetchNDVIFromGeoServer(plot) {
 
 async function fetchCroppedETFromGeoServer(plot, dateRange) {
   console.log('downloading cropped et', dateRange);
+
+  // clone dateRange
+  let start;
+  let end;
   // when daterange is js Date, convert it to string
-  if (dateRange.start instanceof Date) {
-    dateRange.start = dateRange.start.toISOString().split('T')[0];
-  }
-  if (dateRange.end instanceof Date) {
-    dateRange.end = dateRange.end.toISOString().split('T')[0];
-  }
-  const TIME = `${dateRange.start}/${dateRange.end}`;
+  start = dateRange.start.toISOString().split('T')[0];
+  end = dateRange.end.toISOString().split('T')[0];
+  const TIME = `${start}/${end}`;
   const bboxCoords = bbox(plot);
   if (!bboxCoords) {
     throw new Error('Invalid BBOX');
+  }
+
+  const cacheKey = `${plot.properties.id}-${start}`;
+
+  console.log('crop cacheKey', cacheKey);
+
+  // Check if the URL is already in the cache
+  if (etCache[cacheKey]) {
+    console.log('NDVI data found in cache');
+    return etCache[cacheKey];
   }
 
   const bboxStr = bboxCoords.join(',');
@@ -357,6 +355,10 @@ export async function getCroppedRaster(
   { rasterLayer, dateRange, accessToken, map }
 ) {
   console.log('getCroppedRaster rasterLayer', rasterLayer, dateRange);
+  if (!dateRange.start instanceof Date || !dateRange.end instanceof Date) {
+    console.error('DateRange is not of type Date');
+    return;
+  }
   if (rasterLayer === 'ET' || rasterLayer?.value === 'ET') {
     const imageUrl = await fetchCroppedETFromGeoServer(plot, dateRange);
     if (!imageUrl) return null;

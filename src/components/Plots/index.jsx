@@ -245,9 +245,9 @@ export default function Plots() {
     );
   }, []);
 
-  const handleViewportChange = useCallback(
+  const handleLoadingCroppedRasterLayerToMap = useCallback(
     ({ timeTravel = false }) => {
-      console.log('handleViewportChange start');
+      console.log('handleLoadingCroppedRasterLayerToMap start');
 
       if (!map || datesLoading) {
         //
@@ -276,7 +276,7 @@ export default function Plots() {
         }
       });
 
-      console.log('handleViewportChange end');
+      console.log('handleLoadingCroppedRasterLayerToMap end');
     },
     [
       map,
@@ -292,16 +292,16 @@ export default function Plots() {
   );
 
   // Use useMemo to prevent unnecessary re-creations
-  const debouncedHandleViewportChange = useMemo(
-    () => debounce(handleViewportChange, 500),
-    [handleViewportChange]
+  const debouncedHandleAddingCroppedRasterToMap = useMemo(
+    () => debounce(handleLoadingCroppedRasterLayerToMap, 500),
+    [handleLoadingCroppedRasterLayerToMap]
   );
 
   // run the code when date changes or the visibily changes
   useEffect(() => {
     console.log('dateRnage changed, crop');
-    handleViewportChange({ timeTravel: true });
-  }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer, settings]);
+    handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+  }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer]);
 
   // when clicked on plot, show popup
   useEffect(() => {
@@ -322,20 +322,22 @@ export default function Plots() {
       return;
 
     console.log('adding viewport change event to map');
-    map.on('moveend', debouncedHandleViewportChange);
-    map.on('zoomend', debouncedHandleViewportChange);
+    map.on('moveend', debouncedHandleAddingCroppedRasterToMap);
+    map.on('zoomend', debouncedHandleAddingCroppedRasterToMap);
+    map.on('style.load', debouncedHandleAddingCroppedRasterToMap);
 
     return () => {
       console.log('removing viewport change event from map');
-      debouncedHandleViewportChange.cancel();
-      map.off('moveend', debouncedHandleViewportChange);
-      map.off('zoomend', debouncedHandleViewportChange);
+      debouncedHandleAddingCroppedRasterToMap.cancel();
+      map.off('style.load', debouncedHandleAddingCroppedRasterToMap);
+      map.off('moveend', debouncedHandleAddingCroppedRasterToMap);
+      map.off('zoomend', debouncedHandleAddingCroppedRasterToMap);
     };
   }, [
     map,
     showPlots,
     viewMode,
-    debouncedHandleViewportChange,
+    debouncedHandleAddingCroppedRasterToMap,
     showCroppedImages,
   ]);
 
