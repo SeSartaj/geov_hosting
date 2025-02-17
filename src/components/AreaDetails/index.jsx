@@ -28,8 +28,10 @@ export default function AreaDetails() {
 
   console.log('inside area details picker');
   function getValueAtPointWCS(e) {
+    console.log('getting value');
     setLoading(true);
     setPointEtValue(null);
+    setLoadingError(null);
     const coordinates = pickerData.coordinates;
     // get x,y and map size
     const map = mapRef.current.getMap();
@@ -63,7 +65,7 @@ export default function AreaDetails() {
       width: size.width,
       height: size.height,
       srs: 'EPSG:4326',
-      time: dateRange.start.toISOString().split('T')[0] || undefined,
+      time: dateRange?.start.toISOString().split('T')[0] || undefined,
       info_format: 'application/json',
       x: Math.floor(point.x),
       y: Math.floor(point.y),
@@ -75,17 +77,17 @@ export default function AreaDetails() {
     // Fetch the data from the GeoServer
     return fetch(url)
       .then((response) => {
+        console.log('response is', response);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        console.log('response is', response);
         return response.json();
       })
       .then((data) => {
-        console.log('Received coverage data for point:', coordinates);
+        console.log('Received coverage data for point:', data);
         console.log('Data:', data, typeof data);
         if (data?.features?.length > 0) {
-          console.log(data?.features[0]?.properties?.GRAY_INDEX);
+          console.log('Value is', data?.features[0]?.properties?.GRAY_INDEX);
           setPointEtValue(data?.features[0]?.properties?.GRAY_INDEX);
         }
       })
@@ -94,7 +96,7 @@ export default function AreaDetails() {
           'There was a problem with the fetch operation:',
           error.message
         );
-        setPointEtValue('could not fetch data');
+        setPointEtValue(undefined);
         setLoadingError('could not load ET value at point');
         return null; // Or handle the error as needed
       })

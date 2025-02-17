@@ -129,28 +129,26 @@ export default function LayerPanel() {
   };
 
   const handleSelectedDateChange = (date) => {
-    console.log('ddd running handleSelectedDateChange');
+    console.log('ddd running handleSelectedDateChange', date);
     // if date is undefined,
     if (date === undefined) {
       setSelectedDate(undefined);
       setDateRange({ start: undefined, end: undefined });
     } else {
       const start = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        0,
-        0,
-        0
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 1)
       );
       const end = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        23,
-        59,
-        59
+        Date.UTC(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          23,
+          59,
+          59
+        )
       );
+
       setSelectedDate(date);
       setDateRange({ start: start, end: end });
     }

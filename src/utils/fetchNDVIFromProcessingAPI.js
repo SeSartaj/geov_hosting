@@ -356,7 +356,7 @@ export async function getCroppedRaster(
   { rasterLayer, dateRange, accessToken, map }
 ) {
   console.log('getCroppedRaster rasterLayer', rasterLayer, dateRange);
-  if (!dateRange.start instanceof Date || !dateRange.end instanceof Date) {
+  if (!dateRange?.start instanceof Date || !dateRange?.end instanceof Date) {
     console.error('DateRange is not of type Date');
     return;
   }
