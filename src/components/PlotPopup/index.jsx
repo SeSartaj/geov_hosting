@@ -3,7 +3,7 @@ import './styles.css';
 import MyButton from '../../ui-components/MyButton';
 import { area } from '@turf/turf';
 import NdviChart from '../PlotNDVIChart';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { PlotContext } from '@/contexts/PlotContext';
 import { BiTrash } from 'react-icons/bi';
 
@@ -14,6 +14,7 @@ import { XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import Spinner from '@/ui-components/Spinner';
 import { toast } from 'sonner';
+import { getRunningTasksCount } from '@/api/plotApi';
 
 export default function PlotPopup({ popupInfo, onClose }) {
   const { showPlots, plots, clickedPlot, handleDeletePlot } =
@@ -23,6 +24,8 @@ export default function PlotPopup({ popupInfo, onClose }) {
   console.log('clickedPlot', clickedPlot);
   console.log('clickedPlot popupInfo', popupInfo);
   const [deletingPlot, setDeletingPlot] = useState(false);
+  const [runningTasksCount, setRunningTasksCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const findPlot = useMemo(() => {
     return plots?.find((p) => p?.options?.id === plot?.properties?.id);
@@ -36,6 +39,22 @@ export default function PlotPopup({ popupInfo, onClose }) {
       setDeletingPlot(false);
     });
   }, [findPlot, isConfirmed]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (findPlot && findPlot?.device) {
+      getRunningTasksCount(findPlot?.device)
+        .then((count) => {
+          console.log('et-tasks', count);
+          setRunningTasksCount(count);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setIsLoading(false);
+    }
+  }, [findPlot]);
 
   return !showPlots || !clickedPlot ? null : (
     <Popup
@@ -99,6 +118,19 @@ export default function PlotPopup({ popupInfo, onClose }) {
               </span>
             </div>
           </div>
+          {findPlot?.device && (
+            <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
+              <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+                running tasks count
+              </h4>
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-gray-700 dark:text-gray-200">
+                  {isLoading && <Spinner size="small" />}
+                  {!isLoading && runningTasksCount}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </Popup>

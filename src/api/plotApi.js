@@ -204,3 +204,13 @@ export const TurnOffSatET = (plotId) => {
       console.error('Error:', err);
     });
 };
+
+export async function getRunningTasksCount(stationId) {
+  const url = `https://agviewer.com/api/dashboard/et-task/?device=${stationId}&status=RUNNING`;
+  const response = await fetchWrapper(url);
+  if (!response.ok) {
+    return false;
+  }
+  const data = await response.json();
+  return data.count;
+}
