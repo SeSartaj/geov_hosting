@@ -40,9 +40,8 @@ function transformStationMarker(marker) {
 function transformForecastMarker(marker) {
   return {
     type: 'forecast',
-    title: `${marker?.device?.name || ''}${
-      marker?.device?.serial ? `[${marker?.device?.serial}]` : ''
-    } ${marker?.location_name || ''}`,
+    title: `${marker?.device?.name || ''}${marker?.device?.serial ? `[${marker?.device?.serial}]` : ''
+      } ${marker?.location_name || ''}`,
     location: marker?.use_custom_location
       ? { lng: marker?.lng, lat: marker?.lat }
       : marker?.device?.details?.location,

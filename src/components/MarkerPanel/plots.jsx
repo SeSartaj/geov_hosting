@@ -16,11 +16,14 @@ import Card from '@/ui-components/Card';
 import WeatherStation from '@/icons/weather-station';
 import Input from '@/ui-components/Input';
 import { PlotContext } from '@/contexts/PlotContext';
+import { useIntl } from 'react-intl';
 
 export default function MarkerPlots() {
   const [searchPlot, setSearchPlot] = useState('');
   const { mapRef } = useContext(MapContext);
   const [plotVisible, setPlotVisible] = useState(false);
+  const intl = useIntl();
+
   const {
     markers: markersData,
     loading,
@@ -29,7 +32,6 @@ export default function MarkerPlots() {
 
   const { plots } = useContext(PlotContext);
 
-  console.log('plots', plots);
   const { isConfirmed } = useConfirm();
   const allMarkers = useMemo(() => {
     return markersData.map((m) => transformMarker(m));
@@ -55,7 +57,7 @@ export default function MarkerPlots() {
   const _onDeleteMarker = useCallback(
     async (e) => {
       const markerId = e.currentTarget.getAttribute('data-marker-id');
-      const confirmed = await isConfirmed('Do you want to delete this marker?');
+      const confirmed = await isConfirmed(intl.formatMessage({ id: 'app.agviewer_map.delete_marker_confirm_message', defaultMessage: 'Do you want to delete this marker?' }));
       if (!confirmed) return;
       handleDeleteMarker(markerId);
     },
@@ -79,7 +81,7 @@ export default function MarkerPlots() {
           trigger={
             <div className="w-full border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-between">
               <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
-                Find Station
+                {intl.formatMessage({ id: 'app.agviewer_map.find_station', defaultMessage: 'Find Station' })}
               </h5>
               <BiSearch className="w-5 h-5 action-icon text-gray-500" />
             </div>
@@ -92,7 +94,7 @@ export default function MarkerPlots() {
                 <div className="flex items-center gap-2">
                   <WeatherStation />
                   <h4 className="text-base dark:text-gray-100 tracking-tight">
-                    Stations
+                    {intl.formatMessage({ id: 'app.agviewer_map.stations', defaultMessage: 'Stations' })}
                   </h4>
                 </div>
                 <Input
@@ -116,7 +118,7 @@ export default function MarkerPlots() {
                           {marker?.title}
                         </h5>
                         <span className="flex items-center gap-1">
-                          <Tooltip text="click to fly the marker">
+                          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.focus_marker', defaultMessage: "Focus on the marker" })}>
                             <MyButton
                               variant="icon"
                               className="rounded-full"
@@ -129,7 +131,7 @@ export default function MarkerPlots() {
                               <ArrowUpRightIcon />
                             </MyButton>
                           </Tooltip>
-                          <Tooltip text="click to delete the marker">
+                          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.delete_marker', defaultMessage: 'Delete Marker' })}>
                             <MyButton
                               variant="icon"
                               className="rounded-full"
@@ -150,7 +152,9 @@ export default function MarkerPlots() {
                 ))
               ) : (
                 <div className="flex items-center justify-center h-20 p-4">
-                  <h5 className="text-gray-500">No Station Found</h5>
+                  <h5 className="text-gray-500">
+                    {intl.formatMessage({ id: 'app.agviewer_map.no_station_found', defaultMessage: 'No Station Found' })}
+                  </h5>
                 </div>
               )}
             </div>

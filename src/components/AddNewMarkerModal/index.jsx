@@ -7,11 +7,13 @@ import { MarkersContext } from '../../contexts/markersContext';
 import { BiPin } from 'react-icons/bi';
 import MarkerForm from '@/forms/MarkerForm';
 import Card from '@/ui-components/Card';
+import { useIntl } from 'react-intl';
 
 const AddNewMarkerModal = ({ feature, deleteFeature, trigger }) => {
   const [open, setOpen] = useState(false);
   const { mapRef } = useContext(MapContext);
   const { addNewMarker } = useContext(MarkersContext);
+  const intl = useIntl();
 
   const initialValues = {
     longitude: feature?.geometry?.coordinates[0],
@@ -37,13 +39,13 @@ const AddNewMarkerModal = ({ feature, deleteFeature, trigger }) => {
       trigger={
         trigger || (
           <MyButton color="primary">
-            <BiPin /> Add New Marker
+            <BiPin /> {intl.formatMessage({ id: 'app.agviewer_map.add_new_marker', defaultMessage: "Add New Marker" })}
           </MyButton>
         )
       }
-      title="Add New Marker"
+      title={intl.formatMessage({ id: 'app.agviewer_map.add_new_marker', defaultMessage: "Add New Marker" })}
       headerClassName="m-4"
-      description="add a new marker to the map"
+      // description="add a new marker to the map"
       open={open}
       setOpen={setOpen}
       onClose={handleClose}

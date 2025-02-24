@@ -11,6 +11,7 @@ import { TurnOffSatET, TurnOnSatET } from '@/api/plotApi';
 import ToggleButton from '@/ui-components/toggleButton';
 import { getStationOptions } from '@/api/stationApi';
 import useAsync from '@/hooks/useAsync';
+import { useIntl } from 'react-intl';
 
 const emptyValues = {
   name: '',
@@ -22,7 +23,7 @@ export default function PlotForm({
   onGeometryChange,
   initialValues = {},
   plot,
-  submitButtonText = 'Edit Plot',
+  submitButtonText,
 }) {
   console.log('plot editing', plot);
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +37,7 @@ export default function PlotForm({
     status: stationStatus,
     error: stationError,
   } = useAsync(getStationOptions, { data: [] });
+  const intl = useIntl();
 
   const formRef = useRef();
 
@@ -114,7 +116,7 @@ export default function PlotForm({
 
   return (
     <form onSubmit={handleSubmit} className="p-4" ref={formRef}>
-      <FormGroup label="Name:">
+      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.name', defaultMessage: "Name" })}>
         <Input
           type="text"
           name="name"
@@ -123,7 +125,7 @@ export default function PlotForm({
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         />
       </FormGroup>
-      <FormGroup label="Farm">
+      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.farm_label', defaultMessage: "Farm" })}>
         <MyReactSelect
           className="w-full"
           value={getSelectedValues(formData.farm, farmOptions)}
@@ -131,10 +133,10 @@ export default function PlotForm({
           onChange={(f) => setFormData({ ...formData, farm: f })}
           isClearable={true}
           formRef={formRef}
-          // isLoading={farmsLoading}
+        // isLoading={farmsLoading}
         />
       </FormGroup>
-      <FormGroup label="Associated Station (device)" error={stationError}>
+      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.associated_device', defaultMessage: "Associated Station (Device)" })} error={stationError}>
         <MyReactSelect
           formRef={formRef}
           tabIndex={0}
@@ -148,13 +150,13 @@ export default function PlotForm({
           isLoading={stationStatus === 'pending'}
         />
       </FormGroup>
-      <FormGroup label="Enable Sat-ET">
+      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.sat_et', defaultMessage: "Sat-ET" })}>
         <ToggleButton
           value={formData?.isSatEtOn}
           onChange={handleStationSatEtChange}
           isLoading={etLoading}
-          onTooltip="turn on Sat-ET for this plot"
-          offTooltip="turn off Sat-Et for this plot"
+          onTooltip={intl.formatMessage({ id: 'app.agviewer_map.disable_sat_et', defaultMessage: "Disable Sat-ET" })}
+          offTooltip={intl.formatMessage({ id: 'app.agviewer_map.enable_sat_et', defaultMessage: "Enable Sat-ET" })}
         />
       </FormGroup>
 
@@ -164,16 +166,18 @@ export default function PlotForm({
           {plot && (
             <Button variant="outline" onClick={onGeometryChange}>
               <BiGlobeAlt />
-              Change Shape
+              {intl.formatMessage({ id: 'app.agviewer_map.change_shape', defaultMessage: "Change Shape" })}
             </Button>
           )}
         </div>
         <div className="flex justify-end gap-3">
           <Button onClick={onCancel} variant="outline">
-            Cancel
+            {intl.formatMessage({ id: 'app.agviewer_map.cancel', defaultMessage: "Cancel" })}
           </Button>
           <Button type="submit" disabled={submitting}>
-            {submitting ? 'submitting ...' : submitButtonText}
+            {submitting ?
+              intl.formatMessage({ id: 'app.agviewer_map.submitting', defaultMessage: 'Submitting...' }) :
+              (submitButtonText ? submitButtonText : intl.formatMessage({ id: 'app.agviewer_map.edit_plot', defaultMessage: 'Edit Plot' }))}
           </Button>
         </div>
       </div>
