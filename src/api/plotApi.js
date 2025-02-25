@@ -205,8 +205,19 @@ export const TurnOffSatET = (plotId) => {
     });
 };
 
-export async function getRunningTasksCount(stationId) {
-  const url = `https://agviewer.com/api/dashboard/et-task/?device=${stationId}&status=RUNNING`;
+export async function getRunningTasksCount({ stationId, plotId }) {
+  if (!stationId && !plotId) {
+    console.error(
+      'neither plotId nor stationId is provided to getRunningTasksCount function'
+    );
+  }
+  let url;
+  if (plotId) {
+    url = `https://agviewer.com/api/dashboard/et-task/?plot=${plotId}&status=RUNNING`;
+  } else {
+    url = `https://agviewer.com/api/dashboard/et-task/?device=${stationId}&status=RUNNING`;
+  }
+
   const response = await fetchWrapper(url);
   if (!response.ok) {
     return false;

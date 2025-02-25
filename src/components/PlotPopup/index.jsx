@@ -42,8 +42,11 @@ export default function PlotPopup({ popupInfo, onClose }) {
 
   useEffect(() => {
     setIsLoading(true);
-    if (findPlot && findPlot?.device) {
-      getRunningTasksCount(findPlot?.device)
+    if (findPlot) {
+      getRunningTasksCount({
+        stationId: findPlot?.device,
+        plotId: findPlot?.id,
+      })
         .then((count) => {
           console.log('et-tasks', count);
           setRunningTasksCount(count);
