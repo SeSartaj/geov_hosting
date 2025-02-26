@@ -76,6 +76,7 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
             onSubmit={handlePlotCreation}
             className="p-4"
             submitButtonText="Create Plot"
+            onCancel={() => setOpen(false)}
           />
         </div>
       </Card>

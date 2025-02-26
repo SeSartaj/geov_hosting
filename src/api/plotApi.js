@@ -136,7 +136,7 @@ export const createPlot = async (data) => {
 };
 
 export const updatePlot = async (data) => {
-  const response = await fetchWrapper(`${API_URL}plot/${data.id}`, {
+  const response = await fetchWrapper(`${API_URL}plot/${data.id}/`, {
     method: 'PUT',
     body: JSON.stringify(data),
     // set type to json
