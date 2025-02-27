@@ -5,17 +5,21 @@ import { getStationMarkerColor } from '../../utils/getStationMarkerColor';
 import './styles.css';
 import useMapStore from '@/stores/mapStore';
 import Card from '@/ui-components/Card';
+import { useIntl } from 'react-intl';
 
-const markerObj = {
-  OPTIMAL: 'Optimal',
-  STRESS_START: 'Stress Start',
-  SEVERE_STRESS: 'Severe Stress',
-  EXCESS_WATER: 'Excess Water',
-};
+
 
 export default function PAWStatusPieChart() {
   const { markersData, showMarkers } = useContext(MarkersContext);
   const viewMode = useMapStore((state) => state.viewMode);
+  const intl = useIntl();
+
+  const markerObj = {
+    OPTIMAL: intl.formatMessage({ id: 'app.agviewer_map.optimal', defaultMessage: 'Optimal' }),
+    STRESS_START: intl.formatMessage({ id: 'app.agviewer_map.stress_start', defaultMessage: 'Stress Start' }),
+    SEVERE_STRESS: intl.formatMessage({ id: 'app.agviewer_map.severe_stress', defaultMessage: 'Severe Stress' }),
+    EXCESS_WATER: intl.formatMessage({ id: 'app.agviewer_map.excess_water', defaultMessage: 'Excess Water' }),
+  };
 
   // Group markers by their paw_status
   const statusCounts = markersData.reduce((acc, marker) => {

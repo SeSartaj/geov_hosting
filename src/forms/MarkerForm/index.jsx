@@ -13,6 +13,7 @@ import ToggleButton from '@/ui-components/toggleButton';
 import { fetchWrapper } from '@/utils/fetchWrapper';
 import getSelectedValues from '@/utils/getSelectedValues';
 import { useContext, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 const emptyValues = {
   name: '',
@@ -29,7 +30,7 @@ export default function MarkerForm({
   onCancel,
   initialValues = {},
   marker,
-  submitButtonText = 'Add Marker',
+  submitButtonText,
 }) {
   const {
     data: farmOptions,
@@ -52,6 +53,8 @@ export default function MarkerForm({
     status: allGraphStatus,
     error: allGraphError,
   } = useAsync(getAllGraphOptions, { data: [] });
+
+  const intl = useIntl();
 
   const { settings } = useContext(SettingsContext);
   const [submitting, setSubmitting] = useState(false);
@@ -143,7 +146,7 @@ export default function MarkerForm({
   return (
     <form onSubmit={handleSubmit} className="p-4" ref={formRef}>
       <div className="flex flex-col gap-1 ">
-        <FormGroup label="Name:">
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.name', defaultMessage: "Name" })}>
           <Input
             name="name"
             className="w-full"
@@ -151,7 +154,7 @@ export default function MarkerForm({
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
         </FormGroup>
-        <FormGroup label="Station (device):" error={stationError}>
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.station_label', defaultMessage: "Station (device)" })} error={stationError}>
           <MyReactSelect
             formRef={formRef}
             tabIndex={0}
@@ -165,7 +168,7 @@ export default function MarkerForm({
             isLoading={stationStatus === 'pending'}
           />
         </FormGroup>
-        <FormGroup label="Farm:" error={farmError}>
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.farm_label', defaultMessage: "Farm" })} error={farmError}>
           <MyReactSelect
             formRef={formRef}
             tabIndex={0}
@@ -178,7 +181,7 @@ export default function MarkerForm({
             isSearchable={false}
           />
         </FormGroup>
-        <FormGroup label="Paw Graphs:" error={pawGraphError}>
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.paw_graphs_label', defaultMessage: "Paw Graphs" })} error={pawGraphError}>
           <MyReactSelect
             formRef={formRef}
             className="w-full"
@@ -193,7 +196,7 @@ export default function MarkerForm({
             closeMenuOnSelect={false}
           />
         </FormGroup>
-        <FormGroup label="More Graphs:" error={allGraphError}>
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.more_graphs_label', defaultMessage: "More Graphs" })} error={allGraphError}>
           <MyReactSelect
             formRef={formRef}
             tabIndex={0}
@@ -209,7 +212,7 @@ export default function MarkerForm({
           />
         </FormGroup>
 
-        <FormGroup label="latitude:">
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.latitude_label', defaultMessage: "Latitude" })}>
           <Input
             className="w-full"
             value={formData.latitude}
@@ -224,7 +227,7 @@ export default function MarkerForm({
             }
           />
         </FormGroup>
-        <FormGroup label="longitude:">
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.longitude_label', defaultMessage: "Longitude" })}>
           <Input
             className="w-full"
             value={formData.longitude}
@@ -239,12 +242,12 @@ export default function MarkerForm({
             }
           />
         </FormGroup>
-        <FormGroup label="use different coordinates">
+        <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.diff_coords', defaultMessage: "Use different coordinates" })}>
           <ToggleButton
             value={formData?.customLocation}
             onChange={handleCustomCoordsToggling}
-            onTooltip="click to use marker's coordinates"
-            offTooltip="click to use custom coordinates"
+            onTooltip={intl.formatMessage({ id: 'app.agviewer_map.use_custom_coordinates', defaultMessage: "Use marker's coordinates" })}
+            offTooltip={intl.formatMessage({ id: 'app.agviewer_map.cancel', defaultMessage: "Use custom coordinates" })}
           />
         </FormGroup>
       </div>
@@ -253,10 +256,12 @@ export default function MarkerForm({
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
         <Button onClick={onCancel} variant="outline">
-          Cancel
+          {intl.formatMessage({ id: 'app.agviewer_map.cancel', defaultMessage: "Cancel" })}
         </Button>
         <Button type="submit" disabled={submitting}>
-          {submitting ? 'loading ...' : submitButtonText}
+          {submitting ?
+            intl.formatMessage({ id: 'app.agviewer_map.loading', defaultMessage: 'Loading...' }) :
+            (submitButtonText ? submitButtonText : intl.formatMessage({ id: 'app.agviewer_map.add_marker', defaultMessage: 'Add Marker' }))}
         </Button>
       </div>
     </form>

@@ -12,32 +12,35 @@ import FormGroup from '@/ui-components/FormGroup';
 import { getFarmOptions } from '@/api/farmApi';
 import useMapStore from '@/stores/mapStore';
 import { MapContext } from '@/contexts/MapContext';
+import { useIntl } from 'react-intl';
 
-const markerOptions = [
-  {
-    value: '',
-    label: 'All',
-  },
-  {
-    value: 'OPTIMAL',
-    label: 'Optimal',
-  },
-  {
-    value: 'STRESS_START',
-    label: 'Stress Start',
-  },
-  {
-    value: 'SEVERE_STRESS',
-    label: 'Severe Stress',
-  },
-  {
-    value: 'EXCESS_WATER',
-    label: 'Excess Water',
-  },
-];
 
 export default function MarkerPanel() {
   const { mapRef } = useContext(MapContext);
+  const intl = useIntl();
+
+  const markerOptions = [
+    {
+      value: '',
+      label: intl.formatMessage({ id: 'app.agviewer_map.all', defaultMessage: 'All' }),
+    },
+    {
+      value: 'OPTIMAL',
+      label: intl.formatMessage({ id: 'app.agviewer_map.optimal', defaultMessage: 'Optimal' }),
+    },
+    {
+      value: 'STRESS_START',
+      label: intl.formatMessage({ id: 'app.agviewer_map.stress_start', defaultMessage: 'Stress Start' }),
+    },
+    {
+      value: 'SEVERE_STRESS',
+      label: intl.formatMessage({ id: 'app.agviewer_map.severe_stress', defaultMessage: 'Severe Stress' }),
+    },
+    {
+      value: 'EXCESS_WATER',
+      label: intl.formatMessage({ id: 'app.agviewer_map.excess_water', defaultMessage: 'Excess Water' }),
+    },
+  ];
 
   const {
     markers,
@@ -85,7 +88,7 @@ export default function MarkerPanel() {
       <div className="flex flex-col gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
         <div className="flex items-center justify-between">
           <h4 className="text-base dark:text-gray-100 tracking-tight">
-            Stations
+            {intl.formatMessage({ id: 'app.agviewer_map.stations', defaultMessage: 'Stations' })}
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup
@@ -95,27 +98,29 @@ export default function MarkerPanel() {
             >
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="" id="all" />
-                <Label htmlFor="all">All</Label>
+                <Label htmlFor="all">{intl.formatMessage({ id: 'app.agviewer_map.all', defaultMessage: 'All' })}</Label>
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="station" id="station" />
-                <Label htmlFor="station">Station</Label>
+                <Label htmlFor="station">{intl.formatMessage({ id: 'app.agviewer_map.station', defaultMessage: 'Station' })}</Label>
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="forecast" id="forecast" />
-                <Label htmlFor="forecast">Forecast</Label>
+                <Label htmlFor="forecast">{intl.formatMessage({ id: 'app.agviewer_map.forecast', defaultMessage: 'Forecast' })}</Label>
               </div>
             </RadioGroup>
             <ToggleButton
-              onTooltip="hide markers"
-              offTooltip="show markers"
+              onTooltip={intl.formatMessage({ id: 'app.agviewer_map.hide_markers', defaultMessage: 'Hide Markers' })}
+              offTooltip={intl.formatMessage({ id: 'app.agviewer_map.show_markers', defaultMessage: "Show Markers" })}
               value={showMarkers}
               onChange={setShowMarkers}
             />
           </div>
         </div>
         <div className="flex items-center gap-0 justify-between">
-          <FormGroup label="PAW Status" className="w-full items-between">
+          <FormGroup
+            label={intl.formatMessage({ id: 'app.agviewer_map.paw_status', defaultMessage: "PAW Status" })}
+            className="w-full items-between">
             <MyReactSelect
               onChange={_onSelectMarker}
               value={markerFilters.paw_status}
@@ -137,7 +142,9 @@ export default function MarkerPanel() {
               </option>
             ))}
           </select> */}
-          <FormGroup label="Farm" className="w-full items-between">
+          <FormGroup
+            label={intl.formatMessage({ id: 'app.agviewer_map.farm', defaultMessage: "Farm" })}
+            className="w-full items-between">
             <MyReactSelect
               value={markerFilters.farm_id}
               options={farmOptions}
@@ -151,8 +158,6 @@ export default function MarkerPanel() {
                 if (op === null) {
                   return;
                 }
-                console.log('markers farm', unfilteredMarkers);
-                console.log('markers farm op', op);
 
                 // Find the first marker whose farm_id matches the selected value
                 const selectedMarker = unfilteredMarkers.find(
@@ -182,10 +187,10 @@ export default function MarkerPanel() {
       </div>
       <div className="flex items-center justify-between rounded-md bg-zinc-50 dark:bg-zinc-800 gap-2 p-2">
         <div className="flex items-center w-full justify-between">
-          <h4 className="text-base dark:text-gray-100 tracking-tight">Plots</h4>
+          <h4 className="text-base dark:text-gray-100 tracking-tight">{intl.formatMessage({ id: 'app.agviewer_map.plots', defaultMessage: "Plots" })}</h4>
           <ToggleButton
-            onTooltip="hide plots"
-            offTooltip="show plots"
+            onTooltip={intl.formatMessage({ id: 'app.agviewer_map.hide_plots', defaultMessage: "Hide Plots" })}
+            offTooltip={intl.formatMessage({ id: 'app.agviewer_map.show_plots', defaultMessage: "Show Plots" })}
             value={showPlots}
             onChange={setShowPlots}
           />

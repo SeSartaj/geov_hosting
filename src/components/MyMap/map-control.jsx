@@ -21,6 +21,8 @@ import {
   Tractor,
   Wheat,
 } from 'lucide-react';
+import { useIntl } from 'react-intl';
+
 import PickerControl from '../PickerControl';
 
 function SatelliteIcon() {
@@ -68,6 +70,7 @@ function MapControl() {
   const [isFullScreen, setisFullScreen] = useState(false);
   const setViewMode = useMapStore((state) => state.setViewMode);
   const viewMode = useMapStore((state) => state.viewMode);
+  const intl = useIntl();
 
   const handleMapStyleChange = useCallback(() => {
     setChangeMap((prev) => !prev);
@@ -122,7 +125,7 @@ function MapControl() {
             variant="outline"
             size="icon"
             aria-label="Change view mode"
-            title="Change view mode"
+            title={intl.formatMessage({ id: 'app.agviewer_map.change_view_mode', defaultMessage: "Change view mode" })}
             onClick={handleMapStyleChange}
           >
             {settings.basemap.id === 'basic' ? <SatelliteDish /> : <MapIcon />}
@@ -135,7 +138,7 @@ function MapControl() {
         <Button
           variant="outline"
           size="icon"
-          title="add new plot"
+          title={intl.formatMessage({ id: 'app.agviewer_map.add_view_plot', defaultMessage: "Add new plot" })}
           onClick={() => setViewMode(VIEW_MODES.ADD_PLOT)}
         >
           <Hexagon />
@@ -143,7 +146,7 @@ function MapControl() {
         <Button
           variant="outline"
           size="icon"
-          title="add new station"
+          title={intl.formatMessage({ id: 'app.agviewer_map.add_new_station', defaultMessage: "Add new station" })}
           onClick={() => setViewMode(VIEW_MODES.ADD_MARKER)}
         >
           <Pin />
@@ -151,7 +154,7 @@ function MapControl() {
         <Button
           variant="outline"
           size="icon"
-          title="add new farm"
+          title={intl.formatMessage({ id: 'app.agviewer_map.add_new_farm_title', defaultMessage: "Add new farm" })}
           onClick={() =>
             setViewMode(
               viewMode === VIEW_MODES.ADD_NEW_FARM

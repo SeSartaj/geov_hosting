@@ -30,6 +30,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as turf from '@turf/turf';
 import Spinner from '@/ui-components/Spinner';
+import { useIntl } from 'react-intl';
 
 function hasBboxChanged(previousBbox, currentBbox) {
   if (!previousBbox || !currentBbox) return true;
@@ -98,6 +99,7 @@ export default function LayerPanel() {
   const datesLoading = useMapStore((s) => s.datesLoading);
   const setDatesLoading = useMapStore((s) => s.setDatesLoading);
   const [selectedDate, setSelectedDate] = useState();
+  const intl = useIntl();
 
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
   const setRasterOpacity = useMapStore((state) => state.setRasterOpacity);
@@ -210,11 +212,11 @@ export default function LayerPanel() {
       const bounds = mapInstance?.getBounds();
       let bbox = bounds
         ? [
-            bounds.getWest(),
-            bounds.getSouth(),
-            bounds.getEast(),
-            bounds.getNorth(),
-          ]
+          bounds.getWest(),
+          bounds.getSouth(),
+          bounds.getEast(),
+          bounds.getNorth(),
+        ]
         : undefined;
 
       if (!bbox) {
@@ -367,7 +369,8 @@ export default function LayerPanel() {
       <div className="flex flex-col gap-2 rounded-md bg-zinc-50 dark:bg-zinc-800 p-2">
         <div className="flex items-center justify-between">
           <h4 className="text-base dark:text-gray-100 tracking-tight">
-            Raster Layer
+            {intl.formatMessage({ id: 'app.agviewer_map.raster_layer', defaultMessage: 'Raster Layer' })}
+
           </h4>
           <div className="flex items-center space-x-2">
             <RadioGroup
@@ -377,16 +380,16 @@ export default function LayerPanel() {
             >
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="plot" id="plot" />
-                <Label htmlFor="plot">Plot</Label>
+                <Label htmlFor="plot">{intl.formatMessage({ id: 'app.agviewer_map.plot', defaultMessage: 'Plot' })}</Label>
               </div>
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="map" id="map" />
-                <Label htmlFor="map">Map</Label>
+                <Label htmlFor="map">{intl.formatMessage({ id: 'app.agviewer_map.map', defaultMessage: 'Map' })}</Label>
               </div>
             </RadioGroup>
             <ToggleButton
-              onTooltip="hide layer"
-              offTooltip="show layer"
+              onTooltip={intl.formatMessage({ id: 'app.agviewer_map.hide_layer', defaultMessage: "Hide Layer" })}
+              offTooltip={intl.formatMessage({ id: 'app.agviewer_map.show_layer', defaultMessage: "Show Layer" })}
               value={isVisible}
               onChange={setIsVisible}
             />
@@ -395,7 +398,7 @@ export default function LayerPanel() {
         <div className="flex items-center gap-2 justify-between">
           <div className="flex items-center justify-between w-full">
             <h4 className="text-base dark:text-gray-100 tracking-tight">
-              Opacity
+              {intl.formatMessage({ id: 'app.agviewer_map.opacity', defaultMessage: "Opacity" })}
             </h4>
             {viewMode !== 'PICKER' && (
               <Popover
@@ -431,7 +434,7 @@ export default function LayerPanel() {
       </div>
       <div className="w-full flex flex-col gap-2.5 mt-4">
         <h4 className="text-base flex gap-3 font-medium tracking-tight">
-          <CalenderIcon /> Available Days{' '}
+          <CalenderIcon /> {intl.formatMessage({ id: 'app.agviewer_map.available_days', defaultMessage: "Available Days" })}{' '}
           {datesLoading && <Spinner size="small" />}
         </h4>
         <Card className="flex items-center justify-center">
