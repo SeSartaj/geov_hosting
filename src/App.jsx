@@ -12,34 +12,37 @@ import DeleteDialog from './ui-components/DeleteDialog';
 import { ThemeProvider } from './contexts/ShadcnThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import './App.css';
+import { IntlProvider } from 'react-intl';
 
 function App({ style, requestHeaders, configs, markers }) {
   return (
-    <ThemeProvider defaultTheme="system">
-      <TooltipPrimitive.Provider delayDuration={200}>
-        <SettingsProvider>
-          <ConfirmContextProvider>
-            <MapProvider configs={configs}>
-              <RasterLayerProvider>
-                <PlotProvider>
-                  <MarkersProvider providedMarkers={markers}>
-                    <ErrorBoundary>
-                      <MyMap
-                        style={style}
-                        requestHeaders={requestHeaders}
-                        configs={configs}
-                      />
-                      <Toaster richColors />
-                      <DeleteDialog />
-                    </ErrorBoundary>
-                  </MarkersProvider>
-                </PlotProvider>
-              </RasterLayerProvider>
-            </MapProvider>
-          </ConfirmContextProvider>
-        </SettingsProvider>
-      </TooltipPrimitive.Provider>
-    </ThemeProvider>
+    <IntlProvider>
+      <ThemeProvider defaultTheme="light">
+        <TooltipPrimitive.Provider delayDuration={200}>
+          <SettingsProvider>
+            <ConfirmContextProvider>
+              <MapProvider configs={configs}>
+                <RasterLayerProvider>
+                  <PlotProvider>
+                    <MarkersProvider providedMarkers={markers}>
+                      <ErrorBoundary>
+                        <MyMap
+                          style={style}
+                          requestHeaders={requestHeaders}
+                          configs={configs}
+                        />
+                        <Toaster richColors />
+                        <DeleteDialog />
+                      </ErrorBoundary>
+                    </MarkersProvider>
+                  </PlotProvider>
+                </RasterLayerProvider>
+              </MapProvider>
+            </ConfirmContextProvider>
+          </SettingsProvider>
+        </TooltipPrimitive.Provider>
+      </ThemeProvider>
+    </IntlProvider>
   );
 }
 
