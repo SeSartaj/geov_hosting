@@ -78,6 +78,7 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
             onSubmit={handlePlotCreation}
             className="p-4"
             submitButtonText={intl.formatMessage({ id: 'app.agviewer_map.create_plot', defaultMessage: "Create Plot" })}
+            onCancel={() => setOpen(false)}
           />
         </div>
       </Card>

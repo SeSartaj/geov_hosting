@@ -134,12 +134,12 @@ export default function PlotSearch() {
               {loading || isLoading ? (
                 <Spinner />
               ) : matchingPlots?.length > 0 ? (
-                matchingPlots?.map((marker) => (
-                  <div key={marker.id} className="marker-item rounded-md hover:bg-gray-50">
+                matchingPlots?.map((plot) => (
+                  <div key={plot.id} className="marker-item rounded-md hover:bg-gray-50">
                     <div className="marker-item-info p-2">
                       <div className="flex justify-between items-center">
                         <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
-                          {marker?.name}
+                          {plot?.name}
                         </h5>
                         <span className="flex items-center gap-1">
                           <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.focus_plot', defaultMessage: "Focus on the plot" })}>
@@ -149,10 +149,10 @@ export default function PlotSearch() {
                               onClick={(e) => {
                                 setPlotVisible(false);
                                 handleFlyToPlot(
-                                  marker?.options?.geometry?.coordinates
+                                  plot?.options?.geometry?.coordinates
                                 );
                               }}
-                              data-plot-id={marker.id}
+                              data-plot-id={plot.id}
                             >
                               <ArrowUpRightIcon />
                             </MyButton>
@@ -161,15 +161,17 @@ export default function PlotSearch() {
                             <MyButton
                               variant="icon"
                               className="rounded-full"
-                              onClick={handleDeletePlot}
-                              data-plot-id={marker.id}
+                              onClick={() => {
+                                handleDeletePlot(plot);
+                              }}
+                              data-plot-id={plot.id}
                             >
                               <BiTrash className="w-5 h-5 action-icon text-red-500 " />
                             </MyButton>
                           </Tooltip>
 
                           <EditPlotModal
-                            plot={plots.find((m) => m.id === marker.id)}
+                            plot={plots.find((p) => p.id === plot.id)}
                           />
                         </span>
                       </div>
