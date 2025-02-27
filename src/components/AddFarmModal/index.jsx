@@ -12,11 +12,13 @@ import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
 import { MarkersContext } from '@/contexts/markersContext';
 import getSelectedValues from '@/utils/getSelectedValues';
 import { toast } from 'sonner';
+import { useIntl } from 'react-intl';
 
 const AddFarmModal = () => {
   const [open, setOpen] = useState(true);
   const { mapRef } = useContext(MapContext);
   const setViewMode = useMapStore((state) => state.setViewMode);
+  const intl = useIntl();
 
   const handleClose = () => {
     console.log('closing modal');
@@ -27,7 +29,7 @@ const AddFarmModal = () => {
   const handleFarmCreation = (formValues) => {
     createFarm(formValues.name, formValues.marker_set).then((res) => {
       console.log('farm created successfully');
-      toast('Farm Has been created', {
+      toast(intl.formatMessage({ id: 'app.agviewer_map.farm_success_message', defaultMessage: 'Farm Has been created successfully' }), {
         description: `name: ${formValues.name}`,
       });
     });
@@ -36,7 +38,7 @@ const AddFarmModal = () => {
 
   return (
     <MyModal
-      title="Add New Farm"
+      title={intl.formatMessage({ id: 'app.agviewer_map.add_new_farm', defaultMessage: "Add New Farm" })}
       headerClassName="m-4"
       open={open}
       setOpen={setOpen}
@@ -56,6 +58,7 @@ const AddFarmModal = () => {
 
 function FarmForm({ onClose, onSubmit }) {
   const formRef = useRef();
+  const intl = useIntl();
 
   const { markers, loading: markersLoading } = useContext(MarkersContext);
 
@@ -87,7 +90,7 @@ function FarmForm({ onClose, onSubmit }) {
       className="p-4 flex flex-col h-full"
       ref={formRef}
     >
-      <FormGroup label="Name:">
+      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.name', defaultMessage: 'Name' })}>
         <Input
           type="text"
           name="name"
@@ -96,7 +99,7 @@ function FarmForm({ onClose, onSubmit }) {
           onChange={(e) => setName(e.target.value)}
         />
       </FormGroup>
-      <FormGroup label="Markers:">
+      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.markers', defaultMessage: "Markers" })}>
         <MyReactSelect
           formRef={formRef}
           className="w-full sm:max-w-[483px] max-w-[227px]"
@@ -118,10 +121,10 @@ function FarmForm({ onClose, onSubmit }) {
           onClick={!isLoading && onClose}
           disabled={isLoading}
         >
-          Cancel
+          {intl.formatMessage({ id: 'app.agviewer_map.cancel', defaultMessage: "Cancel" })}
         </Button>
         <Button type="submit" color="primary">
-          Add Farm
+          {intl.formatMessage({ id: 'app.agviewer_map.add_farm', defaultMessage: "Add Farm" })}
         </Button>
       </div>
     </form>

@@ -11,6 +11,7 @@ import { MapContext } from '@/contexts/MapContext';
 import MyButton from '@/ui-components/MyButton';
 import Tooltip from '@/ui-components/Tooltip';
 import useConfirm from '@/hooks/useConfirm';
+import { useIntl } from 'react-intl';
 
 export default function PlotPanel() {
   const {
@@ -22,6 +23,7 @@ export default function PlotPanel() {
   } = useContext(PlotContext);
 
   const { isConfirmed } = useConfirm();
+  const intl = useIntl();
 
   const handleDeletePlot = async (e) => {
     // get marker id from data-marker-id attribute
@@ -35,8 +37,8 @@ export default function PlotPanel() {
       <div className="panel-header-action pb-3">
         <h3 className="text-lg">Plots</h3>
         <ToggleButton
-          onTooltip="hide plots"
-          offTooltip="show plots"
+          onTooltip={intl.formatMessage({ id: 'app.agviewer_map.hide_plots', defaultMessage: "Hide plots" })}
+          offTooltip={intl.formatMessage({ id: 'app.agviewer_map.show_plots', defaultMessage: "Show plots" })}
           value={showPlots}
           onChange={setShowPlots}
         />

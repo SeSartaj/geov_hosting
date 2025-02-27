@@ -7,10 +7,12 @@ import MyModal from '@/ui-components/MyModal';
 import Card from '@/ui-components/Card';
 import Tooltip from '@/ui-components/Tooltip';
 import { Button } from '../ui/button';
+import { useIntl } from 'react-intl';
 
 const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
   const [open, setOpen] = useState(false);
   const { handleMarkerUpdate } = useContext(MarkersContext);
+  const intl = useIntl();
 
   const _onChangeVisibility = useCallback(() => {
     setOpen((prev) => !prev);
@@ -28,12 +30,12 @@ const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
     <MyModal
       trigger={
         <Button variant="outline" size="icon">
-          <Tooltip text="edit the marker">
+          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.edit_marker', defaultMessage: "Edit Marker" })}>
             <BiPencil className="w-5 h-5 action-icon" />
           </Tooltip>
         </Button>
       }
-      title="Edit Marker"
+      title={intl.formatMessage({ id: 'app.agviewer_map.edit_marker', defaultMessage: "Edit Marker" })}
       open={open}
       setOpen={setOpen}
       headerClassName="m-4"
@@ -44,7 +46,7 @@ const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
           marker={marker}
           onSubmit={handlerEditMarker}
           onCancel={_onChangeVisibility}
-          submitButtonText="Save Changes"
+          submitButtonText={intl.formatMessage({ id: 'app.agviewer_map.save_changes', defaultMessage: "Save Changes" })}
         />
       </Card>
     </MyModal>

@@ -11,6 +11,7 @@ import Card from '@/ui-components/Card';
 import { Button } from '../ui/button';
 import PlotForm from '@/forms/plot';
 import { toast } from 'sonner';
+import { useIntl } from 'react-intl';
 
 const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
   const [open, setOpen] = useState(false);
@@ -20,6 +21,7 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
   const [farmOptions, setFarmOptions] = useState([]);
   const [farmsLoading, setFarmsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const intl = useIntl();
 
   const handleClose = () => {
     setOpen(false);
@@ -34,10 +36,10 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
     addNewPlot(formData)
       .then(() => {
         deleteFeature();
-        toast.success('Plot created successfully');
+        toast.success(intl.formatMessage({ id: 'app.agviewer_map.plot_success_message', defaultMessage: 'Plot created successfully' }));
       })
       .catch((e) => {
-        toast.error('Could not create the plot');
+        toast.error(intl.formatMessage({ id: 'app.agviewer_map.plot_failed_message', defaultMessage: 'Could not create the plot' }));
       })
       .finally(() => {
         setLoading(false);
@@ -58,8 +60,8 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
 
   return (
     <MyModal
-      trigger={trigger || <Button color="primary">Add New Plot</Button>}
-      title="Add New Plot"
+      trigger={trigger || <Button color="primary">{intl.formatMessage({ id: 'app.agviewer_map.add_new_plot', defaultMessage: "Add New Plot" })}</Button>}
+      title={intl.formatMessage({ id: 'app.agviewer_map.add_new_plot', defaultMessage: "Add New Plot" })}
       headerClassName="m-4"
       open={open}
       setOpen={setOpen}
@@ -75,7 +77,7 @@ const AddPlotModal = ({ polygon, deleteFeature, trigger }) => {
             initialValues={{ options: polygon }}
             onSubmit={handlePlotCreation}
             className="p-4"
-            submitButtonText="Create Plot"
+            submitButtonText={intl.formatMessage({ id: 'app.agviewer_map.create_plot', defaultMessage: "Create Plot" })}
             onCancel={() => setOpen(false)}
           />
         </div>

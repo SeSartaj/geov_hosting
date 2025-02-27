@@ -10,6 +10,7 @@ import { useMap } from 'react-map-gl/maplibre';
 import { set } from 'immutable';
 import { Button } from '../ui/button';
 import { Pipette } from 'lucide-react';
+import { useIntl } from 'react-intl';
 
 function PickerControl() {
   const { current: mapRef } = useMap();
@@ -26,6 +27,7 @@ function PickerControl() {
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const setCursor = useMapStore((state) => state.setCursor);
   const resetCursor = useMapStore((state) => state.resetCursor);
+  const intl = useIntl();
 
   // Store the current opacity
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
@@ -205,12 +207,11 @@ function PickerControl() {
     <Button
       variant="outline"
       size="icon"
-      title="Activate picker mode"
-      aria-label="Activate picker mode"
+      title={intl.formatMessage({ id: 'app.agviewer_map.activate_picker_mode', defaultMessage: "Activate picker mode" })}
+      aria-label={intl.formatMessage({ id: 'app.agviewer_map.activate_picker_mode', defaultMessage: "Activate picker mode" })}
       onClick={handleClick}
-      className={` ${
-        viewMode === VIEW_MODES.PICKER ? ' bg-gray-200 dark:bg-gray-600' : ''
-      }`}
+      className={` ${viewMode === VIEW_MODES.PICKER ? ' bg-gray-200 dark:bg-gray-600' : ''
+        }`}
     >
       <Pipette />
     </Button>

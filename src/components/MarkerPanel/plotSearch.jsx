@@ -19,8 +19,10 @@ import Input from '@/ui-components/Input';
 import { PlotContext } from '@/contexts/PlotContext';
 import { EditPlotModal } from '../PlotPopup/edit';
 import debounce from '@/utils/debounce';
+import { useIntl } from 'react-intl';
 
 export default function PlotSearch() {
+  const intl = useIntl();
   const [searchKeyword, setSearchKeyword] = useState('');
   const { mapRef } = useContext(MapContext);
   const [plotVisible, setPlotVisible] = useState(false);
@@ -101,7 +103,7 @@ export default function PlotSearch() {
           trigger={
             <div className="w-full border border-solid border-[#D1D5DB] cursor-pointer dark:border-gray-200 rounded-md p-2 flex items-center justify-between">
               <h5 className="scroll-m-20 text-sm font-medium tracking-tight">
-                Search Plot
+                {intl.formatMessage({ id: 'app.agviewer_map.search_plots', defaultMessage: "Search Plots" })}
               </h5>
               <BiSearch className="w-5 h-5 action-icon text-gray-500" />
             </div>
@@ -114,12 +116,13 @@ export default function PlotSearch() {
                 <div className="flex items-center gap-2">
                   <PlotIcon />
                   <h4 className="text-base dark:text-gray-100 tracking-tight">
-                    Plots
+                    {intl.formatMessage({ id: 'app.agviewer_map.plots', defaultMessage: "Plots" })}
                   </h4>
                 </div>
                 <Input
                   className="w-[210px] mr-14"
-                  placeholder="Search Station"
+                  // 
+                  placeholder={intl.formatMessage({ id: 'app.agviewer_map.search_plots', defaultMessage: "Search Plots" })}
                   value={searchKeyword}
                   onChange={handleKeywordChange}
                 />
@@ -139,7 +142,7 @@ export default function PlotSearch() {
                           {plot?.name}
                         </h5>
                         <span className="flex items-center gap-1">
-                          <Tooltip text="click to fly the marker">
+                          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.focus_plot', defaultMessage: "Focus on the plot" })}>
                             <MyButton
                               variant="icon"
                               className="rounded-full"
@@ -154,7 +157,7 @@ export default function PlotSearch() {
                               <ArrowUpRightIcon />
                             </MyButton>
                           </Tooltip>
-                          <Tooltip text="click to delete the marker">
+                          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.delete_plot', defaultMessage: "Delete plot" })}>
                             <MyButton
                               variant="icon"
                               className="rounded-full"
@@ -178,7 +181,7 @@ export default function PlotSearch() {
               ) : (
                 <div className="flex items-center justify-center h-20 p-4">
                   <h5 className="text-gray-500">
-                    No Plots Found for keyword: {searchKeyword}
+                    {intl.formatMessage({ id: 'app.agviewer_map.no_plot_found', defaultMessage: "No Plots Found for keyword:" })}{searchKeyword}
                   </h5>
                 </div>
               )}
