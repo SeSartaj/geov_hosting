@@ -7,6 +7,7 @@ import MarkerPanel from '../MarkerPanel';
 import LayerPanel from './LayerPanel';
 import { maxWidth } from '@/constants/index';
 import { useIntl } from 'react-intl';
+import { Button } from '../ui/button';
 
 const divider = (
   <div className="h-[1px] bg-[#E9E9E9] dark:bg-zinc-100 w-[calc(100%+20px)] mx-auto" />
@@ -21,27 +22,37 @@ export default function Navigation() {
     <>
       {!sidebarExpanded && (
         <div className="sidebar-opener bg-white dark:bg-gray-900 mt-3 ">
-          <MyButton variant="icon" className="border-left-0">
-            <SidebarOpenIcon onClick={() => setSidebarExpanded(true)} />
-          </MyButton>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="border-left-0"
+            onClick={() => setSidebarExpanded(true)}
+          >
+            <SidebarOpenIcon />
+          </Button>
         </div>
       )}
       <Card
-        className={`sidebar ${sidebarExpanded && 'sidebar-expanded'
-          } rounded-l-none  h-full ${maxWidth} `}
+        className={`sidebar ${
+          sidebarExpanded && 'sidebar-expanded'
+        } rounded-l-none  h-full ${maxWidth} `}
         header={
           <div className="flex justify-between items-center mb-1">
             <h1 className="text-lg pr-2 text-black dark:text-white">
-              {intl.formatMessage({ id: 'app.agviewer_map.configurations', defaultMessage: 'Configurations' })}
+              {intl.formatMessage({
+                id: 'app.agviewer_map.configurations',
+                defaultMessage: 'Configurations',
+              })}
             </h1>
             <div className="bg-white dark:bg-gray-900 ">
-              <MyButton variant="icon" className="border-left-0">
-                {sidebarExpanded ? (
-                  <SidebarCloseIcon onClick={() => setSidebarExpanded(false)} />
-                ) : (
-                  <SidebarOpenIcon onClick={() => setSidebarExpanded(true)} />
-                )}
-              </MyButton>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="border-left-0"
+                onClick={() => setSidebarExpanded(!sidebarExpanded)}
+              >
+                {sidebarExpanded ? <SidebarCloseIcon /> : <SidebarOpenIcon />}
+              </Button>
             </div>
           </div>
         }
