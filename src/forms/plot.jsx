@@ -115,8 +115,17 @@ export default function PlotForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4" ref={formRef}>
-      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.name', defaultMessage: "Name" })}>
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 flex flex-col h-full"
+      ref={formRef}
+    >
+      <FormGroup
+        label={intl.formatMessage({
+          id: 'app.agviewer_map.name',
+          defaultMessage: 'Name',
+        })}
+      >
         <Input
           type="text"
           name="name"
@@ -125,7 +134,12 @@ export default function PlotForm({
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         />
       </FormGroup>
-      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.farm_label', defaultMessage: "Farm" })}>
+      <FormGroup
+        label={intl.formatMessage({
+          id: 'app.agviewer_map.farm_label',
+          defaultMessage: 'Farm',
+        })}
+      >
         <MyReactSelect
           className="w-full"
           value={getSelectedValues(formData.farm, farmOptions)}
@@ -133,10 +147,16 @@ export default function PlotForm({
           onChange={(f) => setFormData({ ...formData, farm: f })}
           isClearable={true}
           formRef={formRef}
-        // isLoading={farmsLoading}
+          // isLoading={farmsLoading}
         />
       </FormGroup>
-      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.associated_device', defaultMessage: "Associated Station (Device)" })} error={stationError}>
+      <FormGroup
+        label={intl.formatMessage({
+          id: 'app.agviewer_map.associated_device',
+          defaultMessage: 'Associated Station (Device)',
+        })}
+        error={stationError}
+      >
         <MyReactSelect
           formRef={formRef}
           tabIndex={0}
@@ -150,34 +170,59 @@ export default function PlotForm({
           isLoading={stationStatus === 'pending'}
         />
       </FormGroup>
-      <FormGroup label={intl.formatMessage({ id: 'app.agviewer_map.sat_et', defaultMessage: "Sat-ET" })}>
+      <FormGroup
+        label={intl.formatMessage({
+          id: 'app.agviewer_map.sat_et',
+          defaultMessage: 'Sat-ET',
+        })}
+      >
         <ToggleButton
           value={formData?.isSatEtOn}
           onChange={handleStationSatEtChange}
           isLoading={etLoading}
-          onTooltip={intl.formatMessage({ id: 'app.agviewer_map.disable_sat_et', defaultMessage: "Disable Sat-ET" })}
-          offTooltip={intl.formatMessage({ id: 'app.agviewer_map.enable_sat_et', defaultMessage: "Enable Sat-ET" })}
+          onTooltip={intl.formatMessage({
+            id: 'app.agviewer_map.disable_sat_et',
+            defaultMessage: 'Disable Sat-ET',
+          })}
+          offTooltip={intl.formatMessage({
+            id: 'app.agviewer_map.enable_sat_et',
+            defaultMessage: 'Enable Sat-ET',
+          })}
         />
       </FormGroup>
 
       <FormErrorMessage error={formError} />
-      <div className="flex justify-between">
+      <div className="mt-5 flex gap-2  mt-auto self-end">
         <div>
           {plot && (
             <Button variant="outline" onClick={onGeometryChange}>
               <BiGlobeAlt />
-              {intl.formatMessage({ id: 'app.agviewer_map.change_shape', defaultMessage: "Change Shape" })}
+              {intl.formatMessage({
+                id: 'app.agviewer_map.change_shape',
+                defaultMessage: 'Change Shape',
+              })}
             </Button>
           )}
         </div>
         <div className="flex justify-end gap-3">
           <Button onClick={onCancel} variant="outline">
-            {intl.formatMessage({ id: 'app.agviewer_map.cancel', defaultMessage: "Cancel" })}
+            {intl.formatMessage({
+              id: 'app.agviewer_map.cancel',
+              defaultMessage: 'Cancel',
+            })}
           </Button>
           <Button type="submit" disabled={submitting}>
-            {submitting ?
-              intl.formatMessage({ id: 'app.agviewer_map.submitting', defaultMessage: 'Submitting...' }) :
-              (submitButtonText ? submitButtonText : intl.formatMessage({ id: 'app.agviewer_map.edit_plot', defaultMessage: 'Edit Plot' }))}
+            {submitting
+              ? intl.formatMessage({
+                  id: 'app.agviewer_map.submitting',
+                  defaultMessage: 'Submitting...',
+                })
+              : submitButtonText
+              ? submitButtonText
+              : intl.formatMessage({
+                  id: 'app.agviewer_map.edit_plot',
+                  defaultMessage: 'Edit Plot',
+                })}
           </Button>
         </div>
       </div>
