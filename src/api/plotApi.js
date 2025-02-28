@@ -225,3 +225,25 @@ export async function getRunningTasksCount({ stationId, plotId }) {
   const data = await response.json();
   return data.count;
 }
+
+export async function getTaskCount({ stationId, plotId }) {
+  if (!stationId && !plotId) {
+    console.error(
+      'neither plotId nor stationId is provided to getTaskCount function'
+    );
+  }
+  let url;
+  if (plotId) {
+    url = `https://agviewer.com/api/dashboard/et-task/stats/?plot=${plotId}`;
+  } else {
+    url = `https://agviewer.com/api/dashboard/et-task/stats/?device=${stationId}`;
+  }
+
+  const response = await fetchWrapper(url);
+  if (!response.ok) {
+    return false;
+  }
+  const data = await response.json();
+
+  return data;
+}

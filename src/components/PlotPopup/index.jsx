@@ -14,7 +14,7 @@ import { XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import Spinner from '@/ui-components/Spinner';
 import { toast } from 'sonner';
-import { getRunningTasksCount } from '@/api/plotApi';
+import { getRunningTasksCount, getTaskCount } from '@/api/plotApi';
 import { useIntl } from 'react-intl';
 
 export default function PlotPopup({ popupInfo, onClose }) {
@@ -26,6 +26,7 @@ export default function PlotPopup({ popupInfo, onClose }) {
   console.log('clickedPlot popupInfo', popupInfo);
   const [deletingPlot, setDeletingPlot] = useState(false);
   const [runningTasksCount, setRunningTasksCount] = useState(0);
+  const [tasksStats, setTasksStats] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const intl = useIntl();
 
@@ -50,13 +51,13 @@ export default function PlotPopup({ popupInfo, onClose }) {
   useEffect(() => {
     setIsLoading(true);
     if (findPlot) {
-      getRunningTasksCount({
+      getTaskCount({
         stationId: findPlot?.device,
         plotId: findPlot?.id,
       })
-        .then((count) => {
-          console.log('et-tasks', count);
-          setRunningTasksCount(count);
+        .then((stats) => {
+          console.log('et-tasks', stats);
+          setTasksStats(stats);
         })
         .finally(() => {
           setIsLoading(false);
@@ -148,17 +149,30 @@ export default function PlotPopup({ popupInfo, onClose }) {
             </div>
           </div>
           {findPlot?.device && (
-            <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
-              <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-                running tasks count
-              </h4>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs text-gray-700 dark:text-gray-200">
-                  {isLoading && <Spinner size="small" />}
-                  {!isLoading && runningTasksCount}
-                </span>
+            <>
+              <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
+                <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+                  running tasks
+                </h4>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-gray-700 dark:text-gray-200">
+                    {isLoading && <Spinner size="small" />}
+                    {!isLoading && tasksStats?.running | 0}
+                  </span>
+                </div>
               </div>
-            </div>
+              <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
+                <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+                  pending tasks
+                </h4>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-gray-700 dark:text-gray-200">
+                    {isLoading && <Spinner size="small" />}
+                    {!isLoading && tasksStats?.pending | 0}
+                  </span>
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
