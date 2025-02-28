@@ -8,7 +8,7 @@
 .maplibregl-popup-close-button {
   padding: 0 10px;
 }
-
+/* 
 @media (prefers-color-scheme: dark) {
   .maplibregl-popup-content {
     background-color: rgb(17, 24, 39) !important;
@@ -28,4 +28,4 @@
   .maplibregl-popup-close-button:focus {
     background-color: rgb(65, 65, 65);
   }
-}
+} */
