@@ -24,9 +24,9 @@ export function ThemeProvider({
         .matches
         ? 'dark'
         : 'light';
-      root.classList.add(systemTheme);
+      root.classList.add('light');
     } else {
-      root.classList.add(theme);
+      root.classList.add('light');
     }
   }, [theme]);
 
@@ -41,7 +41,7 @@ export function ThemeProvider({
   }, []);
 
   const value = {
-    theme,
+    theme: 'light',
     setTheme: (newTheme) => {
       localStorage.setItem(storageKey, newTheme);
       setTheme(newTheme);
