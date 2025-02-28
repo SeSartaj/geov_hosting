@@ -6,15 +6,20 @@ import Spinner from '@/ui-components/Spinner';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 
 function parseNDVIData(data) {
-  if (!data) return;
-  if (!data.length > 0) return;
+  if (!data) return [];
+  if (!data.length > 0) return [];
 
-  return data.map((entry) => {
-    return {
-      x: new Date(entry.interval.from).getTime(), // Convert date to timestamp
-      y: entry.outputs.data.bands.B0.stats.mean, // Extract mean NDVI value
-    };
-  });
+  return data
+    .map((entry) => {
+      const date = entry?.interval?.from;
+      const meanNDVI = entry?.outputs?.data?.bands?.B0?.stats?.mean;
+
+      return {
+        x: date ? new Date(date).getTime() : null, // Convert date to timestamp
+        y: meanNDVI !== undefined ? meanNDVI : null, // Extract mean NDVI value
+      };
+    })
+    .filter((entry) => entry.x !== null && entry.y !== null); // Filter out invalid entries
 }
 
 const NdviChart = ({ plot, point }) => {
