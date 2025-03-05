@@ -153,7 +153,8 @@ export const layerOptions = [
           }
         });
 
-        return Array.from(dates).sort();
+        let datesArr = Array.from(dates).sort();
+        return datesArr.map((d) => new Date(d));
       } catch (error) {
         console.error('Error fetching available dates:', error);
         return [];

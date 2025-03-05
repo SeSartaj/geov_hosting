@@ -328,10 +328,7 @@ export async function getSatellitePassDates({
     // it should always remain in utc format
     const dates = data.features
       .map((feature) => {
-        const d = new Date(feature.properties.datetime);
-        return new Date(
-          Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
-        );
+        return new Date(feature.properties.datetime);
       })
       .sort((a, b) => b - a);
     console.log('date from catalog', dates);
