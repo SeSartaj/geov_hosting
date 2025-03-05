@@ -258,20 +258,8 @@ export default function LayerPanel() {
             return;
           }
 
-          const ddates = dates.map((d) => {
-            const localDate = new Date(d);
-            return new Date(
-              Date.UTC(
-                localDate.getUTCFullYear(),
-                localDate.getUTCMonth(),
-                localDate.getUTCDate()
-              )
-            );
-          });
-
-          console.log('ddates', ddates);
-          setPassDates(ddates);
-          handleLayerDatesChange(ddates);
+          setPassDates(dates);
+          handleLayerDatesChange(dates);
         })
         .catch((error) => {
           if (error.name === 'AbortError') {
