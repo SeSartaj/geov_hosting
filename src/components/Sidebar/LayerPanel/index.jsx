@@ -157,13 +157,17 @@ export default function LayerPanel() {
   };
 
   const handleLayerDatesChange = (dates) => {
+    console.log('handleLayerDatesChange', selectedDate, dates);
     if (dates.length > 0) {
       let isCurrentDateExist = false;
       // if selectedDates is present in the new dates list, keep it uncahnged
       if (selectedDate) {
-        isCurrentDateExist = dates
-          .map((d) => d.getTime())
-          .includes(selectedDate.getTime());
+        isCurrentDateExist = dates.some(
+          (d) =>
+            d.getFullYear() === selectedDate.getFullYear() &&
+            d.getMonth() === selectedDate.getMonth() &&
+            d.getDate() === selectedDate.getDate()
+        );
       }
 
       if (isCurrentDateExist) {
