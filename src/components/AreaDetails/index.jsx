@@ -27,7 +27,7 @@ export default function AreaDetails() {
   const [loadingError, setLoadingError] = useState(null);
 
   console.log('inside area details picker');
-  function getValueAtPointWCS(e) {
+  function getValueAtPointWCS(pickerData) {
     console.log('getting value');
     setLoading(true);
     setPointEtValue(null);
@@ -35,20 +35,17 @@ export default function AreaDetails() {
     const coordinates = pickerData.coordinates;
     // get x,y and map size
     const map = mapRef.current.getMap();
-    const bbox = map.getBounds();
-    const point = map.project(coordinates);
     const canvas = map.getCanvas();
-    const size = {
-      width: canvas.width,
-      height: canvas.height,
-    };
 
+    console.log('coordinates are', coordinates);
+
+    const buffer = 0.000001;
     // Construct the bounding box string
     const bboxString = [
-      bbox.getWest(),
-      bbox.getSouth(),
-      bbox.getEast(),
-      bbox.getNorth(),
+      coordinates.lng - buffer,
+      coordinates.lat - buffer,
+      coordinates.lng + buffer,
+      coordinates.lat + buffer,
     ].join(',');
 
     // GeoServer WCS endpoint URL template
@@ -62,13 +59,13 @@ export default function AreaDetails() {
       layers: 'ne:et_data',
       query_layers: 'ne:et_data',
       bbox: bboxString,
-      width: size.width,
-      height: size.height,
+      width: 1,
+      height: 1,
       srs: 'EPSG:4326',
       time: dateRange?.start.toISOString().split('T')[0] || undefined,
       info_format: 'application/json',
-      x: Math.floor(point.x),
-      y: Math.floor(point.y),
+      x: 0,
+      y: 0,
     });
 
     // Construct the URL with parameters
@@ -106,8 +103,9 @@ export default function AreaDetails() {
   }
 
   useEffect(() => {
+    console.log('pickerData', pickerData);
     if (pickerData && rasterLayer.value === 'ET') {
-      getValueAtPointWCS();
+      getValueAtPointWCS(pickerData);
     }
   }, [pickerData, rasterLayer, dateRange]);
 
