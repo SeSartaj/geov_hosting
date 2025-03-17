@@ -2,7 +2,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './mapbox-draw-style.css';
 
 import Map from 'react-map-gl/maplibre';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FullscreenControl } from 'react-map-gl/maplibre';
 
 import { MapContext } from '../../contexts/MapContext';
@@ -32,14 +32,32 @@ import AddFarmModal from '../AddFarmModal';
 import { RasterLayerProvider } from '@/contexts/RasterLayerContext';
 import { PlotProvider } from '@/contexts/PlotContext';
 import { MarkersProvider } from '@/contexts/markersContext';
+import { BASEMAP_OPTIONS } from '@/constants';
 
 export default function MyMap({ style, requestHeaders, configs, markers }) {
-  const { mapStyle, mapRef } = useContext(MapContext);
+  const { settings } = useContext(SettingsContext);
+
+  const { mapRef } = useContext(MapContext);
   const initialViewState = useInitialView();
   const viewMode = useMapStore((state) => state.viewMode);
   const cursor = useMapStore((state) => state.cursor);
   const setRequestHeaders = useMapStore((state) => state.setRequestHeaders);
   const setConfigs = useMapStore((state) => state.setConfigs);
+
+  const [mapStyle, setMapStyle] = useState(
+    `${BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url}?key=${
+      configs?.VITE_MAPTILER_ACCESS_KEY
+    }`
+  );
+
+  // whenever settings changes--like new user login-- update the mapstyle
+  useEffect(() => {
+    setMapStyle(
+      `${BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url}?key=${
+        configs?.VITE_MAPTILER_ACCESS_KEY
+      }`
+    );
+  }, [settings]);
 
   useEffect(() => {
     setRequestHeaders(requestHeaders);
