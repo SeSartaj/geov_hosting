@@ -2,7 +2,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import './mapbox-draw-style.css';
 
 import Map from 'react-map-gl/maplibre';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FullscreenControl } from 'react-map-gl/maplibre';
 
 import { MapContext } from '../../contexts/MapContext';
@@ -38,11 +38,16 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
   const { settings } = useContext(SettingsContext);
 
   const { mapRef } = useContext(MapContext);
+  const mapRef2 = useRef();
   const initialViewState = useInitialView();
+  const [viewState, setViewState] = useState(initialViewState);
+
   const viewMode = useMapStore((state) => state.viewMode);
   const cursor = useMapStore((state) => state.cursor);
   const setRequestHeaders = useMapStore((state) => state.setRequestHeaders);
   const setConfigs = useMapStore((state) => state.setConfigs);
+
+  const onMove = useCallback((evt) => setViewState(evt.viewState), []);
 
   const [mapStyle, setMapStyle] = useState(
     `${BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url}?key=${
@@ -76,15 +81,17 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
   // when the raster layer is toggled off and on, it should render beneath the plots layer
 
   return (
-    <RasterLayerProvider>
-      <PlotProvider>
-        <MarkersProvider providedMarkers={markers}>
+    <MarkersProvider providedMarkers={markers}>
+      <RasterLayerProvider>
+        <PlotProvider>
           <SidebarProvider>
             <AccessTokenProvider>
               <Map
                 id="myMap"
                 ref={mapRef}
                 initialViewState={initialViewState}
+                {...viewState}
+                onMove={onMove}
                 style={{ width: '100%', height: '80vh', ...style }}
                 mapStyle={
                   typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()
@@ -94,7 +101,7 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                 preserveDrawingBuffer={true}
                 cursor={cursor}
               >
-                <NDVILayer />
+                <NDVILayer mapRef={mapRef} />
                 <Sidebar />
 
                 <div className="absolute top-0 left-0"></div>
@@ -102,7 +109,7 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                   className="absolute top-0 right-0 m-2"
                   style={{ zIndex: 2 }}
                 >
-                  <MapControl />
+                  {/* <MapControl /> */}
                 </div>
                 {/* 
 
@@ -120,14 +127,42 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                 <PAWStatusPieChart />
                 <Markers />
                 <MarkerPopup />
-                <Plots />
+                <Plots mapRef={mapRef} />
                 <StatusBar />
+                {/* {viewMode === VIEW_MODES.PICKER && <ColorLegend />} */}
+              </Map>
+              <Map
+                id="myMap2"
+                ref={mapRef2}
+                initialViewState={initialViewState}
+                {...viewState}
+                onMove={onMove}
+                style={{ width: '100%', height: '80vh', ...style }}
+                mapStyle={
+                  typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()
+                }
+                attributionControl={false}
+                reuseMaps
+                preserveDrawingBuffer={true}
+                cursor={cursor}
+              >
+                <NDVILayer mapRef={mapRef2} />
+
+                <div className="absolute top-0 left-0"></div>
+                <div
+                  className="absolute top-0 right-0 m-2"
+                  style={{ zIndex: 2 }}
+                >
+                  <MapControl />
+                </div>
+
+                <Plots mapRef={mapRef2} />
                 {viewMode === VIEW_MODES.PICKER && <ColorLegend />}
               </Map>
             </AccessTokenProvider>
           </SidebarProvider>
-        </MarkersProvider>
-      </PlotProvider>
-    </RasterLayerProvider>
+        </PlotProvider>
+      </RasterLayerProvider>
+    </MarkersProvider>
   );
 }
