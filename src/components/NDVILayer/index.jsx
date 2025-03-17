@@ -40,9 +40,10 @@ function getLayerURL({ layer, dateRange }) {
   return url;
 }
 
-const NDVILayer = ({ mapRef }) => {
-  const { dateRange, isVisible } = useContext(RasterLayerContext);
+const NDVILayer = ({ mapRef, dateRange }) => {
+  const { isVisible } = useContext(RasterLayerContext);
   const showCroppedImages = useMapStore((s) => s.showCroppedImages);
+  console.log('uuu daterange inside NDVI layre', dateRange);
 
   // the selected layer from options
   const rasterLayer = useMapStore((state) => state.rasterLayer);
@@ -52,18 +53,23 @@ const NDVILayer = ({ mapRef }) => {
   );
   const [beforeId, setBeforeId] = useState(null);
   const rasterOpacity = useMapStore((state) => state.rasterOpacity);
-  const { current: mapInstance } = useMap();
-  const map = mapInstance.getMap();
+  const mapInstance = mapRef?.current;
+  const map = mapRef?.current?.getMap();
 
   // Update URL when layer or dateRange changes
   useEffect(() => {
-    console.log('dateRange in useEffect layerUrl', dateRange);
+    console.log('uuu dateRange in useEffect layerUrl', dateRange);
     const u = getLayerURL({
       layer: rasterLayer.value,
       dateRange: { ...dateRange },
     });
+    console.log('uuu url has changed', u);
     setUrl(u);
   }, [rasterLayer, dateRange]);
+
+  useEffect(() => {
+    console.log('uuu dateRnage has changeed', dateRange);
+  }, [dateRange]);
 
   // Set beforeId based on the presence of plots-layer
   useEffect(() => {
@@ -135,7 +141,6 @@ const NDVILayer = ({ mapRef }) => {
           />
         </Source>
       )}
-      <AreaDetails mapRef={mapRef} />
     </>
   );
 };

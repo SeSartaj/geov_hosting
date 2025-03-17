@@ -12,9 +12,9 @@ import { Button } from '../ui/button';
 import { Pipette } from 'lucide-react';
 import { useIntl } from 'react-intl';
 
-function PickerControl() {
-  const { current: mapRef } = useMap();
-  const mapInstance = mapRef.getMap();
+function PickerControl({ dateRange, mapRef }) {
+  console.log('ppp mapRef', mapRef);
+  const mapInstance = mapRef?.current?.getMap();
   const controlRef = useRef(null);
   const viewMode = useMapStore((state) => state.viewMode);
   const mapMode = useMapStore((s) => s.mapMode);
@@ -78,8 +78,10 @@ function PickerControl() {
 
   const handleMapClick = useCallback(
     (e) => {
+      console.log('eee clicked on map');
       let data = {
         coordinates: e.lngLat,
+        dateRange: dateRange,
       };
 
       // clicked inside a plot
@@ -99,7 +101,9 @@ function PickerControl() {
 
   // handle click on map in picker mode
   useEffect(() => {
+    console.log('eee event', mapInstance, viewMode);
     if (mapInstance && viewMode === 'PICKER') {
+      console.log('added event handler');
       mapInstance.on('click', handleMapClick);
     }
 

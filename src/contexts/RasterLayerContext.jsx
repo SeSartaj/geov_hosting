@@ -10,10 +10,6 @@ export function RasterLayerProvider({ children }) {
   const [opacity, setOpacity] = useState(100);
   const [isDetailActive, setIsDetailActive] = useState(false);
   const [datesLoading, setDatesLoading] = useState(false);
-  const [dateRange, setDateRange] = useState({
-    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-    end: new Date(),
-  });
 
   const handleOpacityChange = (e) => {
     setOpacity(e.target.value);
@@ -28,8 +24,6 @@ export function RasterLayerProvider({ children }) {
         setOpacity,
         handleOpacityChange,
         layerOptions,
-        dateRange,
-        setDateRange,
         isVisible,
         setIsVisible,
         isDetailActive,

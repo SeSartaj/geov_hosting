@@ -67,7 +67,7 @@ function BasicIcon() {
   );
 }
 
-function MapControl() {
+function MapControl({ dateRange, mapRef }) {
   const { current: mapInstance } = useMap();
   const [changeMap, setChangeMap] = useState(false);
   const controlRef = useRef(null);
@@ -160,7 +160,7 @@ function MapControl() {
             <SplitSquareHorizontal />
           )}
         </Button>
-        <PickerControl />
+        <PickerControl dateRange={dateRange} mapRef={mapRef} />
         {mapMode !== MAP_MODES.COMPARISION_VIEW && (
           <>
             <Button

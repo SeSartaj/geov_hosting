@@ -90,6 +90,18 @@ const useMapStore = create((set) => ({
   setDatesLoading: (v) => set({ datesLoading: v }),
   mapMode: MAP_MODES.NORMAL,
   setMapMode: (s) => set({ mapMode: s }),
+  dateRange: {
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    end: new Date(),
+  },
+  dateRange2: {
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    end: new Date(),
+  },
+  setDateRange: (range) => set({ dateRange: range }),
+  setDateRange2: (range) => set({ dateRange2: range }),
+  passDates: [],
+  setPassDates: (dates) => set({ passDates: dates }),
 }));
 
 export default useMapStore;

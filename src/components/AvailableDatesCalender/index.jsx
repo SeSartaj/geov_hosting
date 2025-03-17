@@ -5,17 +5,10 @@ import * as turf from '@turf/turf';
 
 import { getSatellitePassDates } from '@/api/sentinalHubApi';
 import { Card as ShadcnCardn, CardContent } from '@/components/ui/card';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 
 import useMapStore from '@/stores/mapStore';
 import { useIntl } from 'react-intl';
-import { DayPicker, Month, MonthGrid, Months } from 'react-day-picker';
+import { DayPicker, Month, MonthGrid, Months, TZDate } from 'react-day-picker';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,7 +27,6 @@ import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 import { MapContext } from '@/contexts/MapContext';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import debounce from '@/utils/debounce';
-import CompactDateCarousel from '../ui/CompactDateCarousel';
 
 // Function to disable all days except those in the availableDays array
 const isDayDisabled = (passDates) => {
@@ -49,6 +41,7 @@ const isDayDisabled = (passDates) => {
 };
 
 function hasBboxChanged(previousBbox, currentBbox) {
+  console.log('ddd checking bbox');
   if (!previousBbox || !currentBbox) return true;
   console.log('previousBbox', previousBbox);
   console.log('currentBbox', currentBbox);
@@ -81,6 +74,7 @@ export default function AvailableDatesCalender({
   compact = false,
   mapRef,
 }) {
+  console.log('ddd inside available dates');
   const intl = useIntl();
 
   const { isVisible, setIsVisible } = useContext(RasterLayerContext);
@@ -103,12 +97,17 @@ export default function AvailableDatesCalender({
   const passDates = useMapStore((s) => s.passDates);
   const setPassDates = useMapStore((s) => s.setPassDates);
 
+  const timeZonePassDates = useMemo(() => {
+    return passDates.map((date) => new TZDate(date, 'UTC'));
+  }, [passDates]);
+
   const handleLayerDatesChange = (dates) => {
     console.log('handleLayerDatesChange', selectedDate, dates);
     if (dates.length > 0) {
       let isCurrentDateExist = false;
       // if selectedDates is present in the new dates list, keep it uncahnged
       if (selectedDate) {
+        console.log('ddd selectedDate exist', selectedDate, dates);
         isCurrentDateExist = dates.some(
           (d) =>
             d.getFullYear() === selectedDate.getFullYear() &&
@@ -140,39 +139,32 @@ export default function AvailableDatesCalender({
   };
 
   const handleSelectedDateChange = (date) => {
-    console.log('ddd running handleSelectedDateChange', date);
     // if date is undefined,
+    // find the date in the pass dates and get the time from there
+
     if (date === undefined) {
       setSelectedDate(undefined);
       setDateRange({ start: undefined, end: undefined });
     } else {
-      // const start = new Date(
-      //   date.getFullYear(),
-      //   date.getMonth(),
-      //   date.getDate(),
-      //   0,
-      //   0,
-      //   1
-      // );
-      // const end = new Date(
-      //   date.getFullYear(),
-      //   date.getMonth(),
-      //   date.getDate(),
-      //   23,
-      //   59,
-      //   59
-      // );
-
+      const datetime = passDates.find(
+        (d) =>
+          d.getFullYear() === date.getFullYear() &&
+          d.getMonth() === date.getMonth() &&
+          d.getDate() === date.getDate()
+      );
       setSelectedDate(date);
-      setDateRange({ start: date, end: date });
+      console.log('ddd running handleSelectedDateChange', datetime, passDates);
+      console.log('uuu dateRnage has changed inside handleSelectedDate', date);
+      setDateRange({ start: datetime, end: datetime });
       handlePassDates;
     }
   };
 
-  //whenever pass dates changes, update the layer dates change
-  useEffect(() => {
-    handleLayerDatesChange(passDates);
-  }, [passDates]);
+  // //whenever pass dates changes, update the layer dates change
+  // useEffect(() => {
+  //   console.log('ddd pass dates has changed', passDates);
+  //   handleLayerDatesChange(passDates);
+  // }, [passDates]);
 
   // get bbox from viewport of map and call getSatellitePassDates
   //  and store all dates in a state
@@ -180,14 +172,14 @@ export default function AvailableDatesCalender({
 
   const handlePassDates = useCallback(
     (options) => {
-      console.log('inside handlePassDates. options', options);
+      console.log('ddd inside handlePassDates. options', options);
       if (!mapInstance) {
-        console.log('no map instance found to load available dates');
+        console.log('ddd no map instance found to load available dates');
         return;
       }
 
       if (mapInstance?.getZoom() < 9) {
-        console.log('layer is not visible or zoom is smaller than 9');
+        console.log('ddd layer is not visible or zoom is smaller than 9');
         setPassDates([]);
         return;
       }
@@ -220,6 +212,7 @@ export default function AvailableDatesCalender({
 
       // Cancel the previous request
       if (abortControllerRef.current) {
+        console.log('aborting..');
         abortControllerRef.current.abort();
       }
 
@@ -240,9 +233,9 @@ export default function AvailableDatesCalender({
             console.log('Request was aborted, ignoring response');
             return;
           }
-
+          console.log('ddd setting pass dates', dates);
           setPassDates(dates);
-          // handleLayerDatesChange(dates);
+          handleLayerDatesChange(dates);
         })
         .catch((error) => {
           if (error.name === 'AbortError') {
@@ -312,6 +305,7 @@ export default function AvailableDatesCalender({
       <Card className="flex items-center justify-center">
         <DayPicker
           mode="single"
+          timeZone="UTC"
           selected={selectedDate}
           classNames={{
             months: 'rdp-months justify-center',
@@ -319,7 +313,7 @@ export default function AvailableDatesCalender({
           onSelect={handleSelectedDateChange}
           modifiers={{
             disabled: isDayDisabled(passDates), // Pass the function here
-            available: passDates,
+            available: timeZonePassDates,
           }}
           modifiersClassNames={{
             available:
@@ -372,38 +366,3 @@ const CalenderNavComponent = ({
     </div>
   );
 };
-
-function AvailableDatesCarousel({ availableDates = [], selectedDate }) {
-  return (
-    <Carousel
-      opts={{
-        align: 'start',
-        direction: 'rtl',
-      }}
-      className="w-full max-w-sm"
-    >
-      <CarouselContent>
-        {availableDates.map((d, index) => (
-          <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 ">
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex border-none items-center justify-center p-6 dark:text-white bg-gray-200 dark:bg-gray-600 rounded-full ">
-                  <span
-                    className={`${
-                      selectedDate === d ? 'bg-green-400 dark:bg-green-600' : ''
-                    } text-3xl font-semibold`}
-                  >
-                    {/* {d.getDate()} */}
-                    {d.getDate()}
-                  </span>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-  );
-}

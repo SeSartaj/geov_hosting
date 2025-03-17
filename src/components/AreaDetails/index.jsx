@@ -16,16 +16,17 @@ import { Button } from '../ui/button';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import Spinner from '@/ui-components/Spinner';
 
-export default function AreaDetails({ mapRef }) {
+export default function AreaDetails() {
   const pickerData = useMapStore((state) => state.pickerData);
   const setPickerData = useMapStore((state) => state.setPickerData);
   const rasterLayer = useMapStore((state) => state.rasterLayer);
   const [pointEtValue, setPointEtValue] = useState(null);
-  const { dateRange } = useContext(RasterLayerContext);
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
 
-  console.log('inside area details picker');
+  const dateRange = pickerData?.dateRange;
+
+  console.log('inside area details picker', dateRange);
   function getValueAtPointWCS(pickerData) {
     console.log('getting value');
     setLoading(true);
@@ -33,8 +34,6 @@ export default function AreaDetails({ mapRef }) {
     setLoadingError(null);
     const coordinates = pickerData.coordinates;
     // get x,y and map size
-    const map = mapRef.current.getMap();
-    const canvas = map.getCanvas();
 
     console.log('coordinates are', coordinates);
 
@@ -74,9 +73,9 @@ export default function AreaDetails({ mapRef }) {
     return fetch(url)
       .then((response) => {
         console.log('response is', response);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`HTTP error! status: ${response.status}`);
+        // }
         return response.json();
       })
       .then((data) => {
@@ -106,7 +105,13 @@ export default function AreaDetails({ mapRef }) {
     if (pickerData && rasterLayer.value === 'ET') {
       getValueAtPointWCS(pickerData);
     }
-  }, [pickerData, rasterLayer, dateRange]);
+  }, [pickerData, rasterLayer]);
+
+  useEffect(() => {
+    if (pickerData && rasterLayer.value === 'ET') {
+      getValueAtPointWCS(pickerData);
+    }
+  }, [dateRange]);
 
   if (!pickerData) {
     return null;
@@ -130,7 +135,6 @@ export default function AreaDetails({ mapRef }) {
           >
             <TabsTrigger
               value="point"
-              tooltipText="Point"
               // portalContainer={mapInstance.getContainer()}
             >
               <HiOutlineMapPin className="cursor-pointer" /> &nbsp;

@@ -14,7 +14,7 @@ import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import { SettingsContext } from '@/contexts/SettingsContext';
 
-export default function Plots({ mapRef }) {
+export default function Plots({ mapRef, dateRange }) {
   const {
     plots,
     showPlots,
@@ -30,7 +30,7 @@ export default function Plots({ mapRef }) {
   // the selected layer from options
   const rasterLayer = useMapStore((state) => state.rasterLayer);
 
-  const { isVisible, setIsVisible, dateRange } = useContext(RasterLayerContext);
+  const { isVisible, setIsVisible } = useContext(RasterLayerContext);
   const { settings } = useContext(SettingsContext);
 
   const setCursor = useMapStore((state) => state.setCursor);
@@ -53,7 +53,7 @@ export default function Plots({ mapRef }) {
       console.log('eeeeee croppp adding image to map', imageUrl, plot, map);
       if (!map) throw new Error('map is not defined');
       // if layer is toggled off, don't add image to map
-      if (!showCroppedImages) {
+      if (!showCroppedImages || !isVisible) {
         console.log('showCroppedImages is off', showCroppedImages);
         return null;
       }
@@ -318,13 +318,17 @@ export default function Plots({ mapRef }) {
 
   // run the code when date changes or the visibily changes
   useEffect(() => {
-    console.log('dateRnage changed, crop');
-    handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    if (isVisible) {
+      console.log('loading cropped images');
+      handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    }
   }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer]);
 
   useEffect(() => {
-    console.log('settings changed resetting cropped layer');
-    handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    if (isVisible) {
+      console.log('settings changed resetting cropped layer');
+      handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    }
   }, [settings]);
 
   // when clicked on plot, show popup

@@ -34,6 +34,8 @@ import { PlotProvider } from '@/contexts/PlotContext';
 import { MarkersProvider } from '@/contexts/markersContext';
 import { BASEMAP_OPTIONS } from '@/constants';
 import PickerControl from '../PickerControl';
+import AvailableDatesCalender from '../AvailableDatesCalender';
+import AreaDetails from '../AreaDetails';
 
 export default function MyMap({ style, requestHeaders, configs, markers }) {
   const { settings } = useContext(SettingsContext);
@@ -48,6 +50,12 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
   const cursor = useMapStore((state) => state.cursor);
   const setRequestHeaders = useMapStore((state) => state.setRequestHeaders);
   const setConfigs = useMapStore((state) => state.setConfigs);
+
+  const dateRange = useMapStore((state) => state.dateRange);
+  const setDateRange = useMapStore((s) => s.setDateRange);
+
+  const dateRange2 = useMapStore((state) => state.dateRange2);
+  const setDateRange2 = useMapStore((s) => s.setDateRange2);
 
   const onMove = useCallback((evt) => setViewState(evt.viewState), []);
 
@@ -107,16 +115,28 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                   preserveDrawingBuffer={true}
                   cursor={cursor}
                 >
-                  <NDVILayer mapRef={mapRef} />
-                  <Sidebar />
+                  <NDVILayer mapRef={mapRef} dateRange={dateRange} />
+                  {mapMode == MAP_MODES.NORMAL && <Sidebar mapRef={mapRef} />}
 
-                  <div className="absolute top-0 left-0"></div>
+                  <div className="absolute top-0 left-0">
+                    {mapMode == MAP_MODES.COMPARISION_VIEW && (
+                      <AvailableDatesCalender
+                        mapRef={mapRef}
+                        setDateRange={setDateRange}
+                        compact={true}
+                      />
+                    )}
+                  </div>
                   <div
                     className="absolute top-0 right-0 m-2"
                     style={{ zIndex: 2 }}
                   >
-                    {mapMode === MAP_MODES.NORMAL && <MapControl />}
-                    {mapMode !== MAP_MODES.NORMAL && <PickerControl />}
+                    {mapMode === MAP_MODES.NORMAL && (
+                      <MapControl dateRange={dateRange} mapRef={mapRef} />
+                    )}
+                    {mapMode !== MAP_MODES.NORMAL && (
+                      <PickerControl dateRange={dateRange} mapRef={mapRef} />
+                    )}
                   </div>
                   {/* 
 
@@ -134,7 +154,7 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                   <PAWStatusPieChart />
                   <Markers />
                   <MarkerPopup />
-                  <Plots mapRef={mapRef} />
+                  <Plots mapRef={mapRef} dateRange={dateRange} />
                   <StatusBar />
                   {viewMode === VIEW_MODES.PICKER &&
                     mapMode !== MAP_MODES.COMPARISION_VIEW && <ColorLegend />}
@@ -155,20 +175,27 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                     preserveDrawingBuffer={true}
                     cursor={cursor}
                   >
-                    <NDVILayer mapRef={mapRef2} />
+                    <NDVILayer mapRef={mapRef2} dateRange={dateRange2} />
 
-                    <div className="absolute top-0 left-0"></div>
+                    <div className="absolute top-0 left-0">
+                      <AvailableDatesCalender
+                        mapRef={mapRef2}
+                        setDateRange={setDateRange2}
+                        compact={true}
+                      />
+                    </div>
                     <div
                       className="absolute top-0 right-0 m-2"
                       style={{ zIndex: 2 }}
                     >
-                      <MapControl />
+                      <MapControl dateRange={dateRange} mapRef={mapRef2} />
                     </div>
 
-                    <Plots mapRef={mapRef2} />
+                    <Plots mapRef={mapRef2} dateRange={dateRange2} />
                     {viewMode === VIEW_MODES.PICKER && <ColorLegend />}
                   </Map>
                 )}
+                <AreaDetails />
               </div>
             </AccessTokenProvider>
           </SidebarProvider>
