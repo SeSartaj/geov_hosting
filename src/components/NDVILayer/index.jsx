@@ -40,7 +40,7 @@ function getLayerURL({ layer, dateRange }) {
   return url;
 }
 
-const NDVILayer = () => {
+const NDVILayer = ({ mapRef }) => {
   const { dateRange, isVisible } = useContext(RasterLayerContext);
   const showCroppedImages = useMapStore((s) => s.showCroppedImages);
 

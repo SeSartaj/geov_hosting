@@ -14,7 +14,7 @@ import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import { SettingsContext } from '@/contexts/SettingsContext';
 
-export default function Plots() {
+export default function Plots({ mapRef }) {
   const {
     plots,
     showPlots,
@@ -35,7 +35,7 @@ export default function Plots() {
 
   const setCursor = useMapStore((state) => state.setCursor);
   const resetCursor = useMapStore((state) => state.resetCursor);
-  const { drawRef, mapRef } = useContext(MapContext);
+  const { drawRef } = useContext(MapContext);
   const accessToken = useContext(AccessTokenContext);
   const map = mapRef?.current?.getMap();
   const viewMode = useMapStore((state) => state.viewMode);
