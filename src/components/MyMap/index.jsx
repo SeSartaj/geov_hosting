@@ -19,7 +19,7 @@ import { DrawPolygonControl } from '../DrawPolygonControl';
 import Spinner from '@/ui-components/Spinner';
 import StatusBar from '../StatusBar';
 import NDVILayer from '../NDVILayer';
-import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
+import useMapStore, { MAP_MODES, VIEW_MODES } from '@/stores/mapStore';
 import ColorLegend from '../ColorLegend';
 import { AccessTokenProvider } from '@/contexts/AccessTokenProvider';
 import MapControl from './map-control';
@@ -33,6 +33,7 @@ import { RasterLayerProvider } from '@/contexts/RasterLayerContext';
 import { PlotProvider } from '@/contexts/PlotContext';
 import { MarkersProvider } from '@/contexts/markersContext';
 import { BASEMAP_OPTIONS } from '@/constants';
+import PickerControl from '../PickerControl';
 
 export default function MyMap({ style, requestHeaders, configs, markers }) {
   const { settings } = useContext(SettingsContext);
@@ -43,6 +44,7 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
   const [viewState, setViewState] = useState(initialViewState);
 
   const viewMode = useMapStore((state) => state.viewMode);
+  const mapMode = useMapStore((s) => s.mapMode);
   const cursor = useMapStore((state) => state.cursor);
   const setRequestHeaders = useMapStore((state) => state.setRequestHeaders);
   const setConfigs = useMapStore((state) => state.setConfigs);
@@ -86,79 +88,88 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
         <PlotProvider>
           <SidebarProvider>
             <AccessTokenProvider>
-              <Map
-                id="myMap"
-                ref={mapRef}
-                initialViewState={initialViewState}
-                {...viewState}
-                onMove={onMove}
-                style={{ width: '100%', height: '80vh', ...style }}
-                mapStyle={
-                  typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()
-                }
-                attributionControl={false}
-                reuseMaps
-                preserveDrawingBuffer={true}
-                cursor={cursor}
+              <div
+                style={{ width: '100%', height: '80vh' }}
+                className="flex flex-row"
               >
-                <NDVILayer mapRef={mapRef} />
-                <Sidebar />
-
-                <div className="absolute top-0 left-0"></div>
-                <div
-                  className="absolute top-0 right-0 m-2"
-                  style={{ zIndex: 2 }}
+                <Map
+                  id="myMap"
+                  ref={mapRef}
+                  initialViewState={initialViewState}
+                  {...viewState}
+                  onMove={onMove}
+                  style={{ width: '100%', ...style }}
+                  mapStyle={
+                    typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()
+                  }
+                  attributionControl={false}
+                  reuseMaps
+                  preserveDrawingBuffer={true}
+                  cursor={cursor}
                 >
-                  {/* <MapControl /> */}
-                </div>
-                {/* 
+                  <NDVILayer mapRef={mapRef} />
+                  <Sidebar />
+
+                  <div className="absolute top-0 left-0"></div>
+                  <div
+                    className="absolute top-0 right-0 m-2"
+                    style={{ zIndex: 2 }}
+                  >
+                    {mapMode === MAP_MODES.NORMAL && <MapControl />}
+                    {mapMode !== MAP_MODES.NORMAL && <PickerControl />}
+                  </div>
+                  {/* 
 
 
 
           {/* DrawPolygonControl is a canvas and should always be present. any drawing will be painted on this */}
-                <DrawPolygonControl />
-                {viewMode == VIEW_MODES.EDIT_PLOT && (
-                  <EditPlotGeometryControl />
+                  <DrawPolygonControl />
+                  {viewMode == VIEW_MODES.EDIT_PLOT && (
+                    <EditPlotGeometryControl />
+                  )}
+                  {viewMode == VIEW_MODES.ADD_PLOT && <AddPlotControl />}
+                  {viewMode == VIEW_MODES.ADD_MARKER && <AddStationControl />}
+                  {viewMode == VIEW_MODES.ADD_NEW_FARM && <AddFarmModal />}
+
+                  <PAWStatusPieChart />
+                  <Markers />
+                  <MarkerPopup />
+                  <Plots mapRef={mapRef} />
+                  <StatusBar />
+                  {viewMode === VIEW_MODES.PICKER &&
+                    mapMode !== MAP_MODES.COMPARISION_VIEW && <ColorLegend />}
+                </Map>
+                {mapMode === MAP_MODES.COMPARISION_VIEW && (
+                  <Map
+                    id="myMap2"
+                    ref={mapRef2}
+                    initialViewState={initialViewState}
+                    {...viewState}
+                    onMove={onMove}
+                    style={{ width: '100%', ...style }}
+                    mapStyle={
+                      typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()
+                    }
+                    attributionControl={false}
+                    reuseMaps
+                    preserveDrawingBuffer={true}
+                    cursor={cursor}
+                  >
+                    <NDVILayer mapRef={mapRef2} />
+
+                    <div className="absolute top-0 left-0"></div>
+                    <div
+                      className="absolute top-0 right-0 m-2"
+                      style={{ zIndex: 2 }}
+                    >
+                      <MapControl />
+                    </div>
+
+                    <Plots mapRef={mapRef2} />
+                    {viewMode === VIEW_MODES.PICKER && <ColorLegend />}
+                  </Map>
                 )}
-                {viewMode == VIEW_MODES.ADD_PLOT && <AddPlotControl />}
-                {viewMode == VIEW_MODES.ADD_MARKER && <AddStationControl />}
-                {viewMode == VIEW_MODES.ADD_NEW_FARM && <AddFarmModal />}
-
-                <PAWStatusPieChart />
-                <Markers />
-                <MarkerPopup />
-                <Plots mapRef={mapRef} />
-                <StatusBar />
-                {/* {viewMode === VIEW_MODES.PICKER && <ColorLegend />} */}
-              </Map>
-              <Map
-                id="myMap2"
-                ref={mapRef2}
-                initialViewState={initialViewState}
-                {...viewState}
-                onMove={onMove}
-                style={{ width: '100%', height: '80vh', ...style }}
-                mapStyle={
-                  typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()
-                }
-                attributionControl={false}
-                reuseMaps
-                preserveDrawingBuffer={true}
-                cursor={cursor}
-              >
-                <NDVILayer mapRef={mapRef2} />
-
-                <div className="absolute top-0 left-0"></div>
-                <div
-                  className="absolute top-0 right-0 m-2"
-                  style={{ zIndex: 2 }}
-                >
-                  <MapControl />
-                </div>
-
-                <Plots mapRef={mapRef2} />
-                {viewMode === VIEW_MODES.PICKER && <ColorLegend />}
-              </Map>
+              </div>
             </AccessTokenProvider>
           </SidebarProvider>
         </PlotProvider>

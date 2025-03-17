@@ -135,7 +135,7 @@ const NDVILayer = ({ mapRef }) => {
           />
         </Source>
       )}
-      <AreaDetails />
+      <AreaDetails mapRef={mapRef} />
     </>
   );
 };

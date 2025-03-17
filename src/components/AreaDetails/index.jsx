@@ -16,8 +16,7 @@ import { Button } from '../ui/button';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import Spinner from '@/ui-components/Spinner';
 
-export default function AreaDetails() {
-  const { mapRef } = useContext(MapContext);
+export default function AreaDetails({ mapRef }) {
   const pickerData = useMapStore((state) => state.pickerData);
   const setPickerData = useMapStore((state) => state.setPickerData);
   const rasterLayer = useMapStore((state) => state.rasterLayer);

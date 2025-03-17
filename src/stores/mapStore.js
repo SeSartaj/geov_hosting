@@ -10,6 +10,10 @@ export const VIEW_MODES = {
   ADD_MARKER: 'ADD_MARKER',
   EDIT_MARKER: 'EDIT_MARKER',
   ADD_NEW_FARM: 'ADD_NEW_FARM',
+};
+
+export const MAP_MODES = {
+  NORMAL: 'NORMAL',
   COMPARISION_VIEW: 'COMPARISION_VIEW',
 };
 
@@ -84,6 +88,8 @@ const useMapStore = create((set) => ({
   showCroppedImages: false,
   datesLoading: false,
   setDatesLoading: (v) => set({ datesLoading: v }),
+  mapMode: MAP_MODES.NORMAL,
+  setMapMode: (s) => set({ mapMode: s }),
 }));
 
 export default useMapStore;

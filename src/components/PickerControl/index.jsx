@@ -1,7 +1,7 @@
 import './styles.css';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useControl } from 'react-map-gl/maplibre';
-import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
+import useMapStore, { MAP_MODES, VIEW_MODES } from '@/stores/mapStore';
 import { MapContext } from '@/contexts/MapContext';
 import debounce from '@/utils/debounce';
 import getPixelValue from '@/utils/getPixelValue';
@@ -17,6 +17,7 @@ function PickerControl() {
   const mapInstance = mapRef.getMap();
   const controlRef = useRef(null);
   const viewMode = useMapStore((state) => state.viewMode);
+  const mapMode = useMapStore((s) => s.mapMode);
   const toggleNormalPickerMode = useMapStore(
     (state) => state.toggleNormalPickerMode
   );
@@ -203,15 +204,26 @@ function PickerControl() {
     }
   }, [viewMode]);
 
+  if (mapMode !== MAP_MODES.NORMAL) {
+    return null;
+  }
+
   return (
     <Button
       variant="outline"
       size="icon"
-      title={intl.formatMessage({ id: 'app.agviewer_map.activate_picker_mode', defaultMessage: "Activate picker mode" })}
-      aria-label={intl.formatMessage({ id: 'app.agviewer_map.activate_picker_mode', defaultMessage: "Activate picker mode" })}
+      title={intl.formatMessage({
+        id: 'app.agviewer_map.activate_picker_mode',
+        defaultMessage: 'Activate picker mode',
+      })}
+      aria-label={intl.formatMessage({
+        id: 'app.agviewer_map.activate_picker_mode',
+        defaultMessage: 'Activate picker mode',
+      })}
       onClick={handleClick}
-      className={` ${viewMode === VIEW_MODES.PICKER ? ' bg-gray-200 dark:bg-gray-600' : ''
-        }`}
+      className={` ${
+        viewMode === VIEW_MODES.PICKER ? ' bg-gray-200 dark:bg-gray-600' : ''
+      }`}
     >
       <Pipette />
     </Button>
