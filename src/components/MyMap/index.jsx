@@ -29,8 +29,11 @@ import { AddPlotControl } from '../AddPlotControl';
 import { AddStationControl } from '../AddStationControl';
 import AddPlotModal from '../AddPlotModal';
 import AddFarmModal from '../AddFarmModal';
+import { RasterLayerProvider } from '@/contexts/RasterLayerContext';
+import { PlotProvider } from '@/contexts/PlotContext';
+import { MarkersProvider } from '@/contexts/markersContext';
 
-export default function MyMap({ style, requestHeaders, configs }) {
+export default function MyMap({ style, requestHeaders, configs, markers }) {
   const { mapStyle, mapRef } = useContext(MapContext);
   const initialViewState = useInitialView();
   const viewMode = useMapStore((state) => state.viewMode);
@@ -55,45 +58,58 @@ export default function MyMap({ style, requestHeaders, configs }) {
   // when the raster layer is toggled off and on, it should render beneath the plots layer
 
   return (
-    <SidebarProvider>
-      <AccessTokenProvider>
-        <Map
-          id="myMap"
-          ref={mapRef}
-          initialViewState={initialViewState}
-          style={{ width: '100%', height: '80vh', ...style }}
-          mapStyle={typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()}
-          attributionControl={false}
-          reuseMaps
-          preserveDrawingBuffer={true}
-          cursor={cursor}
-        >
-          <NDVILayer />
-          <Sidebar />
+    <RasterLayerProvider>
+      <PlotProvider>
+        <MarkersProvider providedMarkers={markers}>
+          <SidebarProvider>
+            <AccessTokenProvider>
+              <Map
+                id="myMap"
+                ref={mapRef}
+                initialViewState={initialViewState}
+                style={{ width: '100%', height: '80vh', ...style }}
+                mapStyle={
+                  typeof mapStyle === 'string' ? mapStyle : mapStyle.toJS()
+                }
+                attributionControl={false}
+                reuseMaps
+                preserveDrawingBuffer={true}
+                cursor={cursor}
+              >
+                <NDVILayer />
+                <Sidebar />
 
-          <div className="absolute top-0 left-0"></div>
-          <div className="absolute top-0 right-0 m-2" style={{ zIndex: 2 }}>
-            <MapControl />
-          </div>
-          {/* 
+                <div className="absolute top-0 left-0"></div>
+                <div
+                  className="absolute top-0 right-0 m-2"
+                  style={{ zIndex: 2 }}
+                >
+                  <MapControl />
+                </div>
+                {/* 
 
 
 
           {/* DrawPolygonControl is a canvas and should always be present. any drawing will be painted on this */}
-          <DrawPolygonControl />
-          {viewMode == VIEW_MODES.EDIT_PLOT && <EditPlotGeometryControl />}
-          {viewMode == VIEW_MODES.ADD_PLOT && <AddPlotControl />}
-          {viewMode == VIEW_MODES.ADD_MARKER && <AddStationControl />}
-          {viewMode == VIEW_MODES.ADD_NEW_FARM && <AddFarmModal />}
+                <DrawPolygonControl />
+                {viewMode == VIEW_MODES.EDIT_PLOT && (
+                  <EditPlotGeometryControl />
+                )}
+                {viewMode == VIEW_MODES.ADD_PLOT && <AddPlotControl />}
+                {viewMode == VIEW_MODES.ADD_MARKER && <AddStationControl />}
+                {viewMode == VIEW_MODES.ADD_NEW_FARM && <AddFarmModal />}
 
-          <PAWStatusPieChart />
-          <Markers />
-          <MarkerPopup />
-          <Plots />
-          <StatusBar />
-          {viewMode === VIEW_MODES.PICKER && <ColorLegend />}
-        </Map>
-      </AccessTokenProvider>
-    </SidebarProvider>
+                <PAWStatusPieChart />
+                <Markers />
+                <MarkerPopup />
+                <Plots />
+                <StatusBar />
+                {viewMode === VIEW_MODES.PICKER && <ColorLegend />}
+              </Map>
+            </AccessTokenProvider>
+          </SidebarProvider>
+        </MarkersProvider>
+      </PlotProvider>
+    </RasterLayerProvider>
   );
 }
