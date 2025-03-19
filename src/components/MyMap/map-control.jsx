@@ -133,6 +133,10 @@ function MapControl({ dateRange, mapRef }) {
     return null;
   }
 
+  useEffect(() => {
+    console.log('daterange has changed in side mapControl eee', dateRange);
+  }, [dateRange]);
+
   return (
     <>
       <div className=" gap-1 flex flex-col">

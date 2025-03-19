@@ -82,6 +82,12 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
     setConfigs(configs);
   }, []);
 
+  // debug
+  useEffect(() => {
+    console.log('fff dateRange is', dateRange);
+    console.log('fff dateRange2 is', dateRange2);
+  }, [dateRange, dateRange2]);
+
   if (!initialViewState) {
     return <Spinner />;
   }
@@ -135,7 +141,11 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                       <MapControl dateRange={dateRange} mapRef={mapRef} />
                     )}
                     {mapMode !== MAP_MODES.NORMAL && (
-                      <PickerControl dateRange={dateRange} mapRef={mapRef} />
+                      <PickerControl
+                        dateRange={dateRange}
+                        mapRef={mapRef}
+                        showButton={false}
+                      />
                     )}
                   </div>
                   {/* 
@@ -188,7 +198,7 @@ export default function MyMap({ style, requestHeaders, configs, markers }) {
                       className="absolute top-0 right-0 m-2"
                       style={{ zIndex: 2 }}
                     >
-                      <MapControl dateRange={dateRange} mapRef={mapRef2} />
+                      <MapControl dateRange={dateRange2} mapRef={mapRef2} />
                     </div>
 
                     <Plots mapRef={mapRef2} dateRange={dateRange2} />

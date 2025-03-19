@@ -9,24 +9,18 @@ import { getCroppedRaster } from '@/utils/fetchNDVIFromProcessingAPI';
 import { bbox } from '@turf/turf';
 import debounce from '@/utils/debounce';
 import isEmptyObject from '@/utils/isEmptyObject';
-import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
+import useMapStore, { MAP_MODES, VIEW_MODES } from '@/stores/mapStore';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import { SettingsContext } from '@/contexts/SettingsContext';
 
 export default function Plots({ mapRef, dateRange }) {
-  const {
-    plots,
-    showPlots,
-    clickedPlot,
-    setClickedPlot,
-    weeksBefore,
-    showNdviLayer,
-  } = useContext(PlotContext);
+  const { plots, showPlots, clickedPlot, setClickedPlot } =
+    useContext(PlotContext);
 
   const showCroppedImages = useMapStore((s) => s.showCroppedImages);
   const datesLoading = useMapStore((s) => s.datesLoading);
-
+  const mapMode = useMapStore((s) => s.mapMode);
   // the selected layer from options
   const rasterLayer = useMapStore((state) => state.rasterLayer);
 
@@ -400,12 +394,14 @@ export default function Plots({ mapRef, dateRange }) {
         <Layer key="12kkd" {...plotLineStyle} />
       </Source>
 
-      {clickedPlot && viewMode == VIEW_MODES.NORMAL && (
-        <PlotPopup
-          popupInfo={clickedPlot}
-          onClose={() => setClickedPlot(null)}
-        />
-      )}
+      {clickedPlot &&
+        mapMode !== MAP_MODES.COMPARISION_VIEW &&
+        viewMode == VIEW_MODES.NORMAL && (
+          <PlotPopup
+            popupInfo={clickedPlot}
+            onClose={() => setClickedPlot(null)}
+          />
+        )}
     </>
   );
 }

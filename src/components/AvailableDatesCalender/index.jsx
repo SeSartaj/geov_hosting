@@ -46,6 +46,8 @@ function hasBboxChanged(previousBbox, currentBbox) {
   console.log('previousBbox', previousBbox);
   console.log('currentBbox', currentBbox);
 
+  if (previousBbox?.length !== 4 || currentBbox?.length !== 4) return true;
+
   // Extract corners
   const [prevWest, prevSouth, prevEast, prevNorth] = previousBbox;
   const [currWest, currSouth, currEast, currNorth] = currentBbox;
@@ -85,14 +87,13 @@ export default function AvailableDatesCalender({
   const setDatesLoading = useMapStore((s) => s.setDatesLoading);
   const datesLoading = useMapStore((s) => s.datesLoading);
 
-  const { mapRef: mapRefContext } = useContext(MapContext);
-
   const mapInstance = mapRef?.current?.getMap();
 
   const accessToken = useContext(AccessTokenContext);
   const [previousBbox, setPreviousBbox] = useState([]);
   const abortControllerRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState();
+  const [selectedTime, setSelectedTime] = useState();
 
   const passDates = useMapStore((s) => s.passDates);
   const setPassDates = useMapStore((s) => s.setPassDates);
@@ -127,7 +128,7 @@ export default function AvailableDatesCalender({
 
         // set the most recent date
         console.log('ddd most recent date', dates[0]);
-        handleSelectedDateChange(dates[0]);
+        handleSelectedDateChange(dates[0], true);
       }
     } else {
       console.log('ddd no available date fetched');
@@ -138,7 +139,7 @@ export default function AvailableDatesCalender({
     }
   };
 
-  const handleSelectedDateChange = (date) => {
+  const handleSelectedDateChange = (date, timeIncluded = false) => {
     // if date is undefined,
     // find the date in the pass dates and get the time from there
 
@@ -146,17 +147,17 @@ export default function AvailableDatesCalender({
       setSelectedDate(undefined);
       setDateRange({ start: undefined, end: undefined });
     } else {
-      const datetime = passDates.find(
+      let datetime = date;
+      datetime = passDates.find(
         (d) =>
           d.getFullYear() === date.getFullYear() &&
           d.getMonth() === date.getMonth() &&
           d.getDate() === date.getDate()
       );
-      setSelectedDate(date);
-      console.log('ddd running handleSelectedDateChange', datetime, passDates);
+      setSelectedDate(datetime);
+      console.log('ddd running fff', date, datetime, passDates);
       console.log('uuu dateRnage has changed inside handleSelectedDate', date);
       setDateRange({ start: datetime, end: datetime });
-      handlePassDates;
     }
   };
 
@@ -199,15 +200,25 @@ export default function AvailableDatesCalender({
         return;
       }
 
+      console.log(
+        '!options?.layerChanged',
+        !options?.layerChanged,
+        hasBboxChanged(previousBbox, bbox),
+        bbox,
+        previousBbox
+      );
+
       // if layer and bbox  is not changed, don't fetch dates
       if (!options?.layerChanged && previousBbox?.length > 0) {
         if (!hasBboxChanged(previousBbox, bbox)) {
+          console.log('setting previous bbox', bbox);
           setPreviousBbox(bbox);
           console.log('bbox has not changed significantly');
           return;
         }
       }
 
+      console.log('setting previous bbox', bbox);
       setPreviousBbox(bbox);
 
       // Cancel the previous request
@@ -258,6 +269,7 @@ export default function AvailableDatesCalender({
       setDateRange,
       setDatesLoading,
       accessToken,
+      selectedDate,
     ]
   );
 
@@ -284,7 +296,7 @@ export default function AvailableDatesCalender({
 
   useEffect(() => {
     handlePassDates({ layerChanged: true });
-  }, [mapInstance, rasterLayer, accessToken]);
+  }, [rasterLayer, accessToken]);
 
   if (!mapRef) {
     mapRef = mapRefContext;
