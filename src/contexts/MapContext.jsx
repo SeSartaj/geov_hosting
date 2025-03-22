@@ -20,25 +20,12 @@ const MAP_MODES = {
   ADD_PLOT: 'add_plot',
 };
 
-const MapProvider = ({ children, configs }) => {
-  const { settings } = useContext(SettingsContext);
+const MapProvider = ({ children }) => {
   const [mode, setMode] = useState(MAP_MODES.VIEW);
   const [status, setStatus] = useState('idle');
   const [showDrawActionPopup, setShowDrawActionPopup] = useState(false);
-  const [mapStyle, setMapStyle] = useState(
-    `${BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url}?key=${
-      configs?.VITE_MAPTILER_ACCESS_KEY
-    }`
-  );
-  const [isDetailActive, setIsDetailActive] = useState(false);
 
-  useEffect(() => {
-    setMapStyle(
-      `${BASEMAP_OPTIONS.find((o) => o.id === settings.basemap.id)?.url}?key=${
-        configs?.VITE_MAPTILER_ACCESS_KEY
-      }`
-    );
-  }, [settings]);
+  const [isDetailActive, setIsDetailActive] = useState(false);
 
   const [sources, setSources] = useState({});
   const mapRef = useRef(null);
@@ -46,8 +33,6 @@ const MapProvider = ({ children, configs }) => {
 
   const contextValue = useMemo(
     () => ({
-      mapStyle,
-      setMapStyle,
       mapRef,
       drawRef,
       sources,
@@ -61,7 +46,7 @@ const MapProvider = ({ children, configs }) => {
       isDetailActive,
       setIsDetailActive,
     }),
-    [mapStyle, sources, mode, status, showDrawActionPopup, isDetailActive]
+    [sources, mode, status, showDrawActionPopup, isDetailActive]
   );
 
   return (

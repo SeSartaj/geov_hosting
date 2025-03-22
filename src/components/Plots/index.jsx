@@ -9,33 +9,27 @@ import { getCroppedRaster } from '@/utils/fetchNDVIFromProcessingAPI';
 import { bbox } from '@turf/turf';
 import debounce from '@/utils/debounce';
 import isEmptyObject from '@/utils/isEmptyObject';
-import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
+import useMapStore, { MAP_MODES, VIEW_MODES } from '@/stores/mapStore';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import { SettingsContext } from '@/contexts/SettingsContext';
 
-export default function Plots() {
-  const {
-    plots,
-    showPlots,
-    clickedPlot,
-    setClickedPlot,
-    weeksBefore,
-    showNdviLayer,
-  } = useContext(PlotContext);
+export default function Plots({ mapRef, dateRange }) {
+  const { plots, showPlots, clickedPlot, setClickedPlot } =
+    useContext(PlotContext);
 
   const showCroppedImages = useMapStore((s) => s.showCroppedImages);
   const datesLoading = useMapStore((s) => s.datesLoading);
-
+  const mapMode = useMapStore((s) => s.mapMode);
   // the selected layer from options
   const rasterLayer = useMapStore((state) => state.rasterLayer);
 
-  const { isVisible, setIsVisible, dateRange } = useContext(RasterLayerContext);
+  const { isVisible, setIsVisible } = useContext(RasterLayerContext);
   const { settings } = useContext(SettingsContext);
 
   const setCursor = useMapStore((state) => state.setCursor);
   const resetCursor = useMapStore((state) => state.resetCursor);
-  const { drawRef, mapRef } = useContext(MapContext);
+  const { drawRef } = useContext(MapContext);
   const accessToken = useContext(AccessTokenContext);
   const map = mapRef?.current?.getMap();
   const viewMode = useMapStore((state) => state.viewMode);
@@ -53,7 +47,7 @@ export default function Plots() {
       console.log('eeeeee croppp adding image to map', imageUrl, plot, map);
       if (!map) throw new Error('map is not defined');
       // if layer is toggled off, don't add image to map
-      if (!showCroppedImages) {
+      if (!showCroppedImages || !isVisible) {
         console.log('showCroppedImages is off', showCroppedImages);
         return null;
       }
@@ -318,13 +312,17 @@ export default function Plots() {
 
   // run the code when date changes or the visibily changes
   useEffect(() => {
-    console.log('dateRnage changed, crop');
-    handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    if (isVisible) {
+      console.log('loading cropped images');
+      handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    }
   }, [dateRange, isVisible, showCroppedImages, plots, rasterLayer]);
 
   useEffect(() => {
-    console.log('settings changed resetting cropped layer');
-    handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    if (isVisible) {
+      console.log('settings changed resetting cropped layer');
+      handleLoadingCroppedRasterLayerToMap({ timeTravel: true });
+    }
   }, [settings]);
 
   // when clicked on plot, show popup
@@ -396,12 +394,14 @@ export default function Plots() {
         <Layer key="12kkd" {...plotLineStyle} />
       </Source>
 
-      {clickedPlot && viewMode == VIEW_MODES.NORMAL && (
-        <PlotPopup
-          popupInfo={clickedPlot}
-          onClose={() => setClickedPlot(null)}
-        />
-      )}
+      {clickedPlot &&
+        mapMode !== MAP_MODES.COMPARISION_VIEW &&
+        viewMode == VIEW_MODES.NORMAL && (
+          <PlotPopup
+            popupInfo={clickedPlot}
+            onClose={() => setClickedPlot(null)}
+          />
+        )}
     </>
   );
 }

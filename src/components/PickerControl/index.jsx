@@ -1,22 +1,17 @@
 import './styles.css';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { useControl } from 'react-map-gl/maplibre';
-import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
-import { MapContext } from '@/contexts/MapContext';
+import useMapStore, { MAP_MODES, VIEW_MODES } from '@/stores/mapStore';
 import debounce from '@/utils/debounce';
 import getPixelValue from '@/utils/getPixelValue';
-import { RasterLayerContext } from '@/contexts/RasterLayerContext';
-import { useMap } from 'react-map-gl/maplibre';
-import { set } from 'immutable';
 import { Button } from '../ui/button';
 import { Pipette } from 'lucide-react';
 import { useIntl } from 'react-intl';
 
-function PickerControl() {
-  const { current: mapRef } = useMap();
-  const mapInstance = mapRef.getMap();
-  const controlRef = useRef(null);
+function PickerControl({ dateRange, mapRef, showButton = true }) {
+  console.log('ppp mapRef', mapRef);
+  const mapInstance = mapRef?.current?.getMap();
   const viewMode = useMapStore((state) => state.viewMode);
+  const mapMode = useMapStore((s) => s.mapMode);
   const toggleNormalPickerMode = useMapStore(
     (state) => state.toggleNormalPickerMode
   );
@@ -55,7 +50,7 @@ function PickerControl() {
       // if in picker mode and clicked escape
       if (event.key === 'Escape') {
         backToPreviousOpacity();
-        toNormalMode(); // Call your function to switch to normal mode
+        toNormalMode();
       }
     };
 
@@ -75,13 +70,19 @@ function PickerControl() {
     viewMode,
   ]);
 
-  const handleMapClick = useCallback(
-    (e) => {
+  // handle click on map in picker mode
+  useEffect(() => {
+    console.log('eee event', mapInstance, viewMode);
+
+    if (!mapInstance || viewMode !== 'PICKER') return;
+
+    const handleMapClick = (e) => {
+      console.log('eee clicked on map', dateRange);
       let data = {
         coordinates: e.lngLat,
+        dateRange: dateRange,
       };
 
-      // clicked inside a plot
       if (mapInstance.getLayer('plots-layer')) {
         const features = mapInstance.queryRenderedFeatures(e.point, {
           layers: ['plots-layer'],
@@ -92,22 +93,15 @@ function PickerControl() {
       }
       console.log('setting picker data', data);
       setPickerData(data);
-    },
-    [mapInstance, setPickerData]
-  );
+    };
 
-  // handle click on map in picker mode
-  useEffect(() => {
-    if (mapInstance && viewMode === 'PICKER') {
-      mapInstance.on('click', handleMapClick);
-    }
+    console.log('added event handler');
+    mapInstance.on('click', handleMapClick);
 
     return () => {
-      if (mapInstance) {
-        mapInstance.off('click', handleMapClick);
-      }
+      mapInstance.off('click', handleMapClick);
     };
-  }, [mapInstance, viewMode, setPickerData]);
+  }, [mapInstance, viewMode, dateRange, setPickerData]);
 
   // track cursor coords
   useEffect(() => {
@@ -203,15 +197,26 @@ function PickerControl() {
     }
   }, [viewMode]);
 
+  if (!showButton) {
+    return null;
+  }
+
   return (
     <Button
       variant="outline"
       size="icon"
-      title={intl.formatMessage({ id: 'app.agviewer_map.activate_picker_mode', defaultMessage: "Activate picker mode" })}
-      aria-label={intl.formatMessage({ id: 'app.agviewer_map.activate_picker_mode', defaultMessage: "Activate picker mode" })}
+      title={intl.formatMessage({
+        id: 'app.agviewer_map.activate_picker_mode',
+        defaultMessage: 'Activate picker mode',
+      })}
+      aria-label={intl.formatMessage({
+        id: 'app.agviewer_map.activate_picker_mode',
+        defaultMessage: 'Activate picker mode',
+      })}
       onClick={handleClick}
-      className={` ${viewMode === VIEW_MODES.PICKER ? ' bg-gray-200 dark:bg-gray-600' : ''
-        }`}
+      className={` ${
+        viewMode === VIEW_MODES.PICKER ? ' bg-gray-200 dark:bg-gray-600' : ''
+      }`}
     >
       <Pipette />
     </Button>

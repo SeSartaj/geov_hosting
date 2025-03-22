@@ -22,21 +22,16 @@ function App({ style, requestHeaders, configs, markers }) {
           <SettingsProvider>
             <ConfirmContextProvider>
               <MapProvider configs={configs}>
-                <RasterLayerProvider>
-                  <PlotProvider>
-                    <MarkersProvider providedMarkers={markers}>
-                      <ErrorBoundary>
-                        <MyMap
-                          style={style}
-                          requestHeaders={requestHeaders}
-                          configs={configs}
-                        />
-                        <Toaster richColors />
-                        <DeleteDialog />
-                      </ErrorBoundary>
-                    </MarkersProvider>
-                  </PlotProvider>
-                </RasterLayerProvider>
+                <ErrorBoundary>
+                  <MyMap
+                    style={style}
+                    requestHeaders={requestHeaders}
+                    configs={configs}
+                    markers={markers}
+                  />
+                  <Toaster richColors />
+                  <DeleteDialog />
+                </ErrorBoundary>
               </MapProvider>
             </ConfirmContextProvider>
           </SettingsProvider>

@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 const PlotContext = createContext();
 
 const PlotProvider = ({ children }) => {
-  const { mapRef, drawRef, mode, setMode } = useContext(MapContext);
+  const { mapRef, drawRef } = useContext(MapContext);
   const [editingPlot, setEditingPlot] = useState(null);
   const [clickedPlot, setClickedPlot] = useState(null);
   const { plots, addNewPlot, handlePlotUpdate, handleDeletePlot, loading } =
@@ -99,18 +99,6 @@ const PlotProvider = ({ children }) => {
       });
     }
   };
-
-  const handleDrawComplete = useCallback(
-    (event) => {
-      console.log('mode', event.mode);
-      // delete draws after completion
-      console.log('event', event);
-      draw.deleteAll();
-      setMode('view');
-      setViewMode(VIEW_MODES.NORMAL);
-    },
-    [draw, mode]
-  );
 
   const handleEditPlot = (plot) => {
     console.log('plot', plot);

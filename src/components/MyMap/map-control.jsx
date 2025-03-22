@@ -1,12 +1,13 @@
 import './styles.css';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useControl } from 'react-map-gl/maplibre';
-import useMapStore, { VIEW_MODES } from '@/stores/mapStore';
+import useMapStore, { MAP_MODES, VIEW_MODES } from '@/stores/mapStore';
 import { useMap } from 'react-map-gl/maplibre';
 import { SettingsContext } from '@/contexts/SettingsContext';
 import { Button } from '../ui/button';
 import { FaExclamation, FaSatellite, FaSatelliteDish } from 'react-icons/fa6';
 import {
+  AlignCenterHorizontal,
   ChevronRight,
   Hexagon,
   LandPlot,
@@ -14,10 +15,14 @@ import {
   Maximize,
   Minimize,
   Pin,
+  RatioIcon,
   Satellite,
   SatelliteDish,
   SatelliteDishIcon,
+  SplitSquareHorizontal,
+  SplitSquareVertical,
   Sprout,
+  SquareArrowOutUpRightIcon,
   Tractor,
   Wheat,
 } from 'lucide-react';
@@ -62,7 +67,7 @@ function BasicIcon() {
   );
 }
 
-function MapControl() {
+function MapControl({ dateRange, mapRef }) {
   const { current: mapInstance } = useMap();
   const [changeMap, setChangeMap] = useState(false);
   const controlRef = useRef(null);
@@ -70,7 +75,18 @@ function MapControl() {
   const [isFullScreen, setisFullScreen] = useState(false);
   const setViewMode = useMapStore((state) => state.setViewMode);
   const viewMode = useMapStore((state) => state.viewMode);
+  const mapMode = useMapStore((s) => s.mapMode);
+  const setMapMode = useMapStore((s) => s.setMapMode);
+
   const intl = useIntl();
+
+  const toggleComparisionView = () => {
+    if (mapMode == MAP_MODES.COMPARISION_VIEW) {
+      setMapMode(MAP_MODES.NORMAL);
+    } else {
+      setMapMode(MAP_MODES.COMPARISION_VIEW);
+    }
+  };
 
   const handleMapStyleChange = useCallback(() => {
     setChangeMap((prev) => !prev);
@@ -87,7 +103,7 @@ function MapControl() {
     if (!mapInstance) return;
 
     const mapContainer = mapInstance.getContainer();
-    console.log('mapContainer', mapContainer);
+    const parentElement = mapContainer.parentNode;
 
     if (document.fullscreenElement) {
       // Exit fullscreen
@@ -95,14 +111,14 @@ function MapControl() {
       setisFullScreen(false);
     } else {
       // Enter fullscreen
-      if (mapContainer.requestFullscreen) {
-        mapContainer.requestFullscreen();
-      } else if (mapContainer.mozRequestFullScreen) {
-        mapContainer.mozRequestFullScreen(); // For Firefox
-      } else if (mapContainer.webkitRequestFullscreen) {
-        mapContainer.webkitRequestFullscreen(); // For Safari
-      } else if (mapContainer.msRequestFullscreen) {
-        mapContainer.msRequestFullscreen(); // For Internet Explorer
+      if (parentElement.requestFullscreen) {
+        parentElement.requestFullscreen();
+      } else if (parentElement.mozRequestFullScreen) {
+        parentElement.mozRequestFullScreen(); // For Firefox
+      } else if (parentElement.webkitRequestFullscreen) {
+        parentElement.webkitRequestFullscreen(); // For Safari
+      } else if (parentElement.msRequestFullscreen) {
+        parentElement.msRequestFullscreen(); // For Internet Explorer
       }
     }
     setisFullScreen(true);
@@ -117,6 +133,10 @@ function MapControl() {
     return null;
   }
 
+  useEffect(() => {
+    console.log('daterange has changed in side mapControl eee', dateRange);
+  }, [dateRange]);
+
   return (
     <>
       <div className=" gap-1 flex flex-col">
@@ -125,7 +145,10 @@ function MapControl() {
             variant="outline"
             size="icon"
             aria-label="Change view mode"
-            title={intl.formatMessage({ id: 'app.agviewer_map.change_view_mode', defaultMessage: "Change view mode" })}
+            title={intl.formatMessage({
+              id: 'app.agviewer_map.change_view_mode',
+              defaultMessage: 'Change view mode',
+            })}
             onClick={handleMapStyleChange}
           >
             {settings.basemap.id === 'basic' ? <SatelliteDish /> : <MapIcon />}
@@ -134,37 +157,57 @@ function MapControl() {
         <Button variant="outline" size="icon" onClick={handleFullScreen}>
           {isFullScreen ? <Minimize /> : <Maximize />}
         </Button>
-        <PickerControl />
-        <Button
-          variant="outline"
-          size="icon"
-          title={intl.formatMessage({ id: 'app.agviewer_map.add_view_plot', defaultMessage: "Add new plot" })}
-          onClick={() => setViewMode(VIEW_MODES.ADD_PLOT)}
-        >
-          <Hexagon />
+        <Button variant="outline" size="icon" onClick={toggleComparisionView}>
+          {mapMode === MAP_MODES.COMPARISION_VIEW ? (
+            <SquareArrowOutUpRightIcon />
+          ) : (
+            <SplitSquareHorizontal />
+          )}
         </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          title={intl.formatMessage({ id: 'app.agviewer_map.add_new_station', defaultMessage: "Add new station" })}
-          onClick={() => setViewMode(VIEW_MODES.ADD_MARKER)}
-        >
-          <Pin />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          title={intl.formatMessage({ id: 'app.agviewer_map.add_new_farm_title', defaultMessage: "Add new farm" })}
-          onClick={() =>
-            setViewMode(
-              viewMode === VIEW_MODES.ADD_NEW_FARM
-                ? VIEW_MODES.NORMAL
-                : VIEW_MODES.ADD_NEW_FARM
-            )
-          }
-        >
-          <Tractor />
-        </Button>
+        <PickerControl dateRange={dateRange} mapRef={mapRef} />
+        {mapMode !== MAP_MODES.COMPARISION_VIEW && (
+          <>
+            <Button
+              variant="outline"
+              size="icon"
+              title={intl.formatMessage({
+                id: 'app.agviewer_map.add_view_plot',
+                defaultMessage: 'Add new plot',
+              })}
+              onClick={() => setViewMode(VIEW_MODES.ADD_PLOT)}
+            >
+              <Hexagon />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              title={intl.formatMessage({
+                id: 'app.agviewer_map.add_new_station',
+                defaultMessage: 'Add new station',
+              })}
+              onClick={() => setViewMode(VIEW_MODES.ADD_MARKER)}
+            >
+              <Pin />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              title={intl.formatMessage({
+                id: 'app.agviewer_map.add_new_farm_title',
+                defaultMessage: 'Add new farm',
+              })}
+              onClick={() =>
+                setViewMode(
+                  viewMode === VIEW_MODES.ADD_NEW_FARM
+                    ? VIEW_MODES.NORMAL
+                    : VIEW_MODES.ADD_NEW_FARM
+                )
+              }
+            >
+              <Tractor />
+            </Button>
+          </>
+        )}
       </div>
     </>
   );

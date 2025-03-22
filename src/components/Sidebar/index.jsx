@@ -13,7 +13,7 @@ const divider = (
   <div className="h-[1px] bg-[#E9E9E9] dark:bg-zinc-100 w-[calc(100%+20px)] mx-auto" />
 );
 
-export default function Navigation() {
+export default function Navigation({ mapRef }) {
   const sidebarExpanded = useMapStore((state) => state.sidebarExpanded);
   const setSidebarExpanded = useMapStore((state) => state.setSidebarExpanded);
   const intl = useIntl();
@@ -59,7 +59,7 @@ export default function Navigation() {
       >
         <MarkerPanel />
         {divider}
-        <LayerPanel />
+        <LayerPanel mapRef={mapRef} />
       </Card>
     </>
   );

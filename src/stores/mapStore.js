@@ -12,6 +12,11 @@ export const VIEW_MODES = {
   ADD_NEW_FARM: 'ADD_NEW_FARM',
 };
 
+export const MAP_MODES = {
+  NORMAL: 'NORMAL',
+  COMPARISION_VIEW: 'COMPARISION_VIEW',
+};
+
 const MAP_CURSORS = {
   // all posible cursors on react-map-gl (maplibre)
   DEFAULT: '',
@@ -83,6 +88,20 @@ const useMapStore = create((set) => ({
   showCroppedImages: false,
   datesLoading: false,
   setDatesLoading: (v) => set({ datesLoading: v }),
+  mapMode: MAP_MODES.NORMAL,
+  setMapMode: (s) => set({ mapMode: s }),
+  dateRange: {
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    end: new Date(),
+  },
+  dateRange2: {
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    end: new Date(),
+  },
+  setDateRange: (range) => set({ dateRange: range }),
+  setDateRange2: (range) => set({ dateRange2: range }),
+  passDates: [],
+  setPassDates: (dates) => set({ passDates: dates }),
 }));
 
 export default useMapStore;

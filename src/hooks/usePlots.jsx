@@ -215,7 +215,7 @@ export const usePlots = () => {
     getPlotsList(plotFilters);
   }, [plotFilters, getPlotsList]);
 
-  console.log('plots', plots);
+  console.log('usePlots', plots);
 
   return {
     plots,
