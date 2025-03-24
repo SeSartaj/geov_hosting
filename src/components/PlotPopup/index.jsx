@@ -75,8 +75,8 @@ export default function PlotPopup({ popupInfo, onClose }) {
       closeOnClick={true}
       onClose={onClose}
       anchor="top"
-      style={{ width: 240 }}
-      className="plot-popup overflow-y-hidden"
+      style={{ width: 480 }}
+      className="plot-popup overflow-y-hidden !max-w-[480px] sm:!max-w-[270px] lg:!max-w-[480px]"
     >
       <div className="flex flex-col gap-1 items-center dark:text-gray-100 font-black text-[14px]">
         <div className="w-full flex justify-between items-center dark:text-gray-100 font-black text-[14px]">
@@ -93,6 +93,7 @@ export default function PlotPopup({ popupInfo, onClose }) {
                 size="icon"
                 onClick={_onDeletePlot}
                 data-marker-id={findPlot?.id}
+                tabIndex={-1}
               >
                 {deletingPlot ? (
                   <Spinner size="small" />

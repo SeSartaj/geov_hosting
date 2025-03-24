@@ -8055,9 +8055,9 @@ root.render(
       // }}
       configs={{
         VITE_MAPTILER_ACCESS_KEY: 'nffTPMlX5bMIm8VR0LFb',
-        VITE_SENTINAL_HUB_CLIENT_ID: '9188261d-b9c9-48a3-b1b4-b4653da6a8f0',
-        VITE_SENTINAL_HUB_CLIENT_SECRET: 'sln8tqts90EhECu4t1YhnfpEaCSr88ax',
-        VITE_SENTINAL_HUB_WMTS_ID: '5d381ab5-75f9-4fa0-8324-4635bfdbb664',
+        VITE_SENTINAL_HUB_CLIENT_ID: '628eb617-87fe-40fa-9710-0800aeac0cd1',
+        VITE_SENTINAL_HUB_CLIENT_SECRET: 'SG1OyTrZex0mcZ1VHilwiLa7v0HzElRx',
+        VITE_SENTINAL_HUB_WMTS_ID: 'b1fb475c-b6c4-4f1d-b6c8-e2c8c2bf76f0',
       }}
       markers={DUMMY_RPOVIDED_MARKERS}
     />

@@ -64,12 +64,17 @@ export default function MarkerPopup() {
       closeButton={false}
       closeOnClick={true}
       onClose={closePopup}
-      className="!max-w-[240px] sm:!max-w-[270px] lg:!max-w-[320px]"
+      className="!max-w-[480px] sm:!max-w-[270px] lg:!max-w-[480px]"
     >
       <div className="flex gap-2 items-center dark:text-gray-100 font-black text-[14px]">
         <h3 className="text-wrap">{clickedMarker?.title}</h3>
         <span className="flex items-center gap-1">
-          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.delete_marker', defaultMessage: 'Delete Marker' })}>
+          <Tooltip
+            text={intl.formatMessage({
+              id: 'app.agviewer_map.delete_marker',
+              defaultMessage: 'Delete Marker',
+            })}
+          >
             <Button
               variant="outline"
               size="icon"
@@ -86,8 +91,18 @@ export default function MarkerPopup() {
             marker={clickedMarker}
             buttonClassName="!rounded-md !border !border-solid !border-[#D1D5DB] dark:!border-gray-200 !bg-inherit"
           />
-          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.close', defaultMessage: 'Close' })}>
-            <Button variant="outline" size="icon" onClick={closePopup}>
+          <Tooltip
+            text={intl.formatMessage({
+              id: 'app.agviewer_map.close',
+              defaultMessage: 'Close',
+            })}
+          >
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={closePopup}
+              tabIndex={-1}
+            >
               <XIcon className="w-5 h-5 action-icon " />
             </Button>
           </Tooltip>
@@ -124,7 +139,10 @@ function StationPopupContent({ marker, closePopup }) {
       <div className="flex flex-col items-center gap-1">
         <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-            {intl.formatMessage({ id: 'app.agviewer_map.battery', defaultMessage: 'Battery' })}
+            {intl.formatMessage({
+              id: 'app.agviewer_map.battery',
+              defaultMessage: 'Battery',
+            })}
           </h4>
           <div className="flex items-center space-x-2">
             <span className="text-xs text-gray-700 dark:text-gray-200">
@@ -134,7 +152,10 @@ function StationPopupContent({ marker, closePopup }) {
         </div>
         <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-            {intl.formatMessage({ id: 'app.agviewer_map.paw_status', defaultMessage: 'PAW Status' })}
+            {intl.formatMessage({
+              id: 'app.agviewer_map.paw_status',
+              defaultMessage: 'PAW Status',
+            })}
           </h4>
           <div className="flex items-center space-x-2">
             <Badge color={getStationMarkerColor(marker.paw_status)}>
@@ -144,7 +165,10 @@ function StationPopupContent({ marker, closePopup }) {
         </div>
         <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-            {intl.formatMessage({ id: 'app.agviewer_map.avg_paw', defaultMessage: 'Average PAW' })}
+            {intl.formatMessage({
+              id: 'app.agviewer_map.avg_paw',
+              defaultMessage: 'Average PAW',
+            })}
           </h4>
           <div className="flex items-center space-x-2">
             <span className="text-xs text-gray-700 dark:text-gray-200">
@@ -154,7 +178,10 @@ function StationPopupContent({ marker, closePopup }) {
         </div>
         <div className="flex items-center justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2">
           <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-            {intl.formatMessage({ id: 'app.agviewer_map.crop', defaultMessage: 'Crop' })}
+            {intl.formatMessage({
+              id: 'app.agviewer_map.crop',
+              defaultMessage: 'Crop',
+            })}
           </h4>
           <div className="flex items-center space-x-2">
             <span className="text-xs text-gray-700 dark:text-gray-200">

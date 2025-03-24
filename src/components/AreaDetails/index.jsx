@@ -162,7 +162,8 @@ export default function AreaDetails() {
               pointEtValue && (
                 <div className="flex items-center  justify-between w-full gap-2 rounded-md bg-zinc-100 dark:bg-zinc-800 p-2 ">
                   <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-                    ET value at this point
+                    ET value at this point (
+                    {pickerData.dateRange.start.toISOString().split('T')[0]})
                   </h4>
                   <div className="flex items-center space-x-2">
                     <span className="text-xs text-gray-700 dark:text-gray-200 font-bold">

@@ -29,13 +29,21 @@ const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
   return (
     <MyModal
       trigger={
-        <Button variant="outline" size="icon">
-          <Tooltip text={intl.formatMessage({ id: 'app.agviewer_map.edit_marker', defaultMessage: "Edit Marker" })}>
+        <Button variant="outline" size="icon" tabIndex={-1}>
+          <Tooltip
+            text={intl.formatMessage({
+              id: 'app.agviewer_map.edit_marker',
+              defaultMessage: 'Edit Marker',
+            })}
+          >
             <BiPencil className="w-5 h-5 action-icon" />
           </Tooltip>
         </Button>
       }
-      title={intl.formatMessage({ id: 'app.agviewer_map.edit_marker', defaultMessage: "Edit Marker" })}
+      title={intl.formatMessage({
+        id: 'app.agviewer_map.edit_marker',
+        defaultMessage: 'Edit Marker',
+      })}
       open={open}
       setOpen={setOpen}
       headerClassName="m-4"
@@ -46,7 +54,10 @@ const EditMarkerModal = ({ marker, markerId, buttonClassName = '' }) => {
           marker={marker}
           onSubmit={handlerEditMarker}
           onCancel={_onChangeVisibility}
-          submitButtonText={intl.formatMessage({ id: 'app.agviewer_map.save_changes', defaultMessage: "Save Changes" })}
+          submitButtonText={intl.formatMessage({
+            id: 'app.agviewer_map.save_changes',
+            defaultMessage: 'Save Changes',
+          })}
         />
       </Card>
     </MyModal>
