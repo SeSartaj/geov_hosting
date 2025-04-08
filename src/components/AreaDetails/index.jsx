@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { MapContext } from '@/contexts/MapContext';
 import MyModal from '@/ui-components/MyModal';
-import NdviChart from '../PlotNDVIChart';
+import NdviChart, { ETTimeseriesChart } from '../PlotNDVIChart';
 import { TabContent, TabTrigger } from '@/ui-components/Tabs';
 import { FaRegMap } from 'react-icons/fa6';
 import { HiOutlineMapPin } from 'react-icons/hi2';
@@ -15,6 +15,7 @@ import { ET_BASE_URL } from '@/constants';
 import { Button } from '../ui/button';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import Spinner from '@/ui-components/Spinner';
+import { getETTimeSeriesData } from '@/lib/utils';
 
 export default function AreaDetails() {
   const pickerData = useMapStore((state) => state.pickerData);
@@ -60,7 +61,7 @@ export default function AreaDetails() {
       width: 1,
       height: 1,
       srs: 'EPSG:4326',
-      time: dateRange?.start.toISOString().split('T')[0] || undefined,
+      time: dateRange?.start?.toISOString()?.split('T')[0] || undefined,
       info_format: 'application/json',
       x: 0,
       y: 0,
@@ -154,7 +155,14 @@ export default function AreaDetails() {
             {rasterLayer.value === '3_NDVI' && (
               <NdviChart point={pickerData.coordinates} />
             )}
-            {loading ? (
+            {rasterLayer.value === 'ET' && (
+              <ETTimeseriesChart
+                getData={() =>
+                  getETTimeSeriesData({ coordinates: pickerData?.coordinates })
+                }
+              />
+            )}
+            {/* {loading ? (
               <Spinner />
             ) : loadingError ? (
               <div className="text-red ">Could not load ET value</div>
@@ -172,11 +180,20 @@ export default function AreaDetails() {
                   </div>
                 </div>
               )
-            )}
+            )} */}
           </TabContent>
           {pickerData?.plot && (
             <TabContent value="plot">
-              <NdviChart plot={pickerData.plot} />
+              {rasterLayer.value === '3_NDVI' && (
+                <NdviChart plot={pickerData.plot} />
+              )}
+              {rasterLayer.value === 'ET' && (
+                <ETTimeseriesChart
+                  getData={() =>
+                    getETTimeSeriesData({ plot: pickerData?.plot })
+                  }
+                />
+              )}
             </TabContent>
           )}
         </Tabs>

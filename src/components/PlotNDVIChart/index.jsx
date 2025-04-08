@@ -5,6 +5,45 @@ import { fetchMeanNDVI, fetchMeanNDVIForPoint } from '@/api/sentinalHubApi';
 import Spinner from '@/ui-components/Spinner';
 import { AccessTokenContext } from '@/contexts/AccessTokenProvider';
 
+function parseETTimeseriesData(data) {
+  if (!data || !data.length) return [];
+
+  let min = Infinity;
+  let max = -Infinity;
+  let sum = 0;
+  let count = 0;
+
+  const parsedData = data
+    .map((entry) => {
+      if (entry == undefined) return null;
+      const time = entry[0]; // Time (UTC)
+      const ne_et_data = entry[1]; // ET data (Evapotranspiration)
+
+      if (ne_et_data !== undefined) {
+        min = Math.min(min, ne_et_data);
+        max = Math.max(max, ne_et_data);
+        sum += ne_et_data;
+        count++;
+      }
+
+      return {
+        x: time ? new Date(time).getTime() : null,
+        y: ne_et_data !== undefined ? ne_et_data : null,
+      };
+    })
+    .filter((entry) => entry.x !== null && entry.y !== null);
+
+  console.log('ccc parsedData', parsedData);
+  const average = count > 0 ? sum / count : null;
+
+  return {
+    parsedData,
+    min: min.toFixed(2),
+    max: max.toFixed(2),
+    average: average !== null ? average.toFixed(2) : null,
+  };
+}
+
 function parseNDVIData(data) {
   if (!data || !data.length) return [];
 
@@ -42,7 +81,7 @@ function parseNDVIData(data) {
   };
 }
 
-const NdviChart = ({ plot, point }) => {
+const NdviChart = ({ plot, point, getData }) => {
   const [ndviData, setNdviData] = useState([]);
   const [loading, setLoading] = useState(true);
   const accessToken = useContext(AccessTokenContext);
@@ -220,15 +259,17 @@ const NdviChart = ({ plot, point }) => {
         // this is temporary for testing, user marker.id instead
         // const data = await getNdviData(8386);
         let data;
-        if (plot) {
+        if (typeof getData === 'function') {
+          data = await getData();
+        } else if (plot) {
           data = await fetchMeanNDVI(plot, { accessToken });
-        }
-        if (point) {
+        } else if (point) {
           console.log('sending request for point', point);
           data = await fetchMeanNDVIForPoint(point, {
             accessToken,
           });
         }
+
         if (data) {
           setNdviData(parseNDVIData(data));
         }
@@ -275,6 +316,225 @@ const NdviChart = ({ plot, point }) => {
           <div className="flex items-center space-x-2">
             <span className="text-xs text-gray-700 dark:text-gray-200">
               {ndviData.max}
+            </span>
+          </div>
+        </span>
+      </div>
+    </>
+  );
+};
+
+export const ETTimeseriesChart = ({ plot, point, getData }) => {
+  const [etData, setEtData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const accessToken = useContext(AccessTokenContext);
+
+  const etChartOptions = {
+    chart: {
+      backgroundColor: null,
+      borderWidth: 0,
+      type: 'line',
+      margin: [0, 0, 0, 0],
+      height: 100,
+      style: {
+        overflow: 'visible',
+      },
+      skipClone: true,
+    },
+    title: {
+      text: '',
+    },
+    credits: {
+      enabled: false,
+    },
+    xAxis: {
+      labels: {
+        enabled: false,
+      },
+      title: {
+        text: null,
+      },
+      startOnTick: false,
+      endOnTick: false,
+      type: 'datetime',
+    },
+    yAxis: {
+      min: 0,
+      max: 15,
+      title: {
+        text: null,
+      },
+      gridLineWidth: 0,
+      lineWidth: 0,
+      plotBands: [
+        {
+          from: 0,
+          to: 3,
+          color: 'rgba(0, 0, 255, 0.3)', // Blue for low evapotranspiration
+          label: {
+            text: 'Low ET',
+            align: 'left',
+            style: { color: '#888', fontSize: '12px', fontWeight: '100' },
+          },
+        },
+        {
+          from: 3,
+          to: 6,
+          color: 'rgba(165, 42, 42, 0.3)', // Brown for moderate low ET
+          label: {
+            text: 'Moderate Low ET',
+            align: 'left',
+            style: { color: '#888', fontSize: '12px', fontWeight: '100' },
+          },
+        },
+        {
+          from: 6,
+          to: 9,
+          color: 'rgba(144, 238, 144, 0.3)', // Light Green for moderate ET
+          label: {
+            text: 'Moderate ET',
+            align: 'left',
+            style: { color: '#888', fontSize: '12px', fontWeight: '100' },
+          },
+        },
+        {
+          from: 9,
+          to: 12,
+          color: 'rgba(16, 213, 16, 0.3)', // Light Green for high ET
+          label: {
+            text: 'High ET',
+            align: 'left',
+            style: { color: '#888', fontSize: '12px', fontWeight: '100' },
+          },
+        },
+        {
+          from: 12,
+          to: 15,
+          color: 'rgba(0, 128, 0, 0.3)', // Dark Green for very high ET
+          label: {
+            text: 'Very High ET',
+            align: 'left',
+            style: { color: '#888', fontSize: '12px', fontWeight: '100' },
+          },
+        },
+      ],
+      labels: {
+        enabled: false,
+      },
+    },
+    plotOptions: {
+      series: {
+        animation: false,
+        lineWidth: 1,
+        shadow: false,
+        states: {
+          hover: {
+            lineWidth: 1,
+          },
+        },
+        marker: {
+          radius: 1,
+          states: {
+            hover: {
+              radius: 2,
+            },
+          },
+        },
+        fillOpacity: 0.25,
+      },
+      column: {
+        negativeColor: '#910000',
+        borderColor: 'silver',
+      },
+    },
+    series: [
+      {
+        name: 'Evapotranspiration',
+        data: etData.parsedData, // Assuming etData is available
+        tooltip: {
+          valueDecimals: 2,
+          pointFormatter: function () {
+            return `<b>${this.series.name}</b>: ${this.y.toFixed(2)}<br/>`;
+          },
+        },
+        color: '#0893ae', // You can change the color based on your preference
+        lineWidth: 1.5,
+        marker: {
+          enabled: false,
+        },
+      },
+    ],
+    credits: {
+      enabled: false,
+    },
+    legend: {
+      enabled: false,
+    },
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // this is temporary for testing, user marker.id instead
+        // const data = await getNdviData(8386);
+        let data;
+        if (typeof getData === 'function') {
+          data = await getData();
+        } else if (plot) {
+          data = await fetchMeanNDVI(plot, { accessToken });
+        } else if (point) {
+          console.log('sending request for point', point);
+          data = await fetchMeanNDVIForPoint(point, {
+            accessToken,
+          });
+        }
+
+        if (data) {
+          setEtData(parseETTimeseriesData(data));
+        }
+      } catch (error) {
+        console.log('Error fetching NDVI data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <Spinner />;
+
+  return (
+    <>
+      <HighchartsReact highcharts={Highcharts} options={etChartOptions} />
+      <div className="flex items-center justify-between w-full gap-2 rounded-bl-md rounded-br-md bg-zinc-100 dark:bg-zinc-800 p-2 mt-0">
+        <span className="flex gap-1">
+          <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+            min:
+          </h4>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-700 dark:text-gray-200">
+              {etData.min}
+            </span>
+          </div>
+        </span>
+        <span className="flex gap-1">
+          <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+            avg:
+          </h4>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-700 dark:text-gray-200">
+              {etData.average}
+            </span>
+          </div>
+        </span>
+        <span className="flex gap-1">
+          <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+            max:
+          </h4>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-700 dark:text-gray-200">
+              {etData.max}
             </span>
           </div>
         </span>
