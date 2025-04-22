@@ -2,6 +2,7 @@ import { ET_BASE_URL } from '@/constants';
 import { clsx } from 'clsx';
 import { LngLatBounds } from 'maplibre-gl';
 import { twMerge } from 'tailwind-merge';
+import proj4 from 'proj4';
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -42,44 +43,38 @@ export async function getETTimeSeriesData(pickerData, config = {}) {
 
     bbox = `${minX},${minY},${maxX},${maxY}`;
   } else if (pickerData.plot) {
-    const polygonCords = pickerData.plot.geometry.coordinates[0];
-    console.log('ccc plot', polygonCords);
-
     // Convert polygon coordinates to a WMS-compatible format
-    const wktPolygon = `Polygon((${polygonCords
-      .map((coord) => `${coord[0]} ${coord[1]}`)
-      .join(',')},${polygonCords[0][0]} ${polygonCords[0][1]}))`;
-
-    console.log('ccc wktPolygon', wktPolygon);
-
-    const queryParams = new URLSearchParams({
-      SERVICE: 'WMS',
-      VERSION: '1.1.1',
-      REQUEST: 'GetTimeSeries',
-      FORMAT: 'image/jpeg',
-      TIME: `${startDate}/${endDate}`,
-      QUERY_LAYERS: 'et_data',
-      STYLES: '',
-      LAYERS: 'et_data',
-      INFO_FORMAT: 'text/csv',
-      FEATURE_COUNT: '50',
-      X: '0',
-      Y: '0',
-      SRS: 'EPSG:4326',
-      WIDTH: '1',
-      HEIGHT: '1',
-      BBOX: bbox,
-      FEATURE: wktPolygon,
+    const polygonCords = pickerData.plot.geometry.coordinates[0];
+    // Transform coordinates to EPSG:3857
+    const transformedCoords = polygonCords.map((coord) => {
+      const point = proj4('EPSG:4326', 'EPSG:3857', coord);
+      return point;
     });
+    console.log('ccc coords', polygonCords, transformedCoords);
 
-    queryUrl = `${baseUrl}?${queryParams.toString()}`;
+    // Convert polygon coordinates to GeoJSON FeatureCollection
+    const geoJsonPolygon = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: [polygonCords],
+          },
+        },
+      ],
+    };
+    const polgyonShape = JSON.stringify(geoJsonPolygon);
 
-    // Construct the query URL with CQL_FILTER
-    // queryUrl = `${baseUrl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetTimeSeries&FORMAT=image%2Fjpeg&TIME=${startDate}/${endDate}&QUERY_LAYERS=et_data&STYLES&LAYERS=et_data&INFO_FORMAT=text%2Fcsv&FEATURE_COUNT=50&X=0&Y=0&SRS=EPSG%3A4326&WIDTH=1&HEIGHT=1&CQL_FILTER=${encodeURIComponent(
-    //   cqlFilter
-    // )}`;
-
-    console.log('time series for a polygon is not implemented yet');
+    getAverageETForPolygon(polgyonShape, '2025-02-01', config)
+      .then((averageET) => {
+        console.log('ccc averageET', averageET);
+      })
+      .catch((error) => {
+        console.error('Error getting average ET:', error);
+      });
   }
 
   if (!bbox && !queryUrl) {
@@ -122,6 +117,81 @@ export async function getETTimeSeriesData(pickerData, config = {}) {
     return parsedData;
   } catch (error) {
     console.error('Error fetching time series data:', error);
+    return null;
+  }
+}
+
+async function getAverageETForPolygon(polygonGeojson, time, config = {}) {
+  // Base URL for your GeoServer WPS endpoint
+  const WPS_BASE_URL = `${ET_BASE_URL}wps?service=WPS&version=1.0.0&request=Execute`;
+
+  // WPS request XML payload
+  const xmlPayload = `
+    <wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+    <ows:Identifier>gs:RasterZonalStatistics</ows:Identifier>
+    <wps:DataInputs>
+      <wps:Input>
+        <ows:Identifier>data</ows:Identifier>
+        <wps:Reference mimeType="image/tiff" xlink:href="http://geoserver/wcs" method="POST">
+          <wps:Body>
+            <wcs:GetCoverage service="WCS" version="1.1.1">
+              <ows:Identifier>ne:et_data</ows:Identifier>
+              <wcs:DomainSubset>
+                <ows:BoundingBox crs="http://www.opengis.net/gml/srs/epsg.xml#3857">
+                  <ows:LowerCorner>-8082558.050344551 -4550317.438437675</ows:LowerCorner>
+                  <ows:UpperCorner>-7866796.799005218 -3980621.5613618423</ows:UpperCorner>
+                </ows:BoundingBox>
+                  <wcs:TemporalSubset>
+                  <gml:TimePosition xmlns:gml="http://www.opengis.net/gml">2025-02-01</gml:TimePosition>
+                </wcs:TemporalSubset>
+              </wcs:DomainSubset>
+              <wcs:Output format="image/tiff"/>
+            </wcs:GetCoverage>
+          </wps:Body>
+        </wps:Reference>
+      </wps:Input>
+      <wps:Input>
+        <ows:Identifier>zones</ows:Identifier>
+        <wps:Data>
+          <wps:ComplexData mimeType="application/json">
+            <![CDATA[${polygonGeojson}]]>
+          </wps:ComplexData>
+        </wps:Data>
+      </wps:Input>
+    </wps:DataInputs>
+    <wps:ResponseForm>
+      <wps:RawDataOutput mimeType="application/json">
+        <ows:Identifier>statistics</ows:Identifier>
+      </wps:RawDataOutput>
+    </wps:ResponseForm>
+  </wps:Execute>
+
+  `;
+
+  try {
+    const response = await fetch(WPS_BASE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/xml',
+      },
+      body: xmlPayload,
+    });
+
+    if (!response.ok) {
+      throw new Error(`WPS request failed with status ${response.status}`);
+    }
+
+    const resultText = await response.text();
+    console.log('WPS Response:', resultText);
+
+    // Parse the XML response to extract the mean value
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(resultText, 'text/xml');
+    const meanValue = xmlDoc.getElementsByTagName('mean')[0]?.textContent;
+
+    return parseFloat(meanValue);
+  } catch (error) {
+    console.error('Error executing WPS request:', error);
     return null;
   }
 }
