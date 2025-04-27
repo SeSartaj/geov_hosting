@@ -8057,7 +8057,7 @@ root.render(
         VITE_MAPTILER_ACCESS_KEY: 'nffTPMlX5bMIm8VR0LFb',
         VITE_SENTINAL_HUB_CLIENT_ID: '5c51d4df-b1ca-4463-9b79-0177fb098374',
         VITE_SENTINAL_HUB_CLIENT_SECRET: 'iGWasHAXeevlHp3lpYgIdXkOROQW9Tdp',
-        VITE_SENTINAL_HUB_WMTS_ID: 'b1fb475c-b6c4-4f1d-b6c8-e2c8c2bf76f0',
+        VITE_SENTINAL_HUB_WMTS_ID: '7ec388f0-32db-4eae-8065-8b69d19beb02',
       }}
       markers={DUMMY_RPOVIDED_MARKERS}
     />
