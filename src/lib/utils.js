@@ -68,13 +68,13 @@ export async function getETTimeSeriesData(pickerData, config = {}) {
     };
     const polgyonShape = JSON.stringify(geoJsonPolygon);
 
-    getAverageETForPolygon(polgyonShape, '2025-02-01', config)
-      .then((averageET) => {
-        console.log('ccc averageET', averageET);
-      })
-      .catch((error) => {
-        console.error('Error getting average ET:', error);
-      });
+    return getPlotStatistics(polgyonShape, startDate, config).then(
+      (statistics) => {
+        statistics.datetime = startDate;
+        console.log('statistics ET for polygon:', statistics);
+        return statistics;
+      }
+    );
   }
 
   if (!bbox && !queryUrl) {
@@ -121,7 +121,8 @@ export async function getETTimeSeriesData(pickerData, config = {}) {
   }
 }
 
-async function getAverageETForPolygon(polygonGeojson, time, config = {}) {
+async function getPlotStatistics(polygonGeojson, time, config = {}) {
+  console.log('ffff  time', time, polygonGeojson);
   // Base URL for your GeoServer WPS endpoint
   const WPS_BASE_URL = `${ET_BASE_URL}wps?service=WPS&version=1.0.0&request=Execute`;
 
@@ -142,7 +143,7 @@ async function getAverageETForPolygon(polygonGeojson, time, config = {}) {
                   <ows:UpperCorner>-7866796.799005218 -3980621.5613618423</ows:UpperCorner>
                 </ows:BoundingBox>
                   <wcs:TemporalSubset>
-                  <gml:TimePosition xmlns:gml="http://www.opengis.net/gml">2025-02-01</gml:TimePosition>
+                  <gml:TimePosition xmlns:gml="http://www.opengis.net/gml">${time}</gml:TimePosition>
                 </wcs:TemporalSubset>
               </wcs:DomainSubset>
               <wcs:Output format="image/tiff"/>
@@ -181,15 +182,16 @@ async function getAverageETForPolygon(polygonGeojson, time, config = {}) {
       throw new Error(`WPS request failed with status ${response.status}`);
     }
 
-    const resultText = await response.text();
-    console.log('WPS Response:', resultText);
+    const data = await response.json();
+    data.datetime = time;
+    console.log('WPS Response:', data);
 
     // Parse the XML response to extract the mean value
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(resultText, 'text/xml');
-    const meanValue = xmlDoc.getElementsByTagName('mean')[0]?.textContent;
-
-    return parseFloat(meanValue);
+    // const parser = new DOMParser();
+    // const xmlDoc = parser.parseFromString(data, 'text/xml');
+    // const meanValue = xmlDoc.getElementsByTagName('mean')[0]?.textContent;
+    console.log('returning this data', data);
+    return data;
   } catch (error) {
     console.error('Error executing WPS request:', error);
     return null;

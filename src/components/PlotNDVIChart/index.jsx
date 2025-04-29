@@ -324,6 +324,8 @@ const NdviChart = ({ plot, point, getData }) => {
   );
 };
 
+
+
 export const ETTimeseriesChart = ({ plot, point, getData }) => {
   const [etData, setEtData] = useState([]);
   const [loading, setLoading] = useState(true);

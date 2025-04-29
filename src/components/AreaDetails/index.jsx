@@ -16,6 +16,7 @@ import { Button } from '../ui/button';
 import { RasterLayerContext } from '@/contexts/RasterLayerContext';
 import Spinner from '@/ui-components/Spinner';
 import { getETTimeSeriesData } from '@/lib/utils';
+import PlotStatisticsGraph from '../PlotStatisticsGraph';
 
 export default function AreaDetails() {
   const pickerData = useMapStore((state) => state.pickerData);
@@ -188,9 +189,15 @@ export default function AreaDetails() {
                 <NdviChart plot={pickerData.plot} />
               )}
               {rasterLayer.value === 'ET' && (
-                <ETTimeseriesChart
-                  getData={() =>
-                    getETTimeSeriesData({ plot: pickerData?.plot })
+                <PlotStatisticsGraph
+                  getData={async () =>
+                    await getETTimeSeriesData(
+                      { plot: pickerData?.plot },
+                      {
+                        startDate: dateRange?.start?.toISOString(),
+                        endDate: dateRange?.end?.toISOString(),
+                      }
+                    )
                   }
                 />
               )}
