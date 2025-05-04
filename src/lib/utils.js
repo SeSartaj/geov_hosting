@@ -18,12 +18,18 @@ export async function getETTimeSeriesData(pickerData, config = {}) {
   // Determine the startDate and endDate
   let { startDate, endDate } = config;
 
-  if (!startDate || !endDate) {
+  if (!startDate && !endDate) {
     // If no startDate or endDate is provided, get the past 3 months
     const currentDate = new Date();
     endDate = currentDate.toISOString();
     currentDate.setMonth(currentDate.getMonth() - 3); // Subtract 3 months
     startDate = currentDate.toISOString();
+  } else if (!startDate) {
+    // If no startDate is provided, set it to the current date
+    startDate = new Date().toISOString();
+  } else if (!endDate) {
+    // If no endDate is provided, set it to the current date
+    endDate = startDate;
   }
 
   let queryUrl;
@@ -125,47 +131,44 @@ async function getPlotStatistics(polygonGeojson, time, config = {}) {
   console.log('ffff  time', time, polygonGeojson);
   // Base URL for your GeoServer WPS endpoint
   const WPS_BASE_URL = `${ET_BASE_URL}wps?service=WPS&version=1.0.0&request=Execute`;
-
+  if (typeof time === 'object') {
+    time = time.toISOString();
+  }
   // WPS request XML payload
   const xmlPayload = `
-    <wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
-    <ows:Identifier>gs:RasterZonalStatistics</ows:Identifier>
-    <wps:DataInputs>
-      <wps:Input>
-        <ows:Identifier>data</ows:Identifier>
-        <wps:Reference mimeType="image/tiff" xlink:href="http://geoserver/wcs" method="POST">
-          <wps:Body>
-            <wcs:GetCoverage service="WCS" version="1.1.1">
-              <ows:Identifier>ne:et_data</ows:Identifier>
-              <wcs:DomainSubset>
-                <ows:BoundingBox crs="http://www.opengis.net/gml/srs/epsg.xml#3857">
-                  <ows:LowerCorner>-8082558.050344551 -4550317.438437675</ows:LowerCorner>
-                  <ows:UpperCorner>-7866796.799005218 -3980621.5613618423</ows:UpperCorner>
-                </ows:BoundingBox>
-                  <wcs:TemporalSubset>
-                  <gml:TimePosition xmlns:gml="http://www.opengis.net/gml">${time}</gml:TimePosition>
-                </wcs:TemporalSubset>
-              </wcs:DomainSubset>
-              <wcs:Output format="image/tiff"/>
-            </wcs:GetCoverage>
-          </wps:Body>
-        </wps:Reference>
-      </wps:Input>
-      <wps:Input>
-        <ows:Identifier>zones</ows:Identifier>
-        <wps:Data>
-          <wps:ComplexData mimeType="application/json">
-            <![CDATA[${polygonGeojson}]]>
-          </wps:ComplexData>
-        </wps:Data>
-      </wps:Input>
-    </wps:DataInputs>
-    <wps:ResponseForm>
-      <wps:RawDataOutput mimeType="application/json">
-        <ows:Identifier>statistics</ows:Identifier>
-      </wps:RawDataOutput>
-    </wps:ResponseForm>
-  </wps:Execute>
+    <wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+  <ows:Identifier>gs:RasterZonalStatistics</ows:Identifier>
+  <wps:DataInputs>
+    <wps:Input>
+      <ows:Identifier>data</ows:Identifier>
+      <wps:Reference mimeType="image/tiff" xlink:href="http://geoserver/wcs" method="POST">
+        <wps:Body>
+          <wcs:GetCoverage xmlns:wcs="http://www.opengis.net/wcs/2.0" service="WCS" version="2.0.1">
+            <wcs:CoverageId>ne:et_data</wcs:CoverageId>
+            <wcs:DimensionSlice>
+              <wcs:Dimension>time</wcs:Dimension>
+              <wcs:SlicePoint>${time}</wcs:SlicePoint>
+            </wcs:DimensionSlice>
+            <wcs:format>image/geotiff</wcs:format>
+          </wcs:GetCoverage>
+        </wps:Body>
+      </wps:Reference>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>zones</ows:Identifier>
+      <wps:Data>
+        <wps:ComplexData mimeType="application/json">
+          <![CDATA[${polygonGeojson}]]>
+        </wps:ComplexData>
+      </wps:Data>
+    </wps:Input>
+  </wps:DataInputs>
+  <wps:ResponseForm>
+    <wps:RawDataOutput mimeType="application/json">
+      <ows:Identifier>statistics</ows:Identifier>
+    </wps:RawDataOutput>
+  </wps:ResponseForm>
+</wps:Execute>
 
   `;
 

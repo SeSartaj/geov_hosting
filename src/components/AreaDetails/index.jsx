@@ -1,6 +1,6 @@
 import GeoTIFF from 'geotiff';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 // import * as Tabs from '@radix-ui/react-tabs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -102,6 +102,21 @@ export default function AreaDetails() {
       });
   }
 
+  const getPlotStatistics = useCallback(
+    async (configs) => {
+      console.log('ffff configs', configs);
+      return await getETTimeSeriesData(
+        { plot: pickerData?.plot },
+        {
+          startDate: pickerData?.dateRange?.start?.toISOString(),
+          endDate: pickerData?.dateRange?.end?.toISOString(),
+          ...configs,
+        }
+      );
+    },
+    [pickerData]
+  );
+
   useEffect(() => {
     console.log('pickerData', pickerData);
     if (pickerData && rasterLayer.value === 'ET') {
@@ -189,17 +204,7 @@ export default function AreaDetails() {
                 <NdviChart plot={pickerData.plot} />
               )}
               {rasterLayer.value === 'ET' && (
-                <PlotStatisticsGraph
-                  getData={async () =>
-                    await getETTimeSeriesData(
-                      { plot: pickerData?.plot },
-                      {
-                        startDate: dateRange?.start?.toISOString(),
-                        endDate: dateRange?.end?.toISOString(),
-                      }
-                    )
-                  }
-                />
+                <PlotStatisticsGraph getData={getPlotStatistics} />
               )}
             </TabContent>
           )}

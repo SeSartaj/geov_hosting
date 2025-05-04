@@ -324,9 +324,7 @@ const NdviChart = ({ plot, point, getData }) => {
   );
 };
 
-
-
-export const ETTimeseriesChart = ({ plot, point, getData }) => {
+export const ETTimeseriesChart = ({ plot, point, getData, data }) => {
   const [etData, setEtData] = useState([]);
   const [loading, setLoading] = useState(true);
   const accessToken = useContext(AccessTokenContext);
@@ -452,7 +450,7 @@ export const ETTimeseriesChart = ({ plot, point, getData }) => {
     series: [
       {
         name: 'Evapotranspiration',
-        data: etData.parsedData, // Assuming etData is available
+        data: data ? data : etData?.parsedData, // Assuming etData is available
         tooltip: {
           valueDecimals: 2,
           pointFormatter: function () {
@@ -460,10 +458,61 @@ export const ETTimeseriesChart = ({ plot, point, getData }) => {
           },
         },
         color: '#0893ae', // You can change the color based on your preference
-        lineWidth: 1.5,
+        lineWidth: 2,
         marker: {
           enabled: false,
         },
+      },
+      {
+        name: 'Min ET',
+        data: data ? data.map((item) => [item.x, item.min]) : null,
+        tooltip: {
+          valueDecimals: 2,
+          pointFormatter: function () {
+            return `<b>${this.series.name}</b>: ${this.y.toFixed(2)}<br/>`;
+          },
+        },
+        color: '#ff6666', // Red for min
+        lineWidth: 1,
+        dashStyle: 'Dash', // Dashed line to differentiate
+        marker: {
+          enabled: false,
+        },
+        zIndex: 3,
+      },
+      {
+        name: 'Max ET',
+        data: data ? data.map((item) => [item.x, item.max]) : null,
+        tooltip: {
+          valueDecimals: 2,
+          pointFormatter: function () {
+            return `<b>${this.series.name}</b>: ${this.y.toFixed(2)}<br/>`;
+          },
+        },
+        color: '#66cc66', // Green for max
+        lineWidth: 1,
+        dashStyle: 'Dash', // Dashed line to differentiate
+        marker: {
+          enabled: false,
+        },
+        zIndex: 2,
+      },
+      {
+        name: 'StdDev',
+        data: data ? data.map((item) => [item.x, item.stddev]) : null,
+        tooltip: {
+          valueDecimals: 2,
+          pointFormatter: function () {
+            return `<b>${this.series.name}</b>: ${this.y.toFixed(2)}<br/>`;
+          },
+        },
+        color: '#999999', // Gray for stddev
+        lineWidth: 1,
+        dashStyle: 'Dot', // Dotted line to differentiate
+        marker: {
+          enabled: false,
+        },
+        zIndex: 1,
       },
     ],
     credits: {
@@ -475,33 +524,39 @@ export const ETTimeseriesChart = ({ plot, point, getData }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // this is temporary for testing, user marker.id instead
-        // const data = await getNdviData(8386);
-        let data;
-        if (typeof getData === 'function') {
-          data = await getData();
-        } else if (plot) {
-          data = await fetchMeanNDVI(plot, { accessToken });
-        } else if (point) {
-          console.log('sending request for point', point);
-          data = await fetchMeanNDVIForPoint(point, {
-            accessToken,
-          });
-        }
+    if (data) {
+      setEtData(data);
+      console.log('mmm data inside chart', data);
+      setLoading(false);
+    } else {
+      const fetchData = async () => {
+        try {
+          // this is temporary for testing, user marker.id instead
+          // const data = await getNdviData(8386);
+          let data;
+          if (typeof getData === 'function') {
+            data = await getData();
+          } else if (plot) {
+            data = await fetchMeanNDVI(plot, { accessToken });
+          } else if (point) {
+            console.log('sending request for point', point);
+            data = await fetchMeanNDVIForPoint(point, {
+              accessToken,
+            });
+          }
 
-        if (data) {
-          setEtData(parseETTimeseriesData(data));
+          if (data) {
+            setEtData(parseETTimeseriesData(data));
+          }
+        } catch (error) {
+          console.log('Error fetching NDVI data', error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.log('Error fetching NDVI data', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, []);
 
   if (loading) return <Spinner />;
@@ -509,37 +564,44 @@ export const ETTimeseriesChart = ({ plot, point, getData }) => {
   return (
     <>
       <HighchartsReact highcharts={Highcharts} options={etChartOptions} />
+
       <div className="flex items-center justify-between w-full gap-2 rounded-bl-md rounded-br-md bg-zinc-100 dark:bg-zinc-800 p-2 mt-0">
-        <span className="flex gap-1">
-          <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-            min:
-          </h4>
-          <div className="flex items-center space-x-2">
-            <span className="text-xs text-gray-700 dark:text-gray-200">
-              {etData.min}
-            </span>
-          </div>
-        </span>
-        <span className="flex gap-1">
-          <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-            avg:
-          </h4>
-          <div className="flex items-center space-x-2">
-            <span className="text-xs text-gray-700 dark:text-gray-200">
-              {etData.average}
-            </span>
-          </div>
-        </span>
-        <span className="flex gap-1">
-          <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
-            max:
-          </h4>
-          <div className="flex items-center space-x-2">
-            <span className="text-xs text-gray-700 dark:text-gray-200">
-              {etData.max}
-            </span>
-          </div>
-        </span>
+        {etData?.min && (
+          <span className="flex gap-1">
+            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+              min:
+            </h4>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-700 dark:text-gray-200">
+                {etData.min}
+              </span>
+            </div>
+          </span>
+        )}
+        {etData?.average && (
+          <span className="flex gap-1">
+            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+              avg:
+            </h4>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-700 dark:text-gray-200">
+                {etData.average}
+              </span>
+            </div>
+          </span>
+        )}
+        {etData?.max && (
+          <span className="flex gap-1">
+            <h4 className="scroll-m-20 text-xs font-medium tracking-tight">
+              max:
+            </h4>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-700 dark:text-gray-200">
+                {etData.max}
+              </span>
+            </div>
+          </span>
+        )}
       </div>
     </>
   );
